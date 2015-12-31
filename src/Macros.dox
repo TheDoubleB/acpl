@@ -1,0 +1,28 @@
+/// \file Macros.h
+/// \brief General macro helpers.
+/// 
+/// 
+
+
+
+/// \def acplMacroVa(...)
+/// \brief Macro's variable arguments aggregator macro.
+
+/// \def acplHideClassAsop(N_CLASS_NAME)
+/// \brief Hide class's assignment operator only.
+/// \param N_CLASS_NAME Class name (without possible namespaces).
+
+/// \def acplHideClassCopy(N_CLASS_NAME)
+/// \brief Hide class's copy constructor and assignment operator.
+/// \param N_CLASS_NAME Class name (without possible namespaces).
+
+/// \def acplHideClassCopyI(N_CLASS_NAME, ...)
+/// \brief Hide class's copy constructor and assignment operator with initializer parameters in variable arguments.
+/// \param N_CLASS_NAME Class name (without possible namespaces).
+/// \param ... Class initializers.
+
+/// \def acplHideClassCopyIa(N_CLASS_NAME, N_CLASS_ARG_NAME, ...)
+/// \brief Hide class's copy constructor and assignment operator with copy constructor's argument name and initializer parameters in variable arguments.
+/// \param N_CLASS_NAME Class name (without possible namespaces).
+/// \param N_CLASS_ARG_NAME Argument name for copy constructor (needed in case of any of the initializers needs an argument name).
+/// \param ... Class initializers.

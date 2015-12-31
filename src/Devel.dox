@@ -1,0 +1,17 @@
+/// \file Devel.h
+/// \brief Development utilities.
+/// 
+/// 
+
+
+
+/// \def acplDbgStringify
+/// \brief Stringification macro.
+/// \param N_ELEMENT Element to stringify.
+
+/// \def acplDbgStringifyIndrct
+/// \brief Indirect stringification macro.
+/// \param N_ELEMENT Element to stringify.
+
+/// \def acplDbgSrcLoc
+/// \brief Macro combining compilation unit location to a string in a form of <code>"${FILE}:${LINE}"</code>.

@@ -1,0 +1,213 @@
+/// \file Time.h
+/// \brief Time-related functionality
+
+
+
+/// \class acpl::Time
+/// \brief Class containing basic time-related static functions.
+/// \note This is only a container class and, therefore, cannot be instanciated.
+
+
+/// \fn static acpl::TimeT acpl::Time::UnixTime()
+/// \brief Get current UNIX timestamp (in UTC).
+/// \return UNIX timestamp (in UTC).
+/// \warning This function returns timestamp in UTC timezone.
+
+/// \fn static acpl::UInt64 acpl::Time::Monotone()
+/// \brief Returns a monotonic time (in micro seconds) since some unspecified starting point.
+/// \return Monotonic time (in micro seconds).
+/// \note Due to lack of scope, on Windows, this function's time step in 1000 micro seconds (1 milli second).
+
+/// \fn static void acpl::Time::SleepSec(acpl::UInt32 nSecs)
+/// \brief Sleep function.
+/// \param nSecs Number of seconds to sleep.
+
+/// \fn static void acpl::Time::SleepMsec(acpl::UInt32 nMsecs)
+/// \brief Sleep function.
+/// \param nMsecs Number of milli seconds to sleep.
+
+/// \fn static void acpl::Time::SleepUsec(acpl::UInt64 nUsecs)
+/// \brief Sleep function.
+/// \param nUsecs Number of micro seconds to sleep.
+
+
+
+/// \class acpl::DateTime
+/// \brief Date and time class.
+
+
+/// \fn acpl::DateTime::DateTime()
+/// \brief Empty constructor.
+/// \note Default timezone mode is UTC.
+
+/// \fn acpl::DateTime::DateTime(bool nIsLocal)
+/// \brief Constructor.
+/// \param nIsLocal If <code>\b true</code>, it is set to local timezone mode, otherwise it is set to UTC timezone mode.
+
+/// \fn acpl::DateTime::~DateTime()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::DateTime::IsClear() const
+/// \brief Returns whether or not this object is reset.
+/// \return <code>\b true</code> if this object is reset, <code>\b false</code> otherwise.
+
+/// \fn acpl::DateTime &acpl::DateTime::Clear()
+/// \brief Resets this object.
+/// \return Reference to this object.
+
+/// \fn acpl::DateTime &acpl::DateTime::Set(const acpl::DateTime &nDateTime)
+/// \brief Sets value from another acpl::DateTime object.
+/// \param nDateTime Other acpl::DateTime object.
+/// \return Reference to this object.
+
+/// \fn acpl::DateTime &acpl::DateTime::Now()
+/// \brief Fills this object with current date and time.
+/// \note This method depends on which timezone mode the object is in.
+/// \return Reference to this object.
+
+/// \fn acpl::TimeT acpl::DateTime::GetUnixTime() const
+/// \brief Converts object to UNIX timestamp.
+/// \return UNIX timestamp.
+
+/// \fn acpl::DateTime &acpl::DateTime::SetUnixTime(acpl::TimeT nUnixTime)
+/// \brief Sets object from converted UNIX timestamp.
+/// \param nUnixTime UNIX timestamp.
+/// \return Reference to this object.
+
+
+/// \fn acpl::DateTime &acpl::DateTime::Normalize()
+/// \brief Normalize object's elements.
+/// \return Reference to this object.
+
+
+/// \fn bool acpl::DateTime::IsUtc() const
+/// \brief Returns whether or not this object is in UTC timezone mode.
+/// \return <code>\b true</code> if this object is in UTC timezone mode, <code>\b false</code> otherwise.
+/// \note This is an invert method of acpl::DateTime::IsLocal
+/// \see acpl::DateTime::IsLocal
+
+/// \fn acpl::DateTime &acpl::DateTime::ToUtc()
+/// \brief Converts object to UTC timezone mode.
+/// \return Reference to this object.
+
+/// \fn bool acpl::DateTime::IsLocal() const
+/// \brief Returns whether or not this object is in local timezone mode.
+/// \return <code>\b true</code> if this object is in local timezone mode, <code>\b false</code> otherwise.
+/// \note This is an invert method of acpl::DateTime::IsUtc
+/// \see acpl::DateTime::IsUtc
+
+/// \fn acpl::DateTime &acpl::DateTime::ToLocal()
+/// \brief Converts object to local timezone mode.
+/// \return Reference to this object.
+
+
+/// \fn acpl::DateTime &acpl::DateTime::SetDate(acpl::SInt32 nYear, acpl::UInt8 nMonth, acpl::UInt8 nDay)
+/// \brief Sets all object's date elements.
+/// \param nYear Year element (due to size limitations value range is +/- 0x7FFFFF).
+/// \param nMonth Month element (due to size limitations value range is from 0x00 to 0x0F).
+/// \param nDay Day (of month) element (due to size limitations value range is from 0x00 to 0x1F).
+/// \return Reference to this object.
+
+/// \fn acpl::SInt32 acpl::DateTime::GetYear() const
+/// \brief Returns object's year element.
+/// \return Object's year element.
+
+/// \fn acpl::DateTime &acpl::DateTime::SetYear(acpl::SInt32 nYear)
+/// \brief Sets object's year element.
+/// \param nYear Year element (due to size limitations value range is +/- 0x7FFFFF).
+/// \return Reference to this object.
+
+/// \fn acpl::UInt8 acpl::DateTime::GetMonth() const
+/// \brief Returns object's month element.
+/// \return Object's month element.
+
+/// \fn acpl::DateTime &acpl::DateTime::SetMonth(acpl::UInt8 nMonth)
+/// \brief Sets object's month element.
+/// \param nMonth Month element (due to size limitations value range is from 0x00 to 0x0F).
+/// \return Reference to this object.
+
+/// \fn acpl::UInt16 acpl::DateTime::GetDayOfYear() const
+/// \brief Returns object's day of year element.
+/// \return Object's day of year element.
+
+/// \fn acpl::UInt8 acpl::DateTime::GetDayOfWeek() const
+/// \brief Returns object's day of week element.
+/// \return Object's day of week element.
+
+/// \fn acpl::UInt8 acpl::DateTime::GetDay() const
+/// \brief Returns object's day (of month) element.
+/// \return Object's day (of month) element.
+
+/// \fn acpl::DateTime &acpl::DateTime::SetDay(acpl::UInt8 nDay)
+/// \brief Sets object's day (of month) element.
+/// \param nDay Day (of month) element (due to size limitations value range is from 0x00 to 0x1F).
+/// \return Reference to this object.
+
+/// \fn bool acpl::DateTime::IsDst() const
+/// \brief Returns whether or not this object's daylight savings time element is set.
+/// \return <code>\b true</code> if this object's daylight savings time element is set, <code>\b false</code> otherwise.
+/// \note The daylight savings time element can be set only in local timezone mode since UTC timezone does not have daylight savings.
+
+/// \fn acpl::DateTime &acpl::DateTime::SetTime(acpl::UInt8 nHour, acpl::UInt8 nMin, acpl::UInt8 nSec)
+/// \brief Sets all object's time elements.
+/// \param nHour Hour element (due to size limitations value range is from 0x00 to 0x1F).
+/// \param nMin Minute element (due to size limitations value range is from 0x00 to 0x3F).
+/// \param nSec Second element (due to size limitations value range is from 0x00 to 0x3F).
+/// \return Reference to this object.
+
+/// \fn acpl::UInt8 acpl::DateTime::GetHour() const
+/// \brief Returns object's hour element.
+/// \return Object's hour element.
+
+/// \fn acpl::DateTime &acpl::DateTime::SetHour(acpl::UInt8 nHour)
+/// \brief Sets object's hour element.
+/// \param nHour Hour element (due to size limitations value range is from 0x00 to 0x1F).
+/// \return Reference to this object.
+
+/// \fn acpl::UInt8 acpl::DateTime::GetMin() const
+/// \brief Returns object's minute element.
+/// \return Object's minute element.
+
+/// \fn acpl::DateTime &acpl::DateTime::SetMin(acpl::UInt8 nMin)
+/// \brief Sets object's minute element.
+/// \param nMin Minute element (due to size limitations value range is from 0x00 to 0x3F).
+/// \return Reference to this object.
+
+/// \fn acpl::UInt8 acpl::DateTime::GetSec() const
+/// \brief Returns object's second element.
+/// \return Object's second element.
+
+/// \fn acpl::DateTime &acpl::DateTime::SetSec(acpl::UInt8 nSec)
+/// \brief Sets object's second element.
+/// \param nSec Second element (due to size limitations value range is from 0x00 to 0x3F).
+/// \return Reference to this object.
+
+
+
+/// \class acpl::Timer
+/// \brief Coundown timer class.
+
+
+/// \fn acpl::Timer::Timer()
+/// \brief Constructor.
+
+/// \fn acpl::Timer::~Timer()
+/// \brief Destructor.
+
+
+/// \fn void acpl::Timer::SetupSec(acpl::UInt32 nSecs)
+/// \brief Sets-up timeout (in seconds).
+/// \param nSecs Timeout (in seconds).
+
+/// \fn void acpl::Timer::SetupMsec(acpl::UInt32 nMsecs)
+/// \brief Sets-up timeout (in milliseconds).
+/// \param nMsecs Timeout (in milliseconds).
+
+/// \fn void acpl::Timer::SetupUsec(acpl::UInt64 nUsecs)
+/// \brief Sets-up timeout (in microseconds).
+/// \param nUsecs Timeout (in microseconds).
+
+/// \fn bool acpl::Timer::IsElapsed() const
+/// \brief Returns whether or not timeout has been reached.
+/// \return <code>\b true</code> if timeout has been reached, <code>\b false</code> otherwise.

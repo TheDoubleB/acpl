@@ -1,0 +1,16 @@
+/// \namespace acpl
+/// \brief Advanced cross-platform library namespace.
+/// 
+/// 
+
+
+/// \dir .
+/// \brief ACPL source code root directory.
+
+
+/// \dir fs
+/// \brief File system related functionality.
+
+
+/// \dir net
+/// \brief Networking related functionality.

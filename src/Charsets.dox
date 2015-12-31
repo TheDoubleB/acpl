@@ -1,0 +1,146 @@
+/// \file Charsets.h
+/// \brief Character encodings (character sets) handling class.
+
+
+
+/// \class acpl::Charsets
+/// \brief Class for handling character encodings (character sets).
+
+/// \fn static bool acpl::Charsets::GetCharset(const char *nMimeName, acpl::Charsets::ByteOrderMask nBom, acpl::Charsets::Fpc &nFpc);
+/// \brief Retrieves the most suitable character encoding based on IANA character encoding mime name and/or byte order mask (if any).
+/// \note If IANA character encoding mime name is NULL, this method will return the most suitable character encoding based on provided byte order mask, as this list shows:
+/// \li for acpl::Charsets::bomNone, the most suitable character encoding is ISO-8859-1 (latin1);
+/// \li for acpl::Charsets::bom1Byte, the most suitable character encoding is UTF-8;
+/// \li for acpl::Charsets::bom2ByteBe, the most suitable character encoding is UTF-16BE;
+/// \li for acpl::Charsets::bom2ByteLe, the most suitable character encoding is UTF-16LE;
+/// \li for acpl::Charsets::bom4ByteBe, the most suitable character encoding is UCS-4BE;
+/// \li for acpl::Charsets::bom4ByteLe, the most suitable character encoding is UCS-4LE.
+/// \param nMimeName IANA charset mime name or NULL.
+/// \param nBom Byte order mask.
+/// \param nFpc Reference to an acpl::Charsets::Fpc class to which character encoding's FPs will be set.
+/// \return <code>\b true</code> if character encoding was found, <code>\b false</code> otherwise.
+
+/// \fn static acpl::Charsets::ByteOrderMask acpl::Charsets::DecodeBom(const acpl::UInt8 *nBfr, acpl::SizeT nBfrSize, acpl::SizeT &nBomByteSize);
+/// \brief Decode byte order mask (BOM).
+/// \param nBfr Pointer to a (byte) buffer from which to read the (potential) byte order mask (BOM).
+/// \param nBfrSize Size (in bytes) of \a nBfr buffer.
+/// \param nBomByteSize Reference to an acpl::SizeT variable to which number of bytes recognized as a byte order mask (BOM) will be set.
+/// \return Byte order mask.
+
+/// \enum acpl::Charsets::ByteOrderMask
+/// \brief Byte order mask (BOM) type.
+
+/// \var acpl::Charsets::ByteOrderMask acpl::Charsets::bomNone
+/// \brief No BOM is present; native (platform) endianness is presumed
+
+/// \var acpl::Charsets::ByteOrderMask acpl::Charsets::bom1Byte
+/// \brief 1-byte BOM; used (but not always) for UTF-8
+
+/// \var acpl::Charsets::ByteOrderMask acpl::Charsets::bom2ByteBe
+/// \brief 2-byte big-endian BOM (big-endian UCS-2 or UTF-16)
+
+/// \var acpl::Charsets::ByteOrderMask acpl::Charsets::bom2ByteLe
+/// \brief 2-byte little-endian BOM (little-endian UCS-2 or UTF-16)
+
+/// \var acpl::Charsets::ByteOrderMask acpl::Charsets::bom4ByteBe
+/// \brief 4-byte big-endian BOM (big-endian UCS-4 or UTF-32)
+
+/// \var acpl::Charsets::ByteOrderMask acpl::Charsets::bom4ByteLe
+/// \brief 4-byte little-endian BOM (little-endian UCS-4 or UTF-32)
+
+
+
+/// \class acpl::Charsets::Fpc
+/// \brief Function pointer class (FPC) holding character encoding's function pointers (FPs).
+
+/// \fn acpl::Charsets::Fpc::Fpc();
+/// \brief Constructor.
+
+/// \fn void acpl::Charsets::Fpc::Set(fpIsCompatible nIsCompatible, fpGetMimeName nGetMimeName, fpIsBomSuggested nIsBomSuggested, fpCreateBom nCreateBom, fpMinSeqSize nMinSeqSize, fpMaxSeqSize nMaxSeqSize, fpDecode nDecode, fpEncode nEncode);
+/// \brief Sets the character encoding's FPs.
+/// \note This function is used by acpl::Charsets mechanism when retrieving character encoding FPs and is thus not terribly useful to the outside world.
+/// \param nIsCompatible Pointer to an acpl::Charsets::Fpc::fpIsCompatible function.
+/// \param nGetMimeName Pointer to an acpl::Charsets::Fpc::fpGetMimeName function.
+/// \param nIsBomSuggested Pointer to an acpl::Charsets::Fpc::fpIsBomSuggested function.
+/// \param nCreateBom Pointer to an acpl::Charsets::Fpc::fpCreateBom function.
+/// \param nMinSeqSize Pointer to an acpl::Charsets::Fpc::fpMinSeqSize function.
+/// \param nMaxSeqSize Pointer to an acpl::Charsets::Fpc::fpMaxSeqSize function.
+/// \param nDecode Pointer to an acpl::Charsets::Fpc::fpDecode function.
+/// \param nEncode Pointer to an acpl::Charsets::Fpc::fpEncode function.
+
+
+/// \fn inline acpl::Charsets::Fpc::fpIsCompatible acpl::Charsets::Fpc::IsCompatible()
+/// \brief Returns a pointer an acpl::Charsets::Fpc::fpIsCompatible function.
+/// \return Pointer an acpl::Charsets::Fpc::fpIsCompatible function or NULL if not set.
+
+/// \fn inline acpl::Charsets::Fpc::fpGetMimeName acpl::Charsets::Fpc::GetMimeName()
+/// \brief Returns a pointer an acpl::Charsets::Fpc::fpGetMimeName function.
+/// \return Pointer an acpl::Charsets::Fpc::fpGetMimeName function or NULL if not set.
+
+/// \fn inline acpl::Charsets::Fpc::fpIsBomSuggested acpl::Charsets::Fpc::IsBomSuggested()
+/// \brief Returns a pointer an acpl::Charsets::Fpc::fpIsBomSuggested function.
+/// \return Pointer an acpl::Charsets::Fpc::fpIsBomSuggested function or NULL if not set.
+
+/// \fn inline acpl::Charsets::Fpc::fpCreateBom acpl::Charsets::Fpc::CreateBom()
+/// \brief Returns a pointer an acpl::Charsets::Fpc::fpCreateBom function.
+/// \return Pointer an acpl::Charsets::Fpc::fpCreateBom function or NULL if not set.
+
+/// \fn inline acpl::Charsets::Fpc::fpMinSeqSize acpl::Charsets::Fpc::MinSeqSize()
+/// \brief Returns a pointer an acpl::Charsets::Fpc::fpMinSeqSize function.
+/// \return Pointer an acpl::Charsets::Fpc::fpMinSeqSize function or NULL if not set.
+
+/// \fn inline acpl::Charsets::Fpc::fpMaxSeqSize acpl::Charsets::Fpc::MaxSeqSize()
+/// \brief Returns a pointer an acpl::Charsets::Fpc::fpMaxSeqSize function.
+/// \return Pointer an acpl::Charsets::Fpc::fpMaxSeqSize function or NULL if not set.
+
+/// \fn inline acpl::Charsets::Fpc::fpDecode acpl::Charsets::Fpc::Decode()
+/// \brief Returns a pointer an acpl::Charsets::Fpc::fpDecode function.
+/// \return Pointer an acpl::Charsets::Fpc::fpDecode function or NULL if not set.
+
+/// \fn inline acpl::Charsets::Fpc::fpEncode acpl::Charsets::Fpc::Encode()
+/// \brief Returns a pointer an acpl::Charsets::Fpc::fpEncode function.
+/// \return Pointer an acpl::Charsets::Fpc::fpEncode function or NULL if not set.
+
+/// \typedef bool (*acpl::Charsets::Fpc::fpIsCompatible)(const char *nMimeName, acpl::Charsets::ByteOrderMask nBom, acpl::Charsets::Fpc &nFpc);
+/// \brief Definition of a function that retrieves character encoding's FPs if mime name and/or byte order mask (BOM) are compatible.
+/// \note This function is used by acpl::Charsets mechanism to retrieve the most appropriate character encoding for provided mime name and/or byte order mask (BOM) and is thus not terribly useful to the outside world.
+/// \param nMimeName Character encoding's mime name or NULL.
+/// \param nBom Byte order mask (BOM).
+/// \param nFpc Reference to an acpl::Charsets::Fpc object to which character encoding's FPs will be set.
+/// \return <code>\b true</code> if character encoding is compatible with provided parameters, <code>\b false</code> otherwise.
+
+/// \typedef const char *(*acpl::Charsets::Fpc::fpGetMimeName)();
+/// \brief Definition of a function that returns character encoding's mime name.
+/// \return Character encoding's mime name.
+
+/// \typedef bool (*acpl::Charsets::Fpc::fpIsBomSuggested)();
+/// \brief Definition of a function that informs whether or not it is suggested to prepend a byte order mask (BOM) to an encoded string.
+/// \return <code>\b true</code> if prepending of a byte order mask (BOM) is suggested, <code>\b false</code> otherwise.
+
+/// \typedef acpl::SizeT (*acpl::Charsets::Fpc::fpCreateBom)(acpl::UInt8 *nBfr, acpl::SizeT nBfrSize);
+/// \brief Definition of a function that creates a byte order mask (BOM) for this character encoding.
+/// \param nBfr Pointer to a (byte) buffer to which byte order mask (BOM) will be written.
+/// \param nBfrSize Size (in bytes) of \a nBfr buffer. Size of 4 bytes should be enough for any byte order mask.
+/// \return Number of bytes written to \a nBfr or 0 (zero) if \a nBfrSize was too small.
+
+/// \typedef acpl::SizeT (*acpl::Charsets::Fpc::fpMinSeqSize)();
+/// \brief Definition of a function that returns minimum size of a sequence for one unicode code point.
+/// \return Minimum size of a sequence.
+
+/// \typedef acpl::SizeT (*acpl::Charsets::Fpc::fpMaxSeqSize)();
+/// \brief Definition of a function that returns maximum size of a sequence for one unicode code point.
+/// \return Maximum size of a sequence.
+
+/// \typedef acpl::SizeT (*acpl::Charsets::Fpc::fpDecode)(const acpl::UInt8 *nBfr, acpl::SizeT nBfrSize, acpl::Unichar &nUnicodeChar);
+/// \brief Definition of a function that converts (decodes) a character encoding sequence to a unicode code point.
+/// \param nBfr Pointer to a (byte) buffer from which to read the sequence.
+/// \param nBfrSize Size (in bytes) of \a nBfr buffer.
+/// \param nUnicodeChar Reference to an acpl::Unichar variable to which decoded unicode code point is set.
+/// \return Number of bytes read from \a nBfr or 0 (zero) if \a nBfrSize was too small or an invalid sequence occured.
+
+/// \typedef acpl::SizeT (*acpl::Charsets::Fpc::fpEncode)(acpl::Unichar nUnicodeChar, acpl::UInt8 *nBfr, acpl::SizeT nBfrSize);
+/// \brief Definition of a function that converts (encodes) a unicode code point to a character encoding sequence.
+/// \param nUnicodeChar Unicode code point to be encoded.
+/// \param nBfr Pointer to a (byte) buffer to which encoded sequence will be written.
+/// \param nBfrSize Size (in bytes) of \a nBfr buffer.
+/// \return Number of bytes written to \a nBfr or 0 (zero) if \a nBfrSize was too small.

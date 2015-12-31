@@ -1,0 +1,481 @@
+/// \file Address.h
+/// \brief Network addressing functionality.
+
+
+
+/// \class acpl::NetworkByteDataBase
+/// \brief Base class for network byte data elements.
+/// \note Data in this class should be used in network byte order fashion.
+/// \tparam tByteSize Byte size of the byte data element.
+
+
+/// \fn acpl::NetworkByteDataBase::~NetworkByteDataBase()
+/// \brief Destructor.
+
+
+/// \fn acpl::NetworkByteDataBase::Type &acpl::NetworkByteDataBase::Data()
+/// \brief Returns byte data.
+/// \return Byte data.
+
+/// \fn const acpl::NetworkByteDataBase::Type &acpl::NetworkByteDataBase::Data() const
+/// \brief Returns byte data.
+/// \return Byte data.
+
+
+/// \fn acpl::NetworkByteDataBase::NetworkByteDataBase()
+/// \brief Constructor.
+
+
+/// \fn void acpl::NetworkByteDataBase::IReset()
+/// \brief Resets byte data.
+
+/// \fn void acpl::NetworkByteDataBase::IGet(DataType &nData) const
+/// \brief Copies byte data into the provided variable reference.
+/// \param nData Reference to a variable to which byte data is copied.
+
+/// \fn void acpl::NetworkByteDataBase::ISet(const DataType &nData)
+/// \brief Sets/copies byte data.
+/// \param nData Byte data to copy.
+
+
+/// \typedef acpl::NetworkByteDataBase::DataType
+/// \brief Data type to hold network byte data element.
+
+
+
+/// \class acpl::NetworkAddr
+/// \brief Base class for network address types.
+
+
+/// \fn acpl::NetworkAddr::~NetworkAddr()
+/// \brief Destructor.
+
+
+/// \fn acpl::NetworkAddr::Type acpl::NetworkAddr::Identify(const acpl::String::Ref &nAddrStr, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Identifies whether the provided string is a string representation of any type of a network address.
+/// \param nAddrStr acpl::String::Ref reference containing a possible string representation of a network address.
+/// \param nMaxCount Maximum number of sequences (characters) to scan.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return An acpl::NetworkAddr::Type value.
+
+/// \fn acpl::NetworkAddr::Type acpl::NetworkAddr::Identify(const acpl::String &nAddrStr)
+/// \brief Identifies whether the provided string is a string representation of any type of a network address.
+/// \param nAddrStr acpl::String reference containing a possible string representation of a network address.
+/// \return An acpl::NetworkAddr::Type value.
+
+
+/// \fn bool acpl::NetworkAddr::Parse(const acpl::String::Ref &nAddrStr, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Parses the provided network address string into the internal structure.
+/// \param nAddrStr acpl::String::Ref reference containing a possible string representation of a network address.
+/// \param nMaxCount Maximum number of sequences (characters) to parse.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return True if parsing was successful, false otherwise.
+
+/// \fn bool acpl::NetworkAddr::Parse(const acpl::String &nAddrStr)
+/// \brief Parses the provided network address string into the internal structure.
+/// \param nAddrStr acpl::String reference containing a possible string representation of a network address.
+/// \return True if parsing was successful, false otherwise.
+
+/// \fn bool acpl::NetworkAddr::ToStr(acpl::String &nAddrStr) const
+/// \brief Converts the internal structure into a string representation of the address.
+/// \param nAddrStr acpl::String reference to which the string representation will be set.
+/// \return True if converting was successful, false otherwise.
+
+/// \fn void acpl::NetworkAddr::Reset()
+/// \brief Resets the internal structure to a default value.
+
+
+/// \fn bool acpl::NetworkAddr::NetworkAddr()
+/// \brief Constructor.
+
+/// \fn acpl::NetworkAddr::Type acpl::NetworkAddr::Identify(const char *nBegPtr, const char *nEndPtr)
+/// \brief Identifies whether the provided string is of any type of a network address.
+/// \param nBegPtr Pointer to a first character of a possible string representation of a network address.
+/// \param nEndPtr Pointer to the character (one after last) before which scanning has to stop. If NULL terminator was found before this pointer the scanning stops at the NULL terminator.
+/// \return Address type.
+
+
+/// \enum acpl::NetworkAddr::Type
+/// \brief Type of a network address.
+
+/// \var acpl::NetworkAddr::Type acpl::NetworkAddr::tNone
+/// \brief Not a valid network address type.
+
+/// \var acpl::NetworkAddr::Type acpl::NetworkAddr::tIpv4Addr
+/// \brief IPv4 address type.
+
+/// \var acpl::NetworkAddr::Type acpl::NetworkAddr::tIpv6Addr
+/// \brief IPv6 address type.
+
+/// \var acpl::NetworkAddr::Type acpl::NetworkAddr::tDomainName
+/// \brief Domain name address type.
+
+
+
+/// \class acpl::Ipv4Addr
+/// \brief IPv4 address class.
+
+
+/// \fn acpl::Ipv4Addr::Ipv4Addr()
+/// \brief Constructor.
+
+/// \fn acpl::Ipv4Addr::Ipv4Addr(acpl::UInt8 nByte1, acpl::UInt8 nByte2, acpl::UInt8 nByte3, acpl::UInt8 nByte4)
+/// \brief Setter-constructor.
+/// \param nByte1 First (most significant) byte.
+/// \param nByte2 Second byte.
+/// \param nByte3 Third byte.
+/// \param nByte4 Fourth (least significant) byte.
+
+/// \fn acpl::Ipv4Addr::~Ipv4Addr()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::Ipv4Addr::Validate(const acpl::String::Ref &nAddrStr, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Checks whether the provided string is a valid string representation of an IPv4 address.
+/// \param nAddrStr acpl::String::Ref reference containing a possible string representation of an IPv4 address.
+/// \param nMaxCount Maximum number of sequences (characters) to scan.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return True if string is a valid string representation of an IPv4 address, false otherwise.
+
+/// \fn bool acpl::Ipv4Addr::Validate(const acpl::String &nAddrStr)
+/// \brief Checks whether the provided string is a valid string representation of an IPv4 address.
+/// \param nAddrStr acpl::String reference containing a possible string representation of an IPv4 address.
+/// \return True if string is a valid string representation of an IPv4 address, false otherwise.
+
+
+/// \fn void acpl::Ipv4Addr::Get(DataType &nData) const
+/// \brief Copies IPv4 byte data into the provided variable reference.
+/// \param nData Reference to a variable to which byte data is copied.
+
+/// \fn acpl::Ipv4Addr &acpl::Ipv4Addr::Set(const DataType &nData)
+/// \brief Sets/copies IPv4 byte data.
+/// \param nData Byte data to copy.
+/// \return Reference to this object.
+
+
+/// \fn acpl::Ipv4Addr &acpl::Ipv4Addr::Set(acpl::UInt8 nByte1, acpl::UInt8 nByte2, acpl::UInt8 nByte3, acpl::UInt8 nByte4)
+/// \brief Sets IPv4 address.
+/// \param nByte1 First (most significant) byte.
+/// \param nByte2 Second byte.
+/// \param nByte3 Third byte.
+/// \param nByte4 Fourth (least significant) byte.
+/// \return Reference to this object.
+
+
+/// \fn bool acpl::Ipv4Addr::IsAny() const
+/// \brief Checks whether or not the set IPv4 address is any address.
+/// \return True if set IPv4 address is any address, false otherwise.
+
+/// \fn acpl::Ipv4Addr &acpl::Ipv4Addr::SetAny()
+/// \brief Sets the IPv4 address to any address.
+/// \return Reference to this object.
+
+/// \fn bool acpl::Ipv4Addr::IsLoopback() const
+/// \brief Checks whether or not the set IPv4 address is a loopback (localhost) address.
+/// \return True if set IPv4 address is a loopback (localhost) address, false otherwise.
+
+/// \fn acpl::Ipv4Addr &acpl::Ipv4Addr::SetLoopback()
+/// \brief Sets the IPv4 address to a loopback (localhost) address.
+/// \return Reference to this object.
+
+/// \fn bool acpl::Ipv4Addr::IsMulticast() const
+/// \brief Checks whether or not the set IPv4 address is a multicast address.
+/// \return True if set IPv4 address is a multicast address, false otherwise.
+
+
+/// \fn bool acpl::Ipv4Addr::Parse(const char *nBegPtr, const char *nEndPtr, acpl::Ipv4Addr *nObj)
+/// \brief Parses/validates the provided string as a possible string representation of an IPv4 address.
+/// \param nBegPtr Pointer to a first character of a possible string representation of an IPv4 address.
+/// \param nEndPtr Pointer to the character (one after last) before which parsing/scanning has to stop, or NULL. If NULL terminator was found before this pointer the parsing/scanning stops at the NULL terminator.
+/// \param nObj Pointer to an acpl::Ipv4Addr object or NULL for validation only.
+/// \return True if parsing/validation was successful, false otherwise.
+
+
+
+/// \class acpl::Ipv6Addr
+/// \brief IPv6 address class.
+
+
+/// \fn acpl::Ipv6Addr::Ipv6Addr()
+/// \brief Constructor.
+
+/// \fn acpl::Ipv6Addr::Ipv6Addr(acpl::UInt16 nGrp1, acpl::UInt16 nGrp2, acpl::UInt16 nGrp3, acpl::UInt16 nGrp4, acpl::UInt16 nGrp5, acpl::UInt16 nGrp6, acpl::UInt16 nGrp7, acpl::UInt16 nGrp8)
+/// \brief Setter-constructor.
+/// \param nGrp1 First (most significant) byte group/pair.
+/// \param nGrp2 Second byte group/pair.
+/// \param nGrp3 Third byte group/pair.
+/// \param nGrp4 Fourth byte group/pair.
+/// \param nGrp5 Fifth byte group/pair.
+/// \param nGrp6 Sixth byte group/pair.
+/// \param nGrp7 Seventh byte group/pair.
+/// \param nGrp8 Eighth (least significant) byte group/pair.
+
+/// \fn acpl::Ipv6Addr::Ipv6Addr(acpl::UInt16 nGrp1, acpl::UInt16 nGrp2, acpl::UInt16 nGrp3, acpl::UInt16 nGrp4, acpl::UInt16 nGrp5, acpl::UInt16 nGrp6, acpl::UInt8 nGrp7Byte1, acpl::UInt8 nGrp7Byte2, acpl::UInt8 nGrp8Byte1, acpl::UInt8 nGrp8Byte2)
+/// \brief Setter-constructor.
+/// \param nGrp1 First (most significant) byte group/pair.
+/// \param nGrp2 Second byte group/pair.
+/// \param nGrp3 Third byte group/pair.
+/// \param nGrp4 Fourth byte group/pair.
+/// \param nGrp5 Fifth byte group/pair.
+/// \param nGrp6 Sixth byte group/pair.
+/// \param nGrp7Byte1 Upper (most significant) byte of the seventh byte group/pair.
+/// \param nGrp7Byte2 Lower (least significant) byte of the seventh byte group/pair.
+/// \param nGrp8Byte1 Upper (most significant) byte of the eighth (least significant) byte group/pair.
+/// \param nGrp8Byte2 Lower (least significant) byte of the eighth (least significant) byte group/pair.
+
+/// \fn acpl::Ipv6Addr::Ipv6Addr(acpl::UInt8 nGrp7Byte1, acpl::UInt8 nGrp7Byte2, acpl::UInt8 nGrp8Byte1, acpl::UInt8 nGrp8Byte2)
+/// \brief Setter-constructor.
+/// \param nGrp7Byte1 Upper (most significant) byte of the seventh byte group/pair.
+/// \param nGrp7Byte2 Lower (least significant) byte of the seventh byte group/pair.
+/// \param nGrp8Byte1 Upper (most significant) byte of the eighth (least significant) byte group/pair.
+/// \param nGrp8Byte2 Lower (least significant) byte of the eighth (least significant) byte group/pair.
+
+/// \fn acpl::Ipv6Addr::~Ipv6Addr()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::Ipv6Addr::Validate(const acpl::String::Ref &nAddrStr, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Checks whether the provided string is a valid string representation of an IPv6 address.
+/// \param nAddrStr acpl::String::Ref reference containing a possible string representation of an IPv6 address.
+/// \param nMaxCount Maximum number of sequences (characters) to scan.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return True if string is a valid string representation of an IPv6 address, false otherwise.
+
+/// \fn bool acpl::Ipv6Addr::Validate(const acpl::String &nAddrStr)
+/// \brief Checks whether the provided string is a valid string representation of an IPv6 address.
+/// \param nAddrStr acpl::String reference containing a possible string representation of an IPv6 address.
+/// \return True if string is a valid string representation of an IPv6 address, false otherwise.
+
+
+/// \fn bool acpl::Ipv6Addr::Parse(const acpl::String::Ref &nAddrStr, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Parse IPv6 string representation.
+/// \param nAddrStr acpl::String::Ref reference to parse.
+/// \param nMaxCount Maximum number of sequences (characters) to parse.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return True if parsing was successful, false otherwise.
+
+/// \fn bool acpl::Ipv6Addr::Parse(const acpl::String &nAddrStr)
+/// \brief Parse IPv6 string representation.
+/// \param nAddrStr String to parse.
+/// \return True if parsing was successful, false otherwise.
+
+/// \fn bool acpl::Ipv6Addr::ToStr(acpl::String &nAddrStr) const
+/// \brief Convert IPv6 address into a string representation.
+/// \param nAddrStr String object to which converted string will be set.
+/// \return Always true.
+
+/// \fn void acpl::Ipv6Addr::Reset()
+/// \brief Resets IPv6 address.
+
+
+/// \fn void acpl::Ipv6Addr::Get(DataType &nData) const
+/// \brief Copies IPv6 byte data into the provided variable reference.
+/// \param nData Reference to a variable to which byte data is copied.
+
+/// \fn acpl::Ipv6Addr &acpl::Ipv6Addr::Set(const DataType &nData)
+/// \brief Sets/copies IPv6 byte data.
+/// \param nData Byte data to copy.
+/// \return Reference to this object.
+
+
+/// \fn acpl::Ipv6Addr &acpl::Ipv6Addr::Set(acpl::UInt16 nGrp1, acpl::UInt16 nGrp2, acpl::UInt16 nGrp3, acpl::UInt16 nGrp4, acpl::UInt16 nGrp5, acpl::UInt16 nGrp6, acpl::UInt16 nGrp7, acpl::UInt16 nGrp8)
+/// \brief Sets IPv6 address.
+/// \param nGrp1 First (most significant) byte group/pair.
+/// \param nGrp2 Second byte group/pair.
+/// \param nGrp3 Third byte group/pair.
+/// \param nGrp4 Fourth byte group/pair.
+/// \param nGrp5 Fifth byte group/pair.
+/// \param nGrp6 Sixth byte group/pair.
+/// \param nGrp7 Seventh byte group/pair.
+/// \param nGrp8 Eighth (least significant) byte group/pair.
+/// \return Reference to this object.
+
+/// \fn acpl::Ipv6Addr &acpl::Ipv6Addr::Set(acpl::UInt16 nGrp1, acpl::UInt16 nGrp2, acpl::UInt16 nGrp3, acpl::UInt16 nGrp4, acpl::UInt16 nGrp5, acpl::UInt16 nGrp6, acpl::UInt8 nGrp7Byte1, acpl::UInt8 nGrp7Byte2, acpl::UInt8 nGrp8Byte1, acpl::UInt8 nGrp8Byte2)
+/// \brief Sets IPv6 address.
+/// \param nGrp1 First (most significant) byte group/pair.
+/// \param nGrp2 Second byte group/pair.
+/// \param nGrp3 Third byte group/pair.
+/// \param nGrp4 Fourth byte group/pair.
+/// \param nGrp5 Fifth byte group/pair.
+/// \param nGrp6 Sixth byte group/pair.
+/// \param nGrp7Byte1 Upper (most significant) byte of the seventh byte group/pair.
+/// \param nGrp7Byte2 Lower (least significant) byte of the seventh byte group/pair.
+/// \param nGrp8Byte1 Upper (most significant) byte of the eighth (least significant) byte group/pair.
+/// \param nGrp8Byte2 Lower (least significant) byte of the eighth (least significant) byte group/pair.
+/// \return Reference to this object.
+
+/// \fn acpl::Ipv6Addr &acpl::Ipv6Addr::Set(acpl::UInt8 nGrp7Byte1, acpl::UInt8 nGrp7Byte2, acpl::UInt8 nGrp8Byte1, acpl::UInt8 nGrp8Byte2)
+/// \brief Sets IPv6 address.
+/// \param nGrp7Byte1 Upper (most significant) byte of the seventh byte group/pair.
+/// \param nGrp7Byte2 Lower (least significant) byte of the seventh byte group/pair.
+/// \param nGrp8Byte1 Upper (most significant) byte of the eighth (least significant) byte group/pair.
+/// \param nGrp8Byte2 Lower (least significant) byte of the eighth (least significant) byte group/pair.
+/// \return Reference to this object.
+
+
+/// \fn bool acpl::Ipv6Addr::IsAny() const
+/// \brief Checks whether or not the set IPv6 address is any address.
+/// \return True if set IPv6 address is any address, false otherwise.
+
+/// \fn acpl::Ipv6Addr &acpl::Ipv6Addr::SetAny()
+/// \brief Sets the IPv6 address to any address.
+/// \return Reference to this object.
+
+/// \fn bool acpl::Ipv6Addr::IsLoopback() const
+/// \brief Checks whether or not the set IPv6 address is a loopback (localhost) address.
+/// \return True if set IPv6 address is a loopback (localhost) address, false otherwise.
+
+/// \fn acpl::Ipv6Addr &acpl::Ipv6Addr::SetLoopback()
+/// \brief Sets the IPv6 address to a loopback (localhost) address.
+/// \return Reference to this object.
+
+/// \fn bool acpl::Ipv6Addr::IsMulticast() const
+/// \brief Checks whether or not the set IPv6 address is a multicast address.
+/// \return True if set IPv6 address is a multicast address, false otherwise.
+
+
+/// \fn void acpl::Ipv6Addr::Set(acpl::UInt8 nGrpIdx, acpl::UInt16 nGrpVal)
+/// \brief Sets a provided byte group/pair.
+/// \param nGrpIdx Byte group/pair index.
+/// \param nGrpVal Value to be set to the byte group/pair.
+
+/// \fn void acpl::Ipv6Addr::Set(acpl::UInt16 nGrp1, acpl::UInt16 nGrp2, acpl::UInt16 nGrp3, acpl::UInt16 nGrp4, acpl::UInt16 nGrp5, acpl::UInt16 nGrp6)
+/// \brief Sets top six byte groups/pairs.
+/// \param nGrp1 First (most significant) byte group/pair.
+/// \param nGrp2 Second byte group/pair.
+/// \param nGrp3 Third byte group/pair.
+/// \param nGrp4 Fourth byte group/pair.
+/// \param nGrp5 Fifth byte group/pair.
+/// \param nGrp6 Sixth byte group/pair.
+
+/// \fn bool acpl::Ipv6Addr::Parse(const char *nBegPtr, const char *nEndPtr, acpl::Ipv6Addr *nObj)
+/// \brief Parses/validates the provided string as a possible string representation of an IPv6 address.
+/// \param nBegPtr Pointer to a first character of a possible string representation of an IPv6 address.
+/// \param nEndPtr Pointer to the character (one after last) before which parsing/scanning has to stop, or NULL. If NULL terminator was found before this pointer the parsing/scanning stops at the NULL terminator.
+/// \param nObj Pointer to an acpl::Ipv6Addr object or NULL for validation only.
+/// \return True if parsing/validation was successful, false otherwise.
+
+
+
+/// \class acpl::DomainName
+/// \brief Domain name class.
+
+
+/// \fn acpl::DomainName::DomainName()
+/// \brief Constructor.
+
+/// \fn acpl::DomainName::~DomainName()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::DomainName::Validate(const acpl::String::Ref &nAddrStr, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Checks whether the provided string is a valid domain name.
+/// \param nAddrStr acpl::String::Ref reference containing a possible domain name.
+/// \param nMaxCount Maximum number of sequences (characters) to scan.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return True if string is a valid domain name, false otherwise.
+
+/// \fn bool acpl::DomainName::Validate(const acpl::String &nAddrStr)
+/// \brief Checks whether the provided string is a valid domain name.
+/// \param nAddrStr acpl::String reference containing a possible domain name.
+/// \return True if string is a valid domain name, false otherwise.
+
+
+/// \fn const acpl::String &acpl::DomainName::GetStr() const
+/// \brief Returns domain name string.
+/// \return Domain name string.
+
+/// \fn bool acpl::DomainName::ExplodeBySubdomains(acpl::DomainName::SubdomainList &nSubdomains)
+/// \brief Separates the domain name into a list of subdomains.
+/// \note Subdomains are sorted top-to-bottom - top-level domain (TLD) first.
+/// \param nSubdomains Array to which subdomains will be added.
+/// \return True if set domain name is not empty/reset, false otherwise.
+
+
+/// \fn acpl::DomainName::ResolveStatus acpl::DomainName::Resolve(acpl::DomainName::Ipv4AddrList &nAddr4List) const
+/// \brief Resolves the set domain name for IPv4 addresses only.
+/// \param nAddr4List Array of addresses to which resolved IPv4 addresses will be added.
+/// \return An acpl::DomainName::ResolveStatus value.
+
+/// \fn acpl::DomainName::ResolveStatus acpl::DomainName::Resolve(acpl::DomainName::Ipv6AddrList &nAddr6List) const
+/// \brief Resolves the set domain name for IPv6 addresses only.
+/// \param nAddr6List Array of addresses to which resolved IPv6 addresses will be added.
+/// \return An acpl::DomainName::ResolveStatus value.
+
+/// \fn acpl::DomainName::ResolveStatus acpl::DomainName::Resolve(acpl::DomainName::Ipv4AddrList &nAddr4List, acpl::DomainName::Ipv6AddrList &nAddr6List) const
+/// \brief Resolves the set domain name for both IPv4 and IPv6 addresses.
+/// \param nAddr4List Array of addresses to which resolved IPv4 addresses will be added.
+/// \param nAddr6List Array of addresses to which resolved IPv6 addresses will be added.
+/// \return An acpl::DomainName::ResolveStatus value.
+
+
+/// \fn bool acpl::DomainName::Parse(const char *nBegPtr, const char *nEndPtr, acpl::DomainName *nObj)
+/// \brief Parses/validates the provided string as a possible domain name.
+/// \param nBegPtr Pointer to a first character of a possible domain name.
+/// \param nEndPtr Pointer to the character (one after last) before which parsing/scanning has to stop, or NULL. If NULL terminator was found before this pointer the parsing/scanning stops at the NULL terminator.
+/// \param nObj Pointer to an acpl::DomainName object or NULL for validation only.
+/// \return True if parsing/validation was successful, false otherwise.
+
+
+/// \typedef acpl::DomainName::SubdomainList;
+/// \brief List of subdomains.
+
+/// \typedef acpl::DomainName::Ipv4AddrList;
+/// \brief List of IPv4 addresses.
+
+/// \typedef acpl::DomainName::Ipv6AddrList;
+/// \brief List of IPv6 addresses.
+
+/// \enum acpl::DomainName::ResolveStatus
+/// \brief Return values for resolve methods.
+
+/// \var acpl::DomainName::ResolveStatus acpl::DomainName::rsSuccess
+/// \brief Resolving was successful.
+
+/// \var acpl::DomainName::ResolveStatus acpl::DomainName::rsSystemError
+/// \brief System error has occured while resolving.
+
+/// \var acpl::DomainName::ResolveStatus acpl::DomainName::rsNotFound
+/// \brief Domain name does not exist or it exists but there are no addresses defined for it.
+
+/// \var acpl::DomainName::ResolveStatus acpl::DomainName::rsDnsTempFail
+/// \brief Domain name server (DNS) is experiencing temporary failure. Try again later.
+
+/// \var acpl::DomainName::ResolveStatus acpl::DomainName::rsDnsPermFail
+/// \brief Domain name server (DNS) is experiencing permanent failure.
+
+
+
+/// \class acpl::NetworkPort
+/// \brief Network port class.
+
+
+/// \fn acpl::NetworkPort::NetworkPort()
+/// \brief Constructor.
+
+/// \fn acpl::NetworkPort::NetworkPort(acpl::UInt16 nPort)
+/// \brief Setter-constructor.
+/// \param nPort Network port number.
+
+/// \fn acpl::NetworkPort::~NetworkPort()
+/// \brief Destructor.
+
+
+/// \fn void acpl::NetworkPort::Get(DataType &nData) const
+/// \brief Copies network port byte data into a provided variable.
+/// \param nData Reference to a variable to which network port byte data is copied.
+
+/// \fn acpl::NetworkPort &acpl::NetworkPort::Set(const DataType &nData)
+/// \brief Sets/copies network port byte data.
+/// \param nData Byte data to copy.
+/// \return Reference to this object.
+
+
+/// \fn acpl::UInt16 acpl::NetworkPort::Get() const
+/// \brief Returns the set network port number.
+/// \return Set network port number.
+
+/// \fn acpl::NetworkPort &acpl::NetworkPort::Set(acpl::UInt16 nPort)
+/// \brief Sets network port number.
+/// \param nPort Network port number.
+/// \return Reference to this object.

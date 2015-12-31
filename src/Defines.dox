@@ -1,0 +1,90 @@
+/// \file Defines.h
+/// \brief General ACPL defines
+/// 
+/// 
+
+
+
+/// \def acplCompiler
+/// \brief A define to which a specific compiler define (acplCompiler*) will be set.
+
+/// \def acplCompilerVer
+/// \brief Specifies compiler full version number (major, minor, and build/patch level).
+/// \note This define is an all-in-one version number and depends heavily on compiler type.
+
+/// \def acplCompilerUnknown
+/// \brief Specifies an unknown compiler.
+
+/// \def acplCompilerGcc
+/// \brief Specifies a GNU Compiler Collection (GCC) compiler.
+
+/// \def acplCompilerMsvc
+/// \brief Specifies a Microsoft Visual C/C++ compiler.
+
+
+/// \def acplCRuntime
+/// \brief A define to which a specific C standard library (acplCRuntime*) will be set.
+
+/// \def acplCRuntimeVer
+/// \brief Specifies C standard library version.
+
+/// \def acplCRuntimeUnknown
+/// \brief Specifies unknown C standard library.
+
+/// \def acplCRuntimeGlibc
+/// \brief Specifies GNU C Library.
+
+/// \def acplCRuntimeMscrt
+/// \brief Specifies Microsoft C Run-time Library.
+
+
+/// \def acplArch
+/// \brief A define to which a specific target architecture (acplArch*) will be set.
+
+/// \def acplArchUnknown
+/// \brief Specifies an unknown architecture.
+
+/// \def acplArchX8632
+/// \brief Specifies an x86-32/IA32 architecture.
+/// \see acplArchIA32
+
+/// \def acplArchX8664
+/// \brief Specifies an x86-64/AMD64 architecture.
+/// \see acplArchAMD64
+
+/// \def acplArchIA32
+/// \brief Specifies an x86-32/IA-32 architecture.
+/// \see acplArchX8632
+
+/// \def acplArchIA64
+/// \brief Specifies an Itanium/IA-64 architecture.
+
+/// \def acplArchAMD64
+/// \brief Specifies an x86-64/AMD64 architecture.
+/// \see acplArchX8664
+
+/// \def acplArchARM
+/// \brief Specifies an ARM architecture.
+
+/// \def acplArchHPPA
+/// \brief Specifies an HP/PA RISC architecture.
+
+
+/// \def acplPlatform
+/// \brief A define to which a specific platform define (acplPlatform*) will be set.
+
+/// \def acplPlatformUnknown
+/// \brief Specifies an unknown platform.
+
+/// \def acplPlatformLinux
+/// \brief Specifies a GNU/Linux platform.
+
+/// \def acplPlatformMsWin
+/// \brief Specifies a Microsoft Windows platform.
+
+
+/// \def acplPredefVersion
+/// \brief Assembles an all-in-one version number from major, minor, and build/patch level components.
+/// \param N_MAJOR Major version component.
+/// \param N_MINOR Minor version component.
+/// \param N_FRACTION Build or patch level version component.

@@ -1,0 +1,202 @@
+/// \file File.h
+/// \brief File system file functionality.
+/// 
+/// 
+
+
+
+/// \class acpl::File
+/// \brief File manipulation class.
+
+
+/// \fn acpl::File::File()
+/// \brief Empty constructor.
+
+/// \fn acpl::File::File(const acpl::String::Ref &nPath)
+/// \brief Setter constructor.
+/// \param nPath acpl::String::Ref path string.
+
+/// \fn acpl::File::~File()
+/// \brief Destructor.
+
+
+/// \fn acpl::File::LastError acpl::File::GetLastError() const
+/// \brief Returns the the error value set by the last failed file call.
+/// \return Error value set by the last failed file call.
+
+/// \fn void acpl::File::ResetLastError()
+/// \brief Resets the error value set by the last failed file call.
+
+
+/// \fn const acpl::Path &acpl::File::GetPath() const
+/// \brief Get path string.
+/// \return Path string.
+
+/// \fn acpl::Path &acpl::File::GetPath()
+/// \brief Get path string.
+/// \return Path string.
+
+
+/// \fn bool acpl::File::IsOpen() const
+/// \brief Returns whether or not file is open.
+/// \return <code>\b true</code> if file is open, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::File::Open(acpl::File::AccessMode nMode, bool nTruncate = false, bool nCreate = false, const acpl::Path::Permission &nPerm = 0644)
+/// \brief Open a file.
+/// \param nMode Access mode to open the file in (read, write, or both).
+/// \param nTruncate Whether or not to truncate the file on successful opening. <b>Note that for truncation, access mode needs to include write permission.</b>
+/// \param nCreate Whether or not to create file if it does not exist already.
+/// \param nPerm In case of file creation, permissions to create the file with.
+/// \note Permissions setting depends heavily on global <code>\b umask</code>. See acpl::Path::SetUmask
+/// \warning Not all file systems support UNIX style permissions.
+/// \note If called with \a nTruncate set to <code>\b true</code> but without write access, this call will fail before any open attempt is made.
+/// \return <code>\b true</code> if opening was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::File::GetLastError for error code
+/// \see acpl::Path::SetUmask
+
+/// \fn void acpl::File::Close()
+/// \brief Close a file.
+
+/// \fn bool acpl::File::Unlink()
+/// \brief Unlink (remove) a file from the file system.
+/// \return <code>\b true</code> if unlinking was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::File::GetLastError for error code
+
+
+/// \fn bool acpl::File::GetOffset(acpl::OffT &nOffset) const
+/// \brief Get current file read/write offset.
+/// \param nOffset Reference to a variable to which current offset will be written. <b>Note that if the call fails, this value is undefined.</b>
+/// \return <code>\b true</code> if offset value retrieving was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::File::GetLastError for error code
+
+/// \fn bool acpl::File::SetOffset(acpl::OffT nOffset, acpl::File::Whence nWhence, acpl::OffT &nNewOffset)
+/// \brief Set file read/write offset.
+/// \param nOffset New offset value. Note that this can be a negative value to move the offset backwards.
+/// \param nWhence Position relative to which new offset value should start from.
+/// \param nNewOffset Reference to a variable to which current offset will be written. <b>Note that if the call fails, this value is undefined.</b>
+/// \note New offset cannot be set to a position before the beginning of the file (negative offset).
+/// \note New offset can be set beyond the end of the file, which will not increase its size. On a subsequent write, the gap between the end of the file and the current offset will be set to zero and writing will continue at the offset.
+/// \return <code>\b true</code> if offset value setting was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::File::GetLastError for error code
+
+/// \fn bool acpl::File::SetOffset(acpl::OffT nOffset, acpl::File::Whence nWhence = acpl::File::whStart)
+/// \brief Set file read/write offset.
+/// \param nOffset New offset value. Note that this can be a negative value to move the offset backwards.
+/// \param nWhence Position relative to which new offset value should start from.
+/// \note See additional notes at acpl::File::SetOffset.
+/// \return <code>\b true</code> if offset value setting was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::File::GetLastError for error code
+/// \see acpl::File::SetOffset
+
+/// \fn bool acpl::File::Write(const void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesWritten)
+/// \brief Writes data to an open file at the current offset.
+/// \param nData Pointer to a buffer to be written.
+/// \param nDataSize Number of bytes to be written.
+/// \param nBytesWritten Reference to a variable to which number of bytes actually written will be set.
+/// \return <code>\b true</code> if writing was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::File::GetLastError for error code
+
+/// \fn bool acpl::File::Read(void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesRead)
+/// \brief Read data from an open file at the current offset.
+/// \param nData Pointer to a buffer for data to be stored in.
+/// \param nDataSize Maximum byte size of the \a nData buffer.
+/// \param nBytesRead Reference to a variable to which number of bytes actually read will be set.
+/// \return <code>\b true</code> if reading was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::File::GetLastError for error code
+
+
+/// \union acpl::File::Handle
+/// \brief (INTERNAL) Platform-specific handle type.
+
+/// \var acpl::File::Handle::uInt
+/// \brief Used by and corresponds to glibc's <code>{<b>int</b>}</code> file descriptor type.
+
+/// \var acpl::File::Handle::uVptr
+/// \brief Used by and corresponds to MSCRT's <code>{<b>HANDLE</b>}</code> handle type.
+
+
+/// \enum acpl::File::LastError
+/// \brief Error values produced by file calls.
+
+/// \var acpl::File::leNone
+/// \brief Initial (reset) value.
+
+/// \var acpl::File::leSysErr
+/// \brief System error.
+
+/// \var acpl::File::leNoSupport
+/// \brief Operation not supported.
+
+/// \var acpl::File::leInvalAm
+/// \brief Invalid access mode.
+
+/// \var acpl::File::leInvalWh
+/// \brief Invalid whence value.
+
+/// \var acpl::File::lePathEmpty
+/// \brief Path string is empty.
+
+/// \var acpl::File::lePathTooLong
+/// \brief Path string is too long.
+
+/// \var acpl::File::leExists
+/// \brief Element to which path string points to already exists.
+
+/// \var acpl::File::leNonExist
+/// \brief Element to which path string points to does not exist.
+
+/// \var acpl::File::leIsDir
+/// \brief Element to which path string points to is a directory.
+
+/// \var acpl::File::leNotDir
+/// \brief One or more elements/components in path string is not a directory.
+
+/// \var acpl::File::leSymlinkLoop
+/// \brief Too many symbolic links encountered in the path string.
+
+/// \var acpl::File::leNoPerm
+/// \brief Operation is not allowed under current permissions.
+
+/// \var acpl::File::leInUse
+/// \brief File is currently in use.
+
+/// \var acpl::File::leTooLarge
+/// \brief File is too large to be opened.
+/// \note This refers to a limit of 32-bit signed type for offset which should \b never happen in ACPL.
+
+/// \var acpl::File::leWouldBlk
+/// \brief Operation would block if file was in a blocking mode.
+/// \note This error should \b never happen as ACPL does not support asynchronous (non-blocking) file access at this time.
+
+/// \var acpl::File::leIsOpen
+/// \brief File is (already) opened.
+
+/// \var acpl::File::leNotOpen
+/// \brief File is not opened.
+
+/// \var acpl::File::leInvalOff
+/// \brief New file read/write offset is invalid.
+/// \note The new offset is either set beyond seekable position or before the start of the file.
+
+/// \var acpl::File::leNoWrite
+/// \brief File is not opened for or is unsuitable for write operations.
+
+/// \var acpl::File::leNoRead
+/// \brief File is not opened for or is unsuitable for read operations.
+
+
+/// \enum acpl::File::AccessMode
+/// \brief File access mode.
+
+/// \var acpl::File::amNone
+/// \brief Initial (reset) value.
+/// \note This value should not be used with acpl::File::Open as it makes exactly zero sense and the call will fail immediately with acpl::File::leInvalAm error.
+
+/// \var acpl::File::amReadOnly
+/// \brief Open file in read-only mode.
+
+/// \var acpl::File::amWriteOnly
+/// \brief Open file in write-only mode.
+
+/// \var acpl::File::amReadWrite
+/// \brief Open file in read+write mode.

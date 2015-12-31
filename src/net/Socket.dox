@@ -1,0 +1,444 @@
+/// \file Socket.h
+/// \brief Network socket/connection functionality.
+
+
+
+/// \class acpl::Socket
+/// \brief Base socket class.
+
+
+/// \fn acpl::Socket::~Socket()
+/// \brief Destructor.
+
+
+/// \fn acpl::Socket::LastError acpl::Socket::GetLastError() const
+/// \brief Returns the the error value set by the last failed socket call.
+/// \return Error value set by the last failed socket call.
+
+/// \fn void acpl::Socket::ResetLastError()
+/// \brief Resets the error value set by the last failed socket call.
+
+
+/// \fn acpl::Socket::Address &acpl::Socket::GetAddress()
+/// \brief Return socket's setup address.
+/// \return Socket's setup address.
+
+/// \fn const acpl::Socket::Address &acpl::Socket::GetAddress() const
+/// \brief Return socket's setup address.
+/// \return Socket's setup address.
+
+/// \fn bool acpl::Socket::Setup(const acpl::Ipv4Addr &nAddr, const acpl::NetworkPort &nPort)
+/// \brief Setup socket as IPv4 socket.
+/// \param nAddr IPv4 address.
+/// \param nPort Port number.
+/// \note The address and port can be of a local address and port to be bound and listened on or an address and port of a remote socket to connect to.
+/// \return <code>\b true</code> if setup was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+
+/// \fn bool acpl::Socket::Setup(const acpl::Ipv6Addr &nAddr, const acpl::NetworkPort &nPort)
+/// \brief Setup socket as IPv6 socket.
+/// \param nAddr IPv6 address.
+/// \param nPort Port number.
+/// \note The address and port can be of a local address and port to be bound and listened on or an address and port of a remote socket to connect to.
+/// \return <code>\b true</code> if setup was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+
+/// \fn bool acpl::Socket::IsSetup() const
+/// \brief Returns whether or not this socket is setup.
+/// \return <code>\b true</code> if socket is setup, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Socket::Reset()
+/// \brief Resets socket.
+/// \note Socket cannot be reset if it is currently open, and, thus, this method will return <code>\b false</code>.
+/// \return <code>\b true</code> if reset was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+
+
+/// \fn bool acpl::Socket::IsOpen() const
+/// \brief Returns whether or not socket is open.
+/// \return <code>\b true</code> if socket is open, <code>\b false</code> otherwise.
+
+/// \fn void acpl::Socket::Close()
+/// \brief Close socket.
+
+
+/// \fn bool acpl::Socket::SetBlocking(bool nBlocking)
+/// \brief Set socket to a blocking or non-blocking state.
+/// \param nBlocking Flag to notify whether socket should be blocking (<code>\b true</code>) or non-blocking (<code>\b false</code>).
+/// \note This can be set only when socket is open.
+/// \note Socket is opened in a blocking state by default.
+/// \return <code>\b true</code> if setting was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+
+
+/// \fn acpl::Socket::Socket()
+/// \brief Constructor.
+/// \note This is a base class for specific types of socket extensions, and, this, this constructor is protected.
+
+
+/// \fn const acpl::Socket::Handle &acpl::Socket::GetHandle() const
+/// \brief Returns internal socket handle.
+/// \warning This is a platform-specific socket handle. Fiddling with this can have grave consequences on inner workings of this class. Proceed with great caution.
+/// \note The point of exposing the value of an internal socket handle is to enable performing calls to (platform-specific) socket functions that are not covered by ACPL functionality.
+/// \return Socket's handle.
+/// \see acpl::Socket::Handle
+
+
+/// \fn bool acpl::Socket::IOpen(const acpl::SocketTcp &nSocket)
+/// \brief Open the socket as a TCP/IP socket.
+/// \param nSocket Reference to the <code>this</code> object of acpl::SocketTcp class type.
+/// \warning This is an internal method intended to be used by acpl::SocketTcp class only.
+/// \return <code>\b true</code> if opening was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+/// \see acpl::SocketTcp
+
+/// \fn bool acpl::Socket::IOpen(const acpl::SocketUdp &nSocket)
+/// \brief Open the socket as a UDP/IP socket.
+/// \param nSocket Reference to the <code>this</code> object of acpl::SocketUdp class type.
+/// \warning This is an internal method intended to be used by acpl::SocketUdp class only.
+/// \return <code>\b true</code> if opening was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+/// \see acpl::SocketUdp
+
+/// \fn bool acpl::Socket::IOpen(const acpl::SocketRaw &nSocket, acpl::UInt8 nProtoId)
+/// \brief Open the socket as a raw socket.
+/// \param nSocket Reference to the <code>this</code> object of acpl::SocketRaw class type.
+/// \param nProtoId (Next level) Protocol identifier number.
+/// \warning This is an internal method intended to be used by acpl::SocketRaw class only.
+/// \note Opening a raw socket might require the process to have special privileges to do so. Consult system documentation.
+/// \return <code>\b true</code> if opening was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+/// \see acpl::SocketRaw
+
+/// \fn bool acpl::Socket::IBind()
+/// \brief Bind the (setup) address to the (opened) socket.
+/// \return <code>\b true</code> if binding was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+
+/// \fn bool acpl::Socket::IListen(acpl::UInt32 nMaxQueueLen)
+/// \brief Start listening on the opened and bound socket.
+/// \param nMaxQueueLen Maximum number of connections waiting to be accepted.
+/// \note If queue limit is reached, every new connection will be dropped by the system.
+/// \return <code>\b true</code> if listen was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+/// \see acpl::Socket::IBind
+/// \see acpl::Socket::IAccept
+
+/// \fn bool acpl::Socket::IAccept(acpl::Socket &nSocket) const
+/// \brief Accept a waiting connection on listening socket.
+/// \param nSocket Reference to a socket object to which a client socket will be set.
+/// \return <code>\b true</code> if accept was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+/// \see acpl::Socket::IListen
+
+/// \fn bool acpl::Socket::IConnect()
+/// \brief Establish a connection with a remote socket.
+/// \return <code>\b true</code> if connection was established, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+
+
+/// \fn bool acpl::Socket::ISetHdrIncl(bool nHdrIncl)
+/// \brief Set whether or not the system should generate the IP header.
+/// \param nHdrIncl Flag to notify whether or not the system should generate the IP header.
+/// \warning Successful call to this method can only be possible on raw sockets and with sufficient privileges.
+/// \note The system generates IP headers automatically by default. Only if you want to explicitly generate your own IP headers this method should be called.
+/// \return <code>\b true</code> if setting was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+/// \see acpl::SocketRaw
+
+
+/// \fn bool acpl::Socket::IWrite(const void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesWritten) const
+/// \brief Writes data to an open socket.
+/// \param nData Pointer to a buffer to be written.
+/// \param nDataSize Number of bytes to be written.
+/// \param nBytesWritten Reference to a variable to which number of bytes actually written will be set.
+/// \return <code>\b true</code> if writing was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+
+/// \fn bool acpl::Socket::IRead(void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesRead) const
+/// \brief Read data from an open socket.
+/// \param nData Pointer to a buffer for data to be stored in.
+/// \param nDataSize Maximum byte size of the \a nData buffer.
+/// \param nBytesRead Reference to a variable to which number of bytes actually read will be set.
+/// \return <code>\b true</code> if reading was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+
+/// \fn bool acpl::Socket::IRead(void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesRead, acpl::Socket::Address &nAddress) const
+/// \brief Read data from an open socket and get remote address information.
+/// \param nData Pointer to a buffer for data to be stored in.
+/// \param nDataSize Maximum byte size of the \a nData buffer.
+/// \param nBytesRead Reference to a variable to which number of bytes actually read will be set.
+/// \param nAddress Reference to an acpl::Socket::Address object to which remote address information is set.
+/// \return <code>\b true</code> if reading was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Socket::GetLastError for error code
+
+
+/// \union acpl::Socket::Handle
+/// \brief (INTERNAL) Platform-specific handle type.
+
+/// \var acpl::Socket::Handle::uInt
+/// \brief Used by and corresponds to glibc's <code>{<b>int</b>}</code> file descriptor type.
+
+/// \var acpl::Socket::Handle::uPsui
+/// \brief Used by and corresponds to MSCRT's "pointer-sized unsigned integer" <code>{<b>SOCKET</b>}</code> handle type.
+
+
+/// \enum acpl::Socket::LastError
+/// \brief Error values produced by socket calls.
+
+/// \var acpl::Socket::leNone
+/// \brief Initial (reset) value.
+
+/// \var acpl::Socket::leSysErr
+/// \brief System error.
+
+/// \var acpl::Socket::leNoSupport
+/// \brief Operation not supported.
+
+/// \var acpl::Socket::leIsSetup
+/// \brief Socket is (already) set up.
+
+/// \var acpl::Socket::leNotSetup
+/// \brief Socket is not set up.
+
+/// \var acpl::Socket::leIsOpened
+/// \brief Socket is (already) opened.
+
+/// \var acpl::Socket::leNotOpened
+/// \brief Socket is not opened.
+
+/// \var acpl::Socket::leNoPerm
+/// \brief Operation is not allowed under current permissions.
+
+/// \var acpl::Socket::leInvalProto
+/// \brief Invalid protocol.
+
+/// \var acpl::Socket::leAddrInUse
+/// \brief Specified (local) address is already bound to another socket.
+
+/// \var acpl::Socket::leIsBound
+/// \brief Socket has already bound an address.
+
+/// \var acpl::Socket::leWouldBlk
+/// \brief Operation would block if socket was in a blocking mode.
+/// \note This happens when a socket is in a non-blocking mode and the operation could not be completed in a meaningful way (nothing to accept or read, or could not complete writing).
+/// \see acpl::Socket::IAccept
+/// \see acpl::Socket::IRead
+/// \see acpl::Socket::IWrite
+
+/// \var acpl::Socket::leIsConn
+/// \brief Socket is (already) connected.
+
+/// \var acpl::Socket::leNotConn
+/// \brief Socket is not connected.
+
+/// \var acpl::Socket::leConnRefused
+/// \brief Connection could not be established because remote address does not have a listener.
+
+/// \var acpl::Socket::leConnAbort
+/// \brief Connection was aborted by the remote party before it could be accepted.
+/// \see acpl::Socket::IAccept
+
+/// \var acpl::Socket::leConnReset
+/// \brief Connection was dropped by the remote party (connection reset by peer).
+
+/// \var acpl::Socket::leConnTimeout
+/// \brief Connection attempt has timed out.
+
+/// \var acpl::Socket::leConnInProg
+/// \brief Connection attempt is (already) in progress.
+
+/// \var acpl::Socket::leNetUnreach
+/// \brief Network is unreachable.
+
+
+
+
+/// \class acpl::Socket::Address
+/// \brief Socket address internal data holder class.
+
+
+/// \fn acpl::Socket::Address::Address()
+/// \brief Constructor.
+
+/// \fn acpl::Socket::Address::~Address()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::Socket::Address::IsSetup() const
+/// \brief Returns whether or not address is setup.
+/// \return <code>\b true</code> if address is setup, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Socket::Address::Get(acpl::Ipv4Addr &nAddr, acpl::NetworkPort &nPort) const
+/// \brief Translate internal address data to IPv4 address and port number.
+/// \param nAddr Reference to an IPv4 address class variable.
+/// \param nPort Reference to a network port class variable.
+/// \return <code>\b true</code> if internal address data is setup as IPv4, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Socket::Address::Get(acpl::Ipv6Addr &nAddr, acpl::NetworkPort &nPort) const
+/// \brief Translate internal address data to IPv6 address and port number.
+/// \param nAddr Reference to an IPv6 address class variable.
+/// \param nPort Reference to a network port class variable.
+/// \return <code>\b true</code> if internal address data is setup as IPv6, <code>\b false</code> otherwise.
+
+
+/// \fn acpl::Socket::Address::Data &acpl::Socket::Address::GetData()
+/// \brief Get raw address data.
+/// \return Raw address data.
+
+/// \fn const acpl::Socket::Address::Data &acpl::Socket::Address::GetData() const
+/// \brief Get raw address data.
+/// \return Raw address data.
+
+/// \fn bool acpl::Socket::Address::Setup(const acpl::Ipv4Addr &nAddr, const acpl::NetworkPort &nPort)
+/// \brief Setup address data as IPv4.
+/// \param nAddr IPv4 address.
+/// \param nPort Port number.
+/// \return <code>\b true</code> if setup was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Socket::Address::Setup(const acpl::Ipv6Addr &nAddr, const acpl::NetworkPort &nPort)
+/// \brief Setup address data as IPv6.
+/// \param nAddr IPv6 address.
+/// \param nPort Port number.
+/// \return <code>\b true</code> if setup was successful, <code>\b false</code> otherwise.
+
+/// \fn void acpl::Socket::Address::Reset()
+/// \brief Reset address data.
+
+
+/// \typedef acpl::Socket::Address::Data
+/// \brief Raw address data type.
+
+
+
+/// \class acpl::SocketTcp
+/// \brief TCP/IP socket class extension.
+
+
+/// \fn acpl::SocketTcp::SocketTcp()
+/// \brief Constructor.
+
+/// \fn acpl::SocketTcp::~SocketTcp()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::SocketTcp::Listen(acpl::UInt32 nMaxQueueLen)
+/// \brief Open, bind, and start listening on the setup address.
+/// \param nMaxQueueLen Maximum number of connections waiting to be accepted.
+/// \note If queue limit is reached, every new connection will be dropped by the system.
+/// \return <code>\b true</code> if open, bind, and listen were successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::SocketTcp::GetLastError for error code
+
+/// \fn bool acpl::SocketTcp::Accept(acpl::SocketTcp &nSocket) const
+/// \brief Accept a connect on a listening socket.
+/// \param nSocket Reference to an acpl::SocketTcp object to which the accepted client socket will be assigned.
+/// \return <code>\b true</code> if accept was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::SocketTcp::GetLastError for error code
+/// \see acpl::SocketTcp::Listen
+
+/// \fn bool acpl::SocketTcp::Connect()
+/// \brief Open and connect to a remote socket.
+/// \return <code>\b true</code> if open and connect were successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::SocketTcp::GetLastError for error code
+
+
+/// \fn bool acpl::SocketTcp::Write(const void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesWritten)
+/// \brief Writes data to an open socket.
+/// \param nData Pointer to a buffer to be written.
+/// \param nDataSize Number of bytes to be written.
+/// \param nBytesWritten Reference to a variable to which number of bytes actually written will be set.
+/// \return <code>\b true</code> if writing was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::SocketTcp::GetLastError for error code
+
+/// \fn bool acpl::SocketTcp::Read(void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesRead)
+/// \brief Read data from an open socket.
+/// \param nData Pointer to a buffer for data to be stored in.
+/// \param nDataSize Maximum byte size of the \a nData buffer.
+/// \param nBytesRead Reference to a variable to which number of bytes actually read will be set.
+/// \return <code>\b true</code> if reading was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::SocketTcp::GetLastError for error code
+
+
+/// \fn bool acpl::SocketTcp::IOpen()
+/// \brief Hide method for acpl::Socket::IOpen.
+/// \note There's only one correct acpl::Socket::IOpen to be called for one type of sockets.
+/// \return 
+
+
+
+/// \class acpl::SocketUdp
+/// \brief UDP/IP socket class extension.
+
+
+/// \fn acpl::SocketUdp::SocketUdp()
+/// \brief Constructor.
+
+/// \fn acpl::SocketUdp::~SocketUdp()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::SocketUdp::Bind()
+/// \brief Open and bind the setup address.
+/// \return <code>\b true</code> if open and bind were successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::SocketUdp::GetLastError for error code
+
+/// \fn bool acpl::SocketUdp::Open()
+/// \brief Open the setup address.
+/// \note In UDP/IP sockets, the address does not need to be bound to the socket to start reading and/or writing on the socket.
+/// \return <code>\b true</code> if open was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::SocketUdp::GetLastError for error code
+
+
+/// \fn bool acpl::SocketUdp::Write(const void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesWritten)
+/// \brief Writes data to an open socket.
+/// \param nData Pointer to a buffer to be written.
+/// \param nDataSize Number of bytes to be written.
+/// \param nBytesWritten Reference to a variable to which number of bytes actually written will be set.
+/// \return <code>\b true</code> if writing was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::SocketUdp::GetLastError for error code
+
+/// \fn bool acpl::SocketUdp::Read(void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesRead)
+/// \brief Read data from an open socket.
+/// \param nData Pointer to a buffer for data to be stored in.
+/// \param nDataSize Maximum byte size of the \a nData buffer.
+/// \param nBytesRead Reference to a variable to which number of bytes actually read will be set.
+/// \warning This method is dangerous to use with UDP/IP socket as it does not tell you whose data has been read (from what address the data came from).
+/// \return <code>\b true</code> if reading was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::SocketUdp::GetLastError for error code
+
+/// \fn bool acpl::SocketUdp::Read(void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesRead, acpl::Socket::Address &nAddress)
+/// \brief Read data from an open socket.
+/// \param nData Pointer to a buffer for data to be stored in.
+/// \param nDataSize Maximum byte size of the \a nData buffer.
+/// \param nBytesRead Reference to a variable to which number of bytes actually read will be set.
+/// \param nAddress Reference to an acpl::Socket::Address class to which sender's address is set.
+/// \note This method is safe to use with UDP/IP sockets because it tells whose data has been read (from what address the data came from).
+/// \return <code>\b true</code> if reading was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::SocketUdp::GetLastError for error code
+
+
+/// \fn bool acpl::SocketUdp::IOpen()
+/// \brief Hide method for acpl::Socket::IOpen.
+/// \note There's only one correct acpl::Socket::IOpen to be called for one type of sockets.
+/// \return 
+
+
+
+/// \class acpl::SocketRaw
+/// \brief Raw socket class extension.
+/// \warning Dealing with raw sockets might require the process to have special privileges to do so. Consult system documentation.
+/// \note When dealing with raw sockets, user is responsible for quite a bit more that is otherwise done by the system, as in the case of TCP/IP or UDP/IP sockets. Do get familiar with how to deal with raw sockets before trying on a live system.
+
+
+/// \fn acpl::SocketRaw::SocketRaw()
+/// \brief Constructor.
+
+/// \fn acpl::SocketRaw::~SocketRaw()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::SocketRaw::IOpen(acpl::UInt8 nProtoId)
+/// \brief Hide method for acpl::Socket::IOpen.
+/// \param nProtoId (Next level) Protocol identifier number.
+/// \note There's only one correct acpl::Socket::IOpen to be called for one type of sockets.
+/// \return 

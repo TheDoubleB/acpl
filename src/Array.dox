@@ -1,0 +1,418 @@
+/// \file Array.h
+/// \brief Array functionality.
+
+
+
+/// \fn  void *operator new   (size_t, const acpl::ArrayBase<tType, tDestroyAction> *, tType *nPtr, acpl::SizeT nOff)
+/// \brief Custom placement new operator for the acpl::ArrayBase class.
+/// \tparam tType Data type (needs to be specified).
+/// \tparam tDestroyAction Element destroy action function.
+/// \param nPtr Array pointer.
+/// \param nOff Element offset in the array.
+
+/// \fn  void  operator delete(void *, const acpl::ArrayBase<tType, tDestroyAction> *, tType *, acpl::SizeT)
+/// \brief Custom placement delete operator for the acpl::ArrayBase class.
+/// \tparam tType Data type (needs to be specified).
+/// \tparam tDestroyAction Element destroy action function.
+
+
+
+/// \class acpl::ArrayBase
+/// \brief Array class that holds all array functionality.
+/// \tparam tType Data type (needs to be specified).
+/// \tparam tDestroyAction Element destroy action function.
+
+/// \fn acpl::ArrayBase::ArrayBase(acpl::SizeT nGrowSize = 16)
+/// \brief Constructor.
+/// \param nGrowSize Default growing amount when adding elements; default is 16.
+
+/// \fn acpl::ArrayBase::~ArrayBase()
+/// \brief Destructor.
+
+/// \fn acpl::SizeT acpl::ArrayBase::Count() const
+/// \brief Returns a number of elements in the array.
+/// \return Number of elements in the array.
+
+/// \fn tType &acpl::ArrayBase::Get(acpl::SizeT nItemIdx)
+/// \brief Returns a reference to an element in the array.
+/// \param nItemIdx Index position of an element in the array.
+/// \warning The index position \a nItemIdx must be in bounds of array size. If index is out of bounds you are running a risk of your program performing an illegal memory operation which may result in your program crashing.
+/// \return Reference to an element in the array.
+
+/// \fn const tType &acpl::ArrayBase::Get(acpl::SizeT nItemIdx) const
+/// \brief Returns a reference to an element in the array.
+/// \param nItemIdx Index position of an element in the array.
+/// \warning The index position \a nItemIdx must be in bounds of array size. If index is out of bounds you are running a risk of your program performing an illegal memory operation which may result in your program crashing.
+/// \return Reference to an element in the array.
+
+/// \fn bool acpl::ArrayBase::Get(acpl::SizeT nItemIdx, tType &nItem)
+/// \brief Retrieves an element in the array.
+/// \param nItemIdx Index position of an element in the array. The index position may be out of bounds in which case the return value will be <code>\b false</code>.
+/// \param nItem Reference to a <code>tType</code> object to which the value will be set.
+/// \return <code>\b true</code> if index position is in bounds, <code>\b false</code> otherwise.
+
+/// \fn tType &acpl::ArrayBase::GetFirst()
+/// \brief Returns a reference to the first element in the array.
+/// \warning The array has to contain at least one element. If array contains no elements you are running a risk of your program performing an illegal memory operation which may result in your program crashing.
+/// \return Reference to the first element in the array.
+
+/// \fn const tType &acpl::ArrayBase::GetFirst() const
+/// \brief Returns a reference to the first element in the array.
+/// \warning The array has to contain at least one element. If array contains no elements you are running a risk of your program performing an illegal memory operation which may result in your program crashing.
+/// \return Reference to the first element in the array.
+
+/// \fn bool acpl::ArrayBase::GetFirst(tType &nItem)
+/// \brief Retrieves the first element in the array.
+/// \param nItem Reference to a <code>tType</code> object to which the value will be set.
+/// \return <code>\b true</code> if array contains at least one element, <code>\b false</code> otherwise.
+
+/// \fn tType &acpl::ArrayBase::GetLast()
+/// \brief Returns a reference to the last element in the array.
+/// \warning The array has to contain at least one element. If array contains no elements you are running a risk of your program performing an illegal memory operation which may result in your program crashing.
+/// \return Reference to the last element in the array.
+
+/// \fn const tType &acpl::ArrayBase::GetLast() const
+/// \brief Returns a reference to the last element in the array.
+/// \warning The array has to contain at least one element. If array contains no elements you are running a risk of your program performing an illegal memory operation which may result in your program crashing.
+/// \return Reference to the last element in the array.
+
+/// \fn bool acpl::ArrayBase::GetLast(tType &nItem)
+/// \brief Retrieves the last element in the array.
+/// \param nItem Reference to a <code>tType</code> object to which the value will be set.
+/// \return <code>\b true</code> if array contains at least one element, <code>\b false</code> otherwise.
+
+/// \fn acpl::SizeT acpl::ArrayBase::GetIndexOf(const tType &nItem, acpl::SizeT &nIdx) const
+/// \brief Retrieves an index position of a provided item in the array.
+/// \param nItem Reference of an element to search for.
+/// \param nIdx Reference to a variable to which the index will be set (if the return value is true).
+/// \return <code>\b true</code> if element exists in the array, <code>\b false</code> otherwise.
+
+/// \fn acpl::SizeT acpl::ArrayBase::GetIndexOf(const tType &nItem) const
+/// \brief Returns an index position of a provided item in the array.
+/// \param nItem Reference of an element to search for.
+/// \return Element's index position if it exists in the array, or a value of acpl::Num<acpl::SizeT>::Max().
+
+// \fn bool acpl::ArrayBase::Find(const tType &nKeyValue, acpl::SInt8 (*nComparator)(const tType &nItem1, const tType &nItem2), tType &nItem)
+// \brief Searches for an element and retrieves it if it is found.
+// \param nKeyValue Key value to search.
+// \param nComparator Pointer to a function for comparing two elements.
+// \param nItem Reference to a <code>tType</code> object to which the value will be set.
+// \return <code>\b true</code> if element was found, <code>\b false</code> otherwise.
+
+// \fn bool acpl::ArrayBase::Find(const tKeyType &nKeyValue, const tKeyType &(tTypeClass::*nMethod)(), acpl::SInt8 (*nComparator)(const tKeyType &nItem1, const tKeyType &nItem2), tType &nItem)
+// \brief Searches for an element and retrieves it if it is found.
+// \warning This method can be used only if <code>tType</code> is a class and has a method defined by <code>nMethod</code>.
+// \param nKeyValue Key value to search.
+// \param nMethod <code>tType</code>'s method to call and provide result to the <code>nComparator</code> function.
+// \param nComparator Pointer to a function for comparing two elements.
+// \param nItem Reference to a <code>tType</code> object to which the value will be set.
+// \return <code>\b true</code> if element was found, <code>\b false</code> otherwise.
+
+// \fn bool acpl::ArrayBase::Find(const tKeyType &nKeyValue, const tKeyType &(tTypeClass::*nMethod)() const, acpl::SInt8 (*nComparator)(const tKeyType &nItem1, const tKeyType &nItem2), const tType &nItem) const
+// \brief Searches for an element and retrieves it if it is found.
+// \warning This method can be used only if <code>tType</code> is a class and has a method defined by <code>nMethod</code>.
+// \param nKeyValue Key value to search.
+// \param nMethod <code>tType</code>'s method to call and provide result to the <code>nComparator</code> function.
+// \param nComparator Pointer to a function for comparing two elements.
+// \param nItem Reference to a <code>tType</code> object to which the value will be set.
+// \return <code>\b true</code> if element was found, <code>\b false</code> otherwise.
+
+// \fn acpl::SizeT acpl::ArrayBase::FindIndexOf(const tType &nKeyValue, acpl::SInt8 (*nComparator)(const tType &nItem1, const tType &nItem2)) const
+// \brief Searches for an element and retrieves its index position if it is found.
+// \param nKeyValue Key value to search.
+// \param nComparator Pointer to a function for comparing two elements.
+// \return Element's index position if it exists in the array, or a value of <code>acpl::Num<acpl::SizeT>::Max()</code>.
+
+// \fn acpl::SizeT acpl::ArrayBase::FindIndexOf(const tKeyType &nKeyValue, const tKeyType &(tTypeClass::*nMethod)(), acpl::SInt8 (*nComparator)(const tKeyType &nItem1, const tKeyType &nItem2))
+// \brief Searches for an element and retrieves its index position if it is found.
+// \warning This method can be used only if <code>tType</code> is a class and has a method defined by <code>nMethod</code>.
+// \param nKeyValue Key value to search.
+// \param nMethod <code>tType</code>'s method to call and provide result to the <code>nComparator</code> function.
+// \param nComparator Pointer to a function for comparing two elements.
+// \return Element's index position if it exists in the array, or a value of <code>acpl::Num<acpl::SizeT>::Max()</code>.
+
+// \fn acpl::SizeT acpl::ArrayBase::FindIndexOf(const tKeyType &nKeyValue, const tKeyType &(tTypeClass::*nMethod)() const, acpl::SInt8 (*nComparator)(const tKeyType &nItem1, const tKeyType &nItem2)) const
+// \brief Searches for an element and retrieves its index position if it is found.
+// \warning This method can be used only if <code>tType</code> is a class and has a method defined by <code>nMethod</code>.
+// \param nKeyValue Key value to search.
+// \param nMethod <code>tType</code>'s method to call and provide result to the <code>nComparator</code> function.
+// \param nComparator Pointer to a function for comparing two elements.
+// \return Element's index position if it exists in the array, or a value of <code>acpl::Num<acpl::SizeT>::Max()</code>.
+
+/// \fn bool acpl::ArrayBase::Add()
+/// \brief Adds a new element to the array (by calling a 0-argument (default) constructor).
+/// \return <code>\b true</code> if adding was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Add( tCt1  nCa1)
+/// \brief Adds a new element to the array (by calling a 1-argument constructor including a possible copy constructor).
+/// \tparam tCt1  Type of the 1st argument of the constructor (does not need to be manually specified).
+/// \param nCa1  Value of the 1st argument of the constructor.
+/// \return <code>\b true</code> if adding was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Add( tCt1  nCa1, tCt2  nCa2)
+/// \brief Adds a new element to the array (by calling a 2-argument constructor).
+/// \tparam tCt1  Type of the 1st argument of the constructor (does not need to be manually specified).
+/// \tparam tCt2  Type of the 2nd argument of the constructor (does not need to be manually specified).
+/// \param nCa1  Value of the 1st argument of the constructor.
+/// \param nCa2  Value of the 2nd argument of the constructor.
+/// \return <code>\b true</code> if adding was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Add( tCt1  nCa1, tCt2  nCa2, tCt3  nCa3)
+/// \brief Adds a new element to the array (by calling a 3-argument constructor).
+/// \tparam tCt1  Type of the 1st argument of the constructor (does not need to be manually specified).
+/// \tparam tCt2  Type of the 2nd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt3  Type of the 3rd argument of the constructor (does not need to be manually specified).
+/// \param nCa1  Value of the 1st argument of the constructor.
+/// \param nCa2  Value of the 2nd argument of the constructor.
+/// \param nCa3  Value of the 3rd argument of the constructor.
+/// \return <code>\b true</code> if adding was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Add( tCt1  nCa1, tCt2  nCa2, tCt3  nCa3, tCt4  nCa4)
+/// \brief Adds a new element to the array (by calling a 4-argument constructor).
+/// \tparam tCt1  Type of the 1st argument of the constructor (does not need to be manually specified).
+/// \tparam tCt2  Type of the 2nd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt3  Type of the 3rd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt4  Type of the 4th argument of the constructor (does not need to be manually specified).
+/// \param nCa1  Value of the 1st argument of the constructor.
+/// \param nCa2  Value of the 2nd argument of the constructor.
+/// \param nCa3  Value of the 3rd argument of the constructor.
+/// \param nCa4  Value of the 4th argument of the constructor.
+/// \return <code>\b true</code> if adding was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Add( tCt1  nCa1, tCt2  nCa2, tCt3  nCa3, tCt4  nCa4, tCt5  nCa5)
+/// \brief Adds a new element to the array (by calling a 5-argument constructor).
+/// \tparam tCt1  Type of the 1st argument of the constructor (does not need to be manually specified).
+/// \tparam tCt2  Type of the 2nd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt3  Type of the 3rd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt4  Type of the 4th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt5  Type of the 5th argument of the constructor (does not need to be manually specified).
+/// \param nCa1  Value of the 1st argument of the constructor.
+/// \param nCa2  Value of the 2nd argument of the constructor.
+/// \param nCa3  Value of the 3rd argument of the constructor.
+/// \param nCa4  Value of the 4th argument of the constructor.
+/// \param nCa5  Value of the 5th argument of the constructor.
+/// \return <code>\b true</code> if adding was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Add( tCt1  nCa1, tCt2  nCa2, tCt3  nCa3, tCt4  nCa4, tCt5  nCa5, tCt6  nCa6)
+/// \brief Adds a new element to the array (by calling a 6-argument constructor).
+/// \tparam tCt1  Type of the 1st argument of the constructor (does not need to be manually specified).
+/// \tparam tCt2  Type of the 2nd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt3  Type of the 3rd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt4  Type of the 4th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt5  Type of the 5th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt6  Type of the 6th argument of the constructor (does not need to be manually specified).
+/// \param nCa1  Value of the 1st argument of the constructor.
+/// \param nCa2  Value of the 2nd argument of the constructor.
+/// \param nCa3  Value of the 3rd argument of the constructor.
+/// \param nCa4  Value of the 4th argument of the constructor.
+/// \param nCa5  Value of the 5th argument of the constructor.
+/// \param nCa6  Value of the 6th argument of the constructor.
+/// \return <code>\b true</code> if adding was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Add( tCt1  nCa1, tCt2  nCa2, tCt3  nCa3, tCt4  nCa4, tCt5  nCa5, tCt6  nCa6, tCt7  nCa7)
+/// \brief Adds a new element to the array (by calling a 7-argument constructor).
+/// \tparam tCt1  Type of the 1st argument of the constructor (does not need to be manually specified).
+/// \tparam tCt2  Type of the 2nd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt3  Type of the 3rd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt4  Type of the 4th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt5  Type of the 5th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt6  Type of the 6th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt7  Type of the 7th argument of the constructor (does not need to be manually specified).
+/// \param nCa1  Value of the 1st argument of the constructor.
+/// \param nCa2  Value of the 2nd argument of the constructor.
+/// \param nCa3  Value of the 3rd argument of the constructor.
+/// \param nCa4  Value of the 4th argument of the constructor.
+/// \param nCa5  Value of the 5th argument of the constructor.
+/// \param nCa6  Value of the 6th argument of the constructor.
+/// \param nCa7  Value of the 7th argument of the constructor.
+/// \return <code>\b true</code> if adding was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Add( tCt1  nCa1, tCt2  nCa2, tCt3  nCa3, tCt4  nCa4, tCt5  nCa5, tCt6  nCa6, tCt7  nCa7, tCt8  nCa8)
+/// \brief Adds a new element to the array (by calling a 8-argument constructor).
+/// \tparam tCt1  Type of the 1st argument of the constructor (does not need to be manually specified).
+/// \tparam tCt2  Type of the 2nd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt3  Type of the 3rd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt4  Type of the 4th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt5  Type of the 5th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt6  Type of the 6th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt7  Type of the 7th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt8  Type of the 8th argument of the constructor (does not need to be manually specified).
+/// \param nCa1  Value of the 1st argument of the constructor.
+/// \param nCa2  Value of the 2nd argument of the constructor.
+/// \param nCa3  Value of the 3rd argument of the constructor.
+/// \param nCa4  Value of the 4th argument of the constructor.
+/// \param nCa5  Value of the 5th argument of the constructor.
+/// \param nCa6  Value of the 6th argument of the constructor.
+/// \param nCa7  Value of the 7th argument of the constructor.
+/// \param nCa8  Value of the 8th argument of the constructor.
+/// \return <code>\b true</code> if adding was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Add( tCt1  nCa1, tCt2  nCa2, tCt3  nCa3, tCt4  nCa4, tCt5  nCa5, tCt6  nCa6, tCt7  nCa7, tCt8  nCa8, tCt9  nCa9)
+/// \brief Adds a new element to the array (by calling a 9-argument constructor).
+/// \tparam tCt1  Type of the 1st argument of the constructor (does not need to be manually specified).
+/// \tparam tCt2  Type of the 2nd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt3  Type of the 3rd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt4  Type of the 4th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt5  Type of the 5th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt6  Type of the 6th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt7  Type of the 7th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt8  Type of the 8th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt9  Type of the 9th argument of the constructor (does not need to be manually specified).
+/// \param nCa1  Value of the 1st argument of the constructor.
+/// \param nCa2  Value of the 2nd argument of the constructor.
+/// \param nCa3  Value of the 3rd argument of the constructor.
+/// \param nCa4  Value of the 4th argument of the constructor.
+/// \param nCa5  Value of the 5th argument of the constructor.
+/// \param nCa6  Value of the 6th argument of the constructor.
+/// \param nCa7  Value of the 7th argument of the constructor.
+/// \param nCa8  Value of the 8th argument of the constructor.
+/// \param nCa9  Value of the 9th argument of the constructor.
+/// \return <code>\b true</code> if adding was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Add( tCt1  nCa1, tCt2  nCa2, tCt3  nCa3, tCt4  nCa4, tCt5  nCa5, tCt6  nCa6, tCt7  nCa7, tCt8  nCa8, tCt9  nCa9, tCt10 nCa10)
+/// \brief Adds a new element to the array (by calling a 10-argument constructor).
+/// \tparam tCt1  Type of the 1st argument of the constructor (does not need to be manually specified).
+/// \tparam tCt2  Type of the 2nd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt3  Type of the 3rd argument of the constructor (does not need to be manually specified).
+/// \tparam tCt4  Type of the 4th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt5  Type of the 5th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt6  Type of the 6th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt7  Type of the 7th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt8  Type of the 8th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt9  Type of the 9th argument of the constructor (does not need to be manually specified).
+/// \tparam tCt10 Type of the 10th argument of the constructor (does not need to be manually specified).
+/// \param nCa1  Value of the 1st argument of the constructor.
+/// \param nCa2  Value of the 2nd argument of the constructor.
+/// \param nCa3  Value of the 3rd argument of the constructor.
+/// \param nCa4  Value of the 4th argument of the constructor.
+/// \param nCa5  Value of the 5th argument of the constructor.
+/// \param nCa6  Value of the 6th argument of the constructor.
+/// \param nCa7  Value of the 7th argument of the constructor.
+/// \param nCa8  Value of the 8th argument of the constructor.
+/// \param nCa9  Value of the 9th argument of the constructor.
+/// \param nCa10 Value of the 10th argument of the constructor.
+/// \return <code>\b true</code> if adding was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Swap(acpl::SizeT nItem1Idx, acpl::SizeT nItem2Idx)
+/// \brief Swaps two elements in the array.
+/// \param nItem1Idx Index position of the first element in the array to swap. The index position may be out of bounds in which case the return value will be <code>\b false</code>.
+/// \param nItem2Idx Index position of the second element in the array to swap. The index position may be out of bounds in which case the return value will be <code>\b false</code>.
+/// \return <code>\b true</code> if index position is in bounds, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Swap(acpl::SizeT nItemIdx, tType &nSwapInOutItem)
+/// \brief Swaps an element on a specified index position.
+/// \param nItemIdx Index position of an element in the array. The index position may be out of bounds in which case the return value will be <code>\b false</code>.
+/// \param nSwapInOutItem Reference to an item to be placed in the \a nItemIdx position and to which the element currently located on \a nItemIdx position will be set.
+/// \return <code>\b true</code> if index position is in bounds, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Swap(acpl::SizeT nItemIdx, const tType &nSwapInItem, tType &nSwapOutItem)
+/// \brief Swaps an element on a specified index position.
+/// \param nItemIdx Index position of an element in the array. The index position may be out of bounds in which case the return value will be <code>\b false</code>.
+/// \param nSwapInItem Reference to an item to be put in place of a current element on the index position. This item may not be the same item as \a nSwapOutItem.
+/// \param nSwapOutItem Reference to an item to which the element currently located on the index position will be set. This item may not be the same item as \a nSwapInItem.
+/// \return <code>\b true</code> if index position is in bounds, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Replace(acpl::SizeT nItemIdx, const tType &nNewItem)
+/// \brief Replaces an element on a specified index position with a provided item and removes the element currently located on the index position.
+/// \param nItemIdx Index position of an element in the array. The index position may be out of bounds in which case the return value will be <code>\b false</code>.
+/// \param nNewItem Reference to an item to be put in place of a current element on the index position.
+/// \return <code>\b true</code> if index position is in bounds, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Discard(acpl::SizeT nItemIdx, tType &nDiscardedItem)
+/// \brief Discards an element in the array and sets the discarded item to the provided reference to an item.
+/// \param nItemIdx Index position of an element in the array. The index position may be out of bounds in which case the return value will be <code>\b false</code>.
+/// \param nDiscardedItem Reference to an item to which the discarded element will be set.
+/// \return <code>\b true</code> if index position is in bounds, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Remove(acpl::SizeT nItemIdx)
+/// \brief Removes a single element from the array and destroys it.
+/// \param nItemIdx Index position of an element in the array. The index position may be out of bounds in which case the return value will be <code>\b false</code>.
+/// \return <code>\b true</code> if index position is in bounds, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::RemoveHead(acpl::SizeT nCount)
+/// \brief Removes multiple elements from the beginning of the array and destroys them.
+/// \param nCount Number of elements to be removed from the beginning of the array.
+/// \return <code>\b true</code> if index position is in bounds, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::RemoveTail(acpl::SizeT nCount)
+/// \brief Removes multiple elements from the end of the array and destroys them.
+/// \param nCount Number of elements to be removed from the end of the array.
+/// \return <code>\b true</code> if index position is in bounds, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Remove(acpl::SizeT nItemIdx, acpl::SizeT nCount)
+/// \brief Removes multiple elements from the array and destroys them.
+/// \param nItemIdx Index position of the first element in the array. The index position may be out of bounds in which case the return value will be <code>\b false</code>.
+/// \param nCount Number of elements following and including element on \a nItemIdx position to be removed.
+/// \return <code>\b true</code> if index position is in bounds, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Move(acpl::SizeT nItemIdx, acpl::SizeT nPositionIdx)
+/// \brief Moves an element from one index position to the other.
+/// \param nItemIdx Index position of an element to move. The index position may be out of bounds in which case the return value will be <code>\b false</code>.
+/// \param nPositionIdx New index position of an element. The index position may be out of bounds in which case the return value will be <code>\b false</code>.
+/// \return <code>\b true</code> if both index positions are in bounds, <code>\b false</code> otherwise.
+
+/// \fn void acpl::ArrayBase::Sort(acpl::SInt8 (*nComparator)(tType &nItem1, tType &nItem2))
+/// \brief Sorts array elements.
+/// \param nComparator Pointer to a function for comparing two elements.
+
+/// \fn bool acpl::ArrayBase::Grow(acpl::SizeT nCount)
+/// \brief Grows the allocated size of the array for provided element count.
+/// \note Useful to call when expecting a large amount of elements to be added.
+/// \param nCount Number of elements to grow the array for.
+/// \return <code>\b true</code> if growing ((re)allocation) was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::ArrayBase::Shrink()
+/// \brief Shrinks the allocated size of the array to the actual element count in the array.
+/// \note Useful to call when a large amount of elements has been removed.
+/// \return <code>\b true</code> if shrinking ((re)allocation) was successful, <code>\b false</code> otherwise.
+
+/// \fn void acpl::ArrayBase::Clear()
+/// \brief Removes all elements from the array.
+
+/// \fn void acpl::ArrayBase::Purge()
+/// \brief Removes all elements from the array and frees the allocated memory.
+
+
+
+/// \class acpl::ArrayEdaNone
+/// \brief Typedef holder for array template with no element destroy action.
+/// \tparam tType Data type (needs to be specified).
+
+/// \typedef acpl::ArrayBase<tType, &acpl::Mem::MgrEda<tType>::None> acpl::ArrayEdaNone::Type
+/// \brief Array template with no element destroy action.
+
+
+
+/// \class acpl::ArrayEdaFree
+/// \brief Typedef holder for array template with free element destroy action.
+/// \tparam tType Data type (needs to be specified).
+
+/// \typedef acpl::ArrayBase<tType, &acpl::Mem::MgrEda<tType>::Free> acpl::ArrayEdaFree::Type
+/// \brief Array template with free element destroy action.
+
+
+
+/// \class acpl::ArrayEdaFreeAligned
+/// \brief Typedef holder for array template with free aligned element destroy action.
+/// \tparam tType Data type (needs to be specified).
+
+/// \typedef acpl::ArrayBase<tType, &acpl::Mem::MgrEda<tType>::Free> acpl::ArrayEdaFreeAligned::Type
+/// \brief Array template with free aligned element destroy action.
+
+
+
+/// \class acpl::ArrayEdaDelete
+/// \brief Typedef holder for array template with delete element destroy action.
+/// \tparam tType Data type (needs to be specified).
+
+/// \typedef acpl::ArrayBase<tType, &acpl::Mem::MgrEda<tType>::Delete> acpl::ArrayEdaDelete::Type
+/// \brief Array template with delete element destroy action.
+
+
+
+/// \class acpl::ArrayEdaDeleteArray
+/// \brief Typedef holder for array template with array delete element destroy action.
+/// \tparam tType Data type (needs to be specified).
+
+/// \typedef acpl::ArrayBase<tType, &acpl::Mem::MgrEda<tType>::DeleteArray> acpl::ArrayEdaDeleteArray::Type
+/// \brief Array template with array delete element destroy action.

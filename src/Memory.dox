@@ -1,0 +1,624 @@
+/// \file Memory.h
+/// \brief Memory management related functionality.
+/// 
+/// 
+
+
+
+/// \class acpl::Mem
+/// \brief Container class holding memory methods.
+
+
+
+/// \fn void *acpl::Mem::BaseAlloc(acpl::SizeT nSize)
+/// \brief Base memory block allocation function.
+/// \param nSize Number of bytes to allocate.
+/// \return Pointer to a newly allocated memory block or NULL in case of failed allocation.
+
+/// \fn void *acpl::Mem::BaseRealloc(void *nPtr, acpl::SizeT nNewSize)
+/// \brief Base memory block reallocation function.
+/// \param nPtr Pointer to an allocated memory block to be reallocated.
+/// \param nNewSize New size in bytes of reallocated memory block.
+/// \return Pointer to a reallocated memory block or NULL in case of failed reallocation.
+
+/// \fn void *acpl::Mem::BaseResize(void *nPtr, acpl::SizeT nPtrSize, acpl::SizeT nNewSize, acpl::SizeT nMoveOffsetBytes)
+/// \brief Base memory block resizing function.
+/// \note Acts like acpl::Mem::BaseRealloc and in addition moves bytes from \a nMoveOffsetBytes to the start of reallocated memory block.
+/// \param nPtr Pointer to an allocated memory block to be resized.
+/// \param nPtrSize Current size of an allocated memory block.
+/// \param nNewSize New size in bytes of resized memory block.
+/// \param nMoveOffsetBytes Byte offset at which to start the copying of data to a resized memory block.
+/// \return Pointer to a resized memory block or NULL in case of failed resizing.
+/// \see acpl::Mem::BaseRealloc
+
+/// \fn void acpl::Mem::BaseFree(void *nPtr)
+/// \brief Base memory block freeing function.
+/// \param nPtr Pointer to an allocated memory block to be freed.
+
+
+/// \fn void *acpl::Mem::BaseAllocAligned(acpl::SizeT nAlignBytes, acpl::SizeT nSize)
+/// \brief Base aligned memory block allocation function.
+/// \param nAlignBytes Alignment in bytes.
+/// \param nSize Number of bytes to allocate.
+/// \return Pointer to a newly allocated memory block or NULL in case of failed allocation.
+
+/// \fn void *acpl::Mem::BaseReallocAligned(void *nPtr, acpl::SizeT nPtrSize, acpl::SizeT nAlignBytes, acpl::SizeT nNewSize)
+/// \brief Base aligned memory block reallocation function.
+/// \param nPtr Pointer to an allocated memory block to be reallocated.
+/// \param nPtrSize Current size of an allocated memory block.
+/// \param nAlignBytes Alignment in bytes.
+/// \param nNewSize New size in bytes of reallocated memory block.
+/// \return Pointer to a reallocated memory block or NULL in case of failed reallocation.
+
+/// \fn void *acpl::Mem::BaseResizeAligned(void *nPtr, acpl::SizeT nPtrSize, acpl::SizeT nAlignBytes, acpl::SizeT nNewSize, acpl::SizeT nMoveOffsetBytes)
+/// \brief Base aligned memory block resizing function.
+/// \note Acts like acpl::Mem::BaseReallocAligned and in addition moves bytes from \a nMoveOffsetBytes to the start of reallocated memory block.
+/// \param nPtr Pointer to an allocated memory block to be resized.
+/// \param nPtrSize Current size of an allocated memory block.
+/// \param nAlignBytes Alignment in bytes.
+/// \param nNewSize New size in bytes of resized memory block.
+/// \param nMoveOffsetBytes Byte offset at which to start the copying of data to a resized memory block.
+/// \return Pointer to a resized memory block or NULL in case of failed resizing.
+/// \see acpl::Mem::BaseReallocAligned
+
+/// \fn void acpl::Mem::BaseFreeAligned(void *nPtr)
+/// \brief Base aligned memory block freeing function.
+/// \param nPtr Pointer to an allocated memory block to be freed.
+
+
+/// \fn void acpl::Mem::BaseCopy(void *nDestPtr, const void *nSrcPtr, acpl::SizeT nCountBytes)
+/// \brief Base <b>overlap-unaware</b> memory block copying function.
+/// \warning This function is not aware of possilbe overlapping of source and destination memory blocks.
+/// \param nDestPtr Destination memory block pointer.
+/// \param nSrcPtr Source memory block pointer.
+/// \param nCountBytes Number of bytes to copy.
+/// \see acpl::Mem::BaseMove
+
+/// \fn void acpl::Mem::BaseMove(void *nDestPtr, const void *nSrcPtr, acpl::SizeT nCountBytes)
+/// \brief Base overlap-aware memory block copying function.
+/// \note This function is similar to acpl::Mem::BaseCopy but is aware of overlapping source and destination memory blocks.
+/// \param nDestPtr Destination memory block pointer.
+/// \param nSrcPtr Source memory block pointer.
+/// \param nCountBytes Number of bytes to copy.
+/// \see acpl::Mem::BaseCopy
+
+/// \fn void acpl::Mem::BaseSet(void *nPtr, acpl::UInt8 nByte, acpl::SizeT nCountBytes)
+/// \brief Base memory block overwriting function.
+/// \param nPtr Pointer to a memory block to be set.
+/// \param nByte Byte to fill into the memory.
+/// \param nCountBytes Number of bytes to overwrite.
+
+
+/// \fn bool acpl::Mem::Alloc(tType *&nPtr, acpl::SizeT nCount)
+/// \brief Memory block allocation function.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nPtr Reference to a \a tType pointer variable which is set to point to a newly allocated memory block. If allocation fails, the pointer is left untouched.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be allocated.
+/// \return <code>\b true</code> if allocation was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::Realloc(tType *&nPtr, acpl::SizeT nNewCount)
+/// \brief Memory block reallocation function.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nPtr Reference to a \a tType pointer variable which is set to point to a reallocated memory block. If reallocation fails, the pointer is left untouched. If provided pointer is NULL, this function acts like acpl::Mem::Alloc.
+/// \param nNewCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be reallocated.
+/// \return <code>\b true</code> if reallocation was successful, <code>\b false</code> otherwise.
+/// \see acpl::Mem::Alloc
+
+/// \fn bool acpl::Mem::Resize(tType *&nPtr, acpl::SizeT nCurCount, acpl::SizeT nNewCount, acpl::SizeT nMoveOffset)
+/// \brief Memory block resizing function.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \note Acts like acpl::Mem::Realloc and in addition moves bytes from \a nMoveOffset to the start of reallocated memory block.
+/// \param nPtr Reference to a \a tType pointer variable which is set to point to a resized memory block. If resizing fails, the pointer is left untouched. If provided pointer is NULL, this function acts like acpl::Mem::Alloc.
+/// \param nCurCount Number of \a tType -sized elements to be copied to resized memory block.
+/// \param nNewCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be the size of resized memory block.
+/// \param nMoveOffset Offset of \a tType -sized elements at which to start the copying of data to a resized memory block.
+/// \return <code>\b true</code> if resizing was sucessful, <code>\b false</code> otherwise.
+/// \see acpl::Mem::Realloc
+/// \see acpl::Mem::Alloc
+
+/// \fn void acpl::Mem::Free(tType *&nPtr)
+/// \brief Memory block freeing function.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \note Memory block could be allocated with acpl::Mem::Alloc, acpl::Mem::Realloc or indeed any system equivalent of POSIX-defined <code>malloc()</code>, <code>calloc()</code>, or <code>realloc()</code> functions.
+/// \param nPtr Reference to a \a tType pointer variable which points to an allocated memory block and is set to NULL after freeing. If provided pointer is NULL, this function does nothing.
+/// \see acpl::Mem::Alloc
+/// \see acpl::Mem::Realloc
+
+
+/// \fn bool acpl::Mem::AllocAligned(tType *&nPtr, acpl::SizeT nAlignCount, acpl::SizeT nCount)
+/// \brief Aligned memory block allocation function.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nPtr Reference to a \a tType pointer variable which is set to point to a newly allocated memory block. If allocation fails, the pointer is left untouched.
+/// \param nAlignCount Alignment requirement expressed as number of <code>{\b sizeof(\a tType)}</code> bytes.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be allocated.
+/// \return <code>\b true</code> if allocation was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::ReallocAligned(tType *&nPtr, acpl::SizeT nCurCount, acpl::SizeT nAlignCount, acpl::SizeT nNewCount)
+/// \brief Aligned memory block reallocation function.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nPtr Reference to a \a tType pointer variable which is set to point to a reallocated memory block. If reallocation fails, the pointer is left untouched. If provided pointer is NULL, this function acts like acpl::Mem::AllocAligned.
+/// \param nCurCount Number of \a tType -sized elements to be copied to reallocated memory block.
+/// \param nAlignCount Alignment requirement expressed as number of <code>{\b sizeof(\a tType)}</code> bytes.
+/// \param nNewCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be reallocated.
+/// \return <code>\b true</code> if reallocation was sucessful, <code>\b false</code> otherwise.
+/// \see acpl::Mem::AllocAligned
+
+/// \fn bool acpl::Mem::ResizeAligned(tType *&nPtr, acpl::SizeT nCurCount, acpl::SizeT nAlignCount, acpl::SizeT nNewCount, acpl::SizeT nMoveOffset)
+/// \brief Aligned memory block resizing function.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \note Acts like acpl::Mem::ReallocAligned and in addition moves bytes from \a nMoveOffset to the start of reallocated memory block.
+/// \param nPtr Reference to a \a tType pointer variable which is set to point to a resized memory block. If resizing fails, the pointer is left untouched. If provided pointer is NULL, this function acts like acpl::Mem::AllocAligned.
+/// \param nCurCount Number of \a tType -sized elements to be copied to resized memory block.
+/// \param nAlignCount Alignment requirement expressed as number of <code>{\b sizeof(\a tType)}</code> bytes.
+/// \param nNewCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be the size of resized memory block.
+/// \param nMoveOffset Offset of \a tType -sized elements at which to start the copying of data to a resized memory block.
+/// \return <code>\b true</code> if resizing was successful, <code>\b false</code> otherwise.
+/// \see acpl::Mem::ReallocAligned
+/// \see acpl::Mem::AllocAligned
+
+/// \fn void acpl::Mem::FreeAligned(tType *&nPtr)
+/// \brief Aligned memory block freeing function.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \note Memory block could be allocated with acpl::Mem::AllocAligned, acpl::Mem::ReallocAligned or indeed any system equivalent of POSIX-defined <code>posix_memalign()</code> function.
+/// \param nPtr Reference to a \a tType pointer variable which points to an allocated memory block and is set to NULL after freeing. If provided pointer points to a NULL location this function does nothing.
+/// \see acpl::Mem::AllocAligned
+/// \see acpl::Mem::ReallocAligned
+
+
+/// \fn void acpl::Mem::Copy(tType *nDestPtr, const tType *nSrcPtr, acpl::SizeT nCount)
+/// \brief <b>Overlap-unaware</b> memory block copying function.
+/// \warning This function is not aware of possilbe overlapping of source and destination memory blocks. If not sure whether blocks overlap, use acpl::Mem::Move.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nDestPtr \a tType pointer which points to a destination memory block. If provided pointer is NULL, the outcome is not specified.
+/// \param nSrcPtr \a tType pointer which points to a source memory block. If provided pointer is NULL, the outcome is not specified.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be copied.
+/// \see acpl::Mem::Move
+
+/// \fn void acpl::Mem::Move(tType *nDestPtr, const tType *nSrcPtr, acpl::SizeT nCount)
+/// \brief Overlap-aware memory block copying function.
+/// \note This function is similar to acpl::Mem::Copy but is aware of overlapping source and destination memory blocks.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nDestPtr \a tType pointer which points to a destination memory block. If provided pointer is NULL, the outcome is not specified.
+/// \param nSrcPtr \a tType pointer which points to a source memory block. If provided pointer is NULL, the outcome is not specified.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be copied.
+/// \see acpl::Mem::Copy
+
+/// \fn void acpl::Mem::Set(tType *nPtr, tTypeCompat nValue, acpl::SizeT nCount)
+/// \brief Memory block \a tType -based (or \a tType -compatible) overwriting function.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \tparam tTypeCompat Data type compatible with \a tType (does not need to be manually specified).
+/// \param nPtr \a tType pointer which points to a selected memory block. If provided pointer is NULL, the outcome is not specified.
+/// \param nValue \a tType or \a tType -compatible value to fill into the memory.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be copied.
+
+/// \fn void acpl::Mem::SetByte(tType *nPtr, acpl::UInt8 nByte, acpl::SizeT nCount)
+/// \brief Memory block byte-based overwriting function.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nPtr \a tType pointer which points to a selected memory block. If provided pointer is NULL, the outcome is not specified.
+/// \param nByte Byte value to fill into the memory.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be copied.
+
+/// \fn acpl::SInt8 acpl::Mem::Cmp(const tType *nPtr1, const tType *nPtr2, acpl::SizeT nCount, acpl::SizeT &nDiffIdx)
+/// \brief Compare two memory blocks.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nPtr1 Pointer to a first memory block.
+/// \param nPtr2 Pointer to a second memory block.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be compared.
+/// \param nDiffIdx \a tType index of a first element that differs. If memory blocks are equal \a nDiffIdx equals \a nCount.
+/// \return Zero if two memory blocks are equal, non-zero otherwise.
+
+/// \fn acpl::SInt8 acpl::Mem::Cmp(const tType *nPtr1, const tType *nPtr2, acpl::SizeT nCount)
+/// \brief Compare two memory blocks.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nPtr1 Pointer to a first memory block.
+/// \param nPtr2 Pointer to a second memory block.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be compared.
+/// \return Zero if two memory blocks are equal, non-zero otherwise.
+
+
+/// \fn void acpl::Mem::Delete(tType *&nPtr)
+/// \brief <code>new()</code>-ed memory <code>delete()</code>-ing function.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nPtr Reference to a \a tType pointer variable, which points to a memory location created using <code>new()</code> operator, and is set to NULL after <code>delete()</code>-ing. If provided pointer is NULL, this function does nothing.
+
+/// \fn void acpl::Mem::DeleteArray(tType *&nPtr)
+/// \brief <code>new[]()</code>-ed memory <code>delete[]()</code>-ing function.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nPtr Reference to a \a tType pointer variable, which points to a memory location created using <code>new[]()</code> operator, and is set to NULL after <code>delete[]()</code>-ing. If provided pointer is NULL, this function does nothing.
+
+
+
+/// \class acpl::Mem::RaiiFree
+/// \brief RAII release class for deallocating allocated non-aligned memory blocks.
+/// \tparam tType Data type of a non-aligned memory block to be deallocated.
+
+/// \fn acpl::Mem::RaiiFree::RaiiFree(tType &nRef)
+/// \brief Attach constructor.
+/// \param nRef Reference to a pointer to an allocated memory block.
+
+/// \fn acpl::Mem::RaiiFree::~RaiiFree()
+/// \brief Destructor.
+
+/// \fn void acpl::Mem::RaiiFree::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::Mem::RaiiFree::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::Mem::RaiiFreeAligned
+/// \brief RAII release class for deallocating allocated aligned memory blocks.
+/// \tparam tType Data type of an aligned memory block to be deallocated.
+
+/// \fn acpl::Mem::RaiiFreeAligned::RaiiFreeAligned(tType &nRef)
+/// \brief Attach constructor.
+/// \param nRef Reference to a pointer to an allocated aligned memory block.
+
+/// \fn acpl::Mem::RaiiFreeAligned::~RaiiFreeAligned()
+/// \brief Destructor.
+
+/// \fn void acpl::Mem::RaiiFreeAligned::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::Mem::RaiiFreeAligned::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::Mem::RaiiDelete
+/// \brief RAII release class for deallocating <code>new()</code>-ed memory.
+/// \tparam tType Data type of a <code>new()</code>-ed memory block to be deallocated.
+
+/// \fn acpl::Mem::RaiiDelete::RaiiDelete(tType &nRef)
+/// \brief Attach constructor.
+/// \param nRef Reference to a pointer to a <code>new()</code>-ed memory.
+
+/// \fn acpl::Mem::RaiiDelete::~RaiiDelete()
+/// \brief Destructor.
+
+/// \fn void acpl::Mem::RaiiDelete::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::Mem::RaiiDelete::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::Mem::RaiiDeleteArray
+/// \brief RAII release class for deallocating <code>new[]()</code>-ed memory.
+/// \tparam tType Data type of a <code>new[]()</code>-ed memory block to be deallocated.
+
+/// \fn acpl::Mem::RaiiDeleteArray::RaiiDeleteArray(tType &nRef)
+/// \brief Attach constructor.
+/// \param nRef Reference to a pointer to a <code>new[]()</code>-ed memory.
+
+/// \fn acpl::Mem::RaiiDeleteArray::~RaiiDeleteArray()
+/// \brief Destructor.
+
+/// \fn void acpl::Mem::RaiiDeleteArray::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::Mem::RaiiDeleteArray::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::Mem::MgrEda
+/// \brief Holder class for standard element destroy action functions.
+/// \tparam tType Data type specifier for destroy action functions.
+
+/// \fn static void acpl::Mem::MgrEda::None(tType *)
+/// \brief Blank element destroy action.
+
+/// \fn static void acpl::Mem::MgrEda::Free(tType *nPtr)
+/// \brief acpl::Mem::Free element destroy action.
+/// \param nPtr Pointer to an allocated memory block.
+/// \see acpl::Mem::Free
+
+/// \fn static void acpl::Mem::MgrEda::FreeAligned(tType *nPtr)
+/// \brief acpl::Mem::FreeAligned element destroy action.
+/// \param nPtr Pointer to an allocated aligned memory block.
+/// \see acpl::Mem::FreeAligned
+
+/// \fn static void acpl::Mem::MgrEda::Delete(tType *nPtr)
+/// \brief acpl::Mem::Delete element destroy action.
+/// \param nPtr Pointer to a <code>new()</code>-ed memory.
+/// \see acpl::Mem::Delete
+
+/// \fn static void acpl::Mem::MgrEda::DeleteArray(tType *nPtr)
+/// \brief acpl::Mem::DeleteArray element destroy action.
+/// \param nPtr Pointer to a <code>new[]()</code>-ed memory.
+/// \see acpl::Mem::DeleteArray
+
+
+
+/// \class acpl::Mem::MgrBlock
+/// \brief Memory block management class for acpl::Mem::Block and used by acpl::Mem::BlockBase.
+/// \tparam tType Data type specifier for memory block management functions.
+
+/// \fn static bool acpl::Mem::MgrBlock::Resize(tType *&nPtr, acpl::SizeT nCurCount, acpl::SizeT nNewCount, acpl::SizeT nMoveOffset)
+/// \brief Resizing method.
+/// \param nPtr Reference to a \a tType pointer variable which is set to point to a resized memory block.
+/// \param nCurCount Number of \a tType -sized elements to be copied to resized memory block.
+/// \param nNewCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be the size of resized memory block.
+/// \param nMoveOffset Offset of \a tType -sized elements at which to start the copying of data to a resized memory block.
+/// \return <code>\b true</code> if resizing was successful, <code>\b false</code> otherwise.
+/// \see acpl::Mem::Resize
+
+/// \fn static void acpl::Mem::MgrBlock::Free(tType *&nPtr)
+/// \brief Freeing method.
+/// \param nPtr Reference to a \a tType pointer variable which points to an allocated memory block and is set to NULL after freeing.
+/// \see acpl::Mem::Free
+
+
+
+/// \class acpl::Mem::MgrBlockAligned
+/// \brief Aligned memory block management class for acpl::Mem::BlockAligned and used by acpl::Mem::BlockBase.
+/// \tparam tType Data type specifier for memory block management functions.
+
+/// \fn static bool acpl::Mem::MgrBlockAligned::Resize(tType *&nPtr, acpl::SizeT nCurCount, acpl::SizeT nNewCount, acpl::SizeT nMoveOffset)
+/// \brief Resizing method.
+/// \param nPtr Reference to a \a tType pointer variable which is set to point to a resized memory block.
+/// \param nCurCount Number of \a tType -sized elements to be copied to resized memory block.
+/// \param nNewCount Number of \a tType -sized elements (<b>not size in bytes</b>) to be the size of resized memory block.
+/// \param nMoveOffset Offset of \a tType -sized elements at which to start the copying of data to a resized memory block.
+/// \return <code>\b true</code> if resizing was successful, <code>\b false</code> otherwise.
+/// \see acpl::Mem::ResizeAligned
+
+/// \fn static void acpl::Mem::MgrBlockAligned::Free(tType *&nPtr)
+/// \brief Freeing method.
+/// \param nPtr Reference to a \a tType pointer variable which points to an allocated memory block and is set to NULL after freeing.
+/// \see acpl::Mem::FreeAligned
+
+
+
+/// \class acpl::Mem::BlockBase
+/// \brief Base memory block class that holds all memory block functionality.
+/// \tparam tType Data type of memory block.
+/// \tparam tAlloc Memory block management class type.
+
+/// \fn acpl::Mem::BlockBase::BlockBase(acpl::SizeT nGrowCount = 256)
+/// \brief Constructor.
+/// \param nGrowCount Default growing amount when reallocating.
+
+/// \fn acpl::Mem::BlockBase::~BlockBase()
+/// \brief Destructor.
+
+/// \fn bool acpl::Mem::BlockBase::Apnd(const tType *nData, acpl::SizeT nCount)
+/// \brief Appends data.
+/// \param nData Pointer to data.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to append.
+/// \return <code>\b true</code> if appending was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::BlockBase::Apnd(acpl::IoChannel *nIoChan, acpl::SizeT nCount, acpl::SizeT &nCountAppended)
+/// \brief Appends data from <code>IoChannel</code>.
+/// \param nIoChan <code>IoChannel</code> to read from.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to append.
+/// \param nCountAppended The actual number of appended \a tType -sized elements.
+/// \return <code>\b true</code> if appending was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::BlockBase::Apnd(acpl::IoChannel *nIoChan, acpl::SizeT nCount)
+/// \brief Appends data from <code>IoChannel</code>.
+/// \param nIoChan <code>IoChannel</code> to read from.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to append.
+/// \return <code>\b true</code> if appending was successful, <code>\b false</code> otherwise. The actual number of appended elements may be less than <code>nCount</code>.
+
+/// \fn bool acpl::Mem::BlockBase::Ins(acpl::SizeT nIndex, const tType *nData, acpl::SizeT nCount)
+/// \brief Inserts data.
+/// \param nIndex Offset of \a tType -sized elements at which to insert data.
+/// \param nData Pointer to data.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to insert.
+/// \return <code>\b true</code> if inserting was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::BlockBase::Ins(acpl::SizeT nIndex, acpl::IoChannel *nIoChan, acpl::SizeT nCount, acpl::SizeT &nCountInserted)
+/// \brief Inserts data from <code>IoChannel</code>.
+/// \param nIndex Offset of \a tType -sized elements at which to insert data.
+/// \param nIoChan <code>IoChannel</code> to read from.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to insert.
+/// \param nCountInserted The actual number of inserted \a tType -sized elements.
+/// \return <code>\b true</code> if inserting was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::BlockBase::Ins(acpl::SizeT nIndex, acpl::IoChannel *nIoChan, acpl::SizeT nCount)
+/// \brief Inserts data from <code>IoChannel</code>.
+/// \param nIndex Offset of \a tType -sized elements at which to insert data.
+/// \param nIoChan <code>IoChannel</code> to read from.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to insert.
+/// \return <code>\b true</code> if inserting was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::BlockBase::Fill(acpl::SizeT nIndex, tType nValue, acpl::SizeT nCount)
+/// \brief Inserts provided \a tType value a specified number of times.
+/// \param nIndex Offset of \a tType -sized elements at which to insert the value.
+/// \param nValue \a tType value to insert.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to insert.
+/// \return <code>\b true</code> if inserting was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::BlockBase::FillByte(acpl::SizeT nIndex, acpl::UInt8 nByte, acpl::SizeT nCount)
+/// \brief Inserts provided byte value a specified number of times.
+/// \param nIndex Offset of byte-sized elements at which to insert the value.
+/// \param nByte Byte value to insert.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to insert.
+/// \return <code>\b true</code> if inserting was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::BlockBase::Grow(acpl::SizeT nCount)
+/// \brief Grows allocated memory by a specified number of \a tType -sized elements.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to grow for.
+/// \return <code>\b true</code> if growing was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::BlockBase::Shrink()
+/// \brief Shirnks allocated memory to actual data length.
+/// \return <code>\b true</code> if shrinking was successful, <code>\b false</code> otherwise.
+
+/// \fn acpl::SizeT acpl::Mem::BlockBase::Length() const
+/// \brief Returns number of \a tType -sized elements held.
+/// \return Number of \a tType -sized elements held.
+
+/// \fn bool acpl::Mem::BlockBase::SetLength(acpl::SizeT nLen)
+/// \brief Resize the block to a specified number of \a tType -sized elements.
+/// \param nLen Number of elements to resize to.
+/// \return <code>\b true</code> if setting was successful, <code>\b false</code> otherwise.
+
+/// \fn const tType *acpl::Mem::BlockBase::Data(acpl::SizeT &nCount) const
+/// \brief Returns a pointer to data held.
+/// \param nCount Reference to an acpl::SizeT variable in which the number of \a tType -sized elements held is written.
+/// \return Pointer to data held.
+
+/// \fn tType *acpl::Mem::BlockBase::Data(acpl::SizeT &nCount)
+/// \brief Returns a pointer to data held.
+/// \param nCount Reference to an acpl::SizeT variable in which the number of \a tType -sized elements held is written.
+/// \return Pointer to data held.
+
+/// \fn const tType *acpl::Mem::BlockBase::Data() const
+/// \brief Returns a pointer to data held.
+/// \return Pointer to data held.
+
+/// \fn tType *acpl::Mem::BlockBase::Data()
+/// \brief Returns a pointer to data held.
+/// \return Pointer to data held.
+
+/// \fn acpl::Mem::BlockBase<tType, tAlloc> &acpl::Mem::BlockBase::Clear()
+/// \brief Sets the number of \a tType -sized elements held to 0 (zero).
+/// \return Reference to this object.
+
+/// \fn acpl::Mem::BlockBase<tType, tAlloc> &acpl::Mem::BlockBase::Purge()
+/// \brief Sets the number of \a tType -sized elements held to 0 (zero) and frees allocated memory.
+/// \return Reference to this object.
+
+/// \fn acpl::Mem::BlockBase<tType, tAlloc> &acpl::Mem::BlockBase::Cut(acpl::SizeT nOffset, acpl::SizeT nCount)
+/// \brief Cuts a specified number of \a tType -sized elements from specified position.
+/// \param nOffset Offset of \a tType -sized elements at which to insert data.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to cut.
+/// \return Reference to this object.
+
+/// \fn acpl::Mem::BlockBase<tType, tAlloc> &acpl::Mem::BlockBase::CutLeft(acpl::SizeT nCount)
+/// \brief Cuts a specified number of \a tType -sized elements from the beginning.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to cut.
+/// \return Reference to this object.
+
+/// \fn acpl::Mem::BlockBase<tType, tAlloc> &acpl::Mem::BlockBase::CutRight(acpl::SizeT nCount)
+/// \brief Cuts a specified number of \a tType -sized elements from the end.
+/// \param nCount Number of \a tType -sized elements (<b>not size in bytes</b>) to cut.
+/// \return Reference to this object.
+
+
+
+/// \class acpl::Mem::Block
+/// \brief Typedef holder for memory block template for non-aligned memory.
+/// \tparam tType Data type of memory block.
+
+/// \typedef acpl::Mem::BlockBase<tType, acpl::Mem::MgrBlock<tType> > acpl::Mem::Block::Type
+/// \brief Memory block template for non-aligned memory
+
+
+
+/// \class acpl::Mem::BlockAligned
+/// \brief Typedef holder for memory block template for aligned memory.
+/// \tparam tType Data type of memory block.
+
+/// \typedef acpl::Mem::BlockBase<tType, acpl::Mem::MgrBlock<tType> > acpl::Mem::BlockAligned::Type
+/// \brief Memory block template for aligned memory.
+
+
+
+/// \class acpl::Mem::ByteBlock
+/// \brief Typedef holder for byte-based (<code>acpl::UInt8</code>) memory block template for non-aligned memory.
+
+/// \typedef acpl::Mem::Block<acpl::UInt8>::Type acpl::Mem::ByteBlock::Type
+/// \brief Byte-based (<code>acpl::UInt8</code>) memory block template for non-aligned memory.
+
+
+
+/// \class acpl::Mem::ByteBlockIo
+/// \brief Traverse between acpl::Mem::ByteBlock and acpl::IoChannel which mimics acpl::File functionality.
+
+/// \fn acpl::Mem::ByteBlockIo::ByteBlockIo()
+/// \brief Constructor.
+
+/// \fn acpl::Mem::ByteBlockIo::~ByteBlockIo()
+/// \brief Destructor.
+
+/// \fn bool acpl::Mem::ByteBlockIo::IsOpen() const
+/// \brief Checks whether or not any byte block is attached (opened).
+/// \return <code>\b true</code> if any byte block is attached (opened), <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::ByteBlockIo::Open(acpl::Mem::ByteBlock::Type *nByteBlock)
+/// \brief Attaches (opens) a byte block.
+/// \param nByteBlock Pointer to a byte block to attach (open).
+/// \return <code>\b true</code> if attaching (opening) was successful, <code>\b false</code> otherwise.
+
+/// \fn void acpl::Mem::ByteBlockIo::Close()
+/// \brief Detaches (closes) a byte block.
+
+/// \fn acpl::OffT acpl::Mem::ByteBlockIo::GetSize() const
+/// \brief Returns a size of the attached byte block.
+/// \return If a byte block is attached it returns the size, <code>\b -1</code> otherwise.
+
+/// \fn bool acpl::Mem::ByteBlockIo::GetSize(acpl::OffT &nSize) const
+/// \brief Returns a size of the attached byte block.
+/// \param nSize Reference to a variable to which size will be written.
+/// \return <code>\b true</code> if a byte block is attached, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::ByteBlockIo::SetSize(acpl::OffT nSize)
+/// \brief Sets the size of an attached byte block.
+/// \param nSize New size of the byte block.
+/// \return <code>\b true</code> if setting the size of an attached byte block was successful, <code>\b false</code> otherwise.
+
+/// \fn acpl::OffT acpl::Mem::ByteBlockIo::GetOffset() const
+/// \brief Returns a position on the attached byte block.
+/// \return If a byte block is attached it returns the position, <code>\b -1</code> otherwise.
+
+/// \fn bool acpl::Mem::ByteBlockIo::GetOffset(acpl::OffT &nOffset) const
+/// \brief Returns a position on the attached byte block.
+/// \param nOffset Reference to a variable to which position will be written.
+/// \return <code>\b true</code> if a byte block is attached, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::ByteBlockIo::SetOffset(acpl::OffT nOffset, acpl::IoChannel::SeekWhence nWhence = acpl::IoChannel::swHead)
+/// \brief Sets the position on an attached byte block.
+/// \param nOffset New position on the byte block.
+/// \param nWhence From what place.
+/// \return <code>\b true</code> if setting the position on an attached byte block was successful, <code>\b false</code> otherwise.
+/// \warning Position can be set to a greater value than the actual size of the attached byte block, but cannot be set to before the beginning of the byte block.
+
+
+/// \fn bool acpl::Mem::ByteBlockIo::Write(const void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesWritten)
+/// \brief Write to an attached byte block.
+/// \param nData Pointer to data to be written.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \param nBytesWritten Reference to a variable to which a number of bytes written will be set.
+/// \return <code>\b true</code> if writing to an attached byte block was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mem::ByteBlockIo::Read(void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesRead)
+/// \brief Read from an attached byte block.
+/// \param nData Pointer to memory chunk to which read data will be set.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \param nBytesRead Reference to a variable to which a number of bytes read will be set.
+/// \return <code>\b true</code> if reading from an attached byte block was successful, <code>\b false</code> otherwise.
+
+
+
+/// \fn acpl::SInt8 acpl::Mem::SortCmpFw(const tType &nItem1, const tType &nItem2)
+/// \brief Forward natural (value) comparator.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nItem1 Item to be compared.
+/// \param nItem2 Item to be compared against.
+/// \return -1 if nItem1 is less than nItem2, 0 if nItem1 is equals to nItem2, 1 if nItem1 is greater than nItem2
+
+/// \fn acpl::SInt8 acpl::Mem::SortCmpBw(const tType &nItem1, const tType &nItem2)
+/// \brief Backward natural (value) comparator.
+/// \tparam tType Data type (does not need to be manually specified).
+/// \param nItem1 Item to be compared.
+/// \param nItem2 Item to be compared against.
+/// \return 1 if nItem1 is less than nItem2, 0 if nItem1 is equals to nItem2, -1 if nItem1 is greater than nItem2
+
+
+/// \fn void acpl::Mem::Quicksort(tType *nElements, acpl::SizeT nFirstOffset, acpl::SizeT nLastOffset, acpl::SInt8 (*nComparator)(const tType &, const tType &))
+/// \brief Quicksort algorithm function.
+/// \tparam tType Data type (sometimes needs to be manually specified).
+/// \param nElements Block of elements.
+/// \param nFirstOffset First offset.
+/// \param nLastOffset Last offset.
+/// \param nComparator Pointer to a function for comparing two elements.

@@ -1,0 +1,174 @@
+/// \file Dir.h
+/// \brief File system directory functionality.
+/// 
+/// 
+
+
+
+/// \class acpl::Dir
+/// \brief Directory manipulation class.
+
+
+/// \fn acpl::Dir::Dir()
+/// \brief Empty constructor.
+
+/// \fn acpl::Dir::Dir(const acpl::String::Ref &nPath)
+/// \brief Setter constructor.
+/// \param nPath acpl::String::Ref path string.
+
+/// \fn acpl::Dir::~Dir()
+/// \brief Destructor.
+
+
+/// \fn acpl::Dir::LastError acpl::Dir::GetLastError() const
+/// \brief Returns the the error value set by the last failed directory call.
+/// \return Error value set by the last failed directory call.
+
+/// \fn void acpl::Dir::ResetLastError()
+/// \brief Resets the error value set by the last failed directory call.
+
+
+/// \fn const acpl::Path &acpl::Dir::GetPath() const
+/// \brief Get path string.
+/// \return Path string.
+
+/// \fn acpl::Path &acpl::Dir::GetPath()
+/// \brief Get path string.
+/// \return Path string.
+
+
+/// \fn bool acpl::Dir::ListEntries(acpl::Dir::EntryList &nEntries, bool nStat = true, acpl::Dir::fpFilter nFilterFunc = NULL) const
+/// \brief List directory entries.
+/// \param nEntries Reference to an entries array to which entries will be added.
+/// \param nStat Whether or not to perform stat on each of the entries found.
+/// \param nFilterFunc Function pointer to a filter function.
+/// \return <code>\b true</code> if entry listing was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Dir::GetLastError for error code
+/// \see acpl::Dir::fpFilter
+
+
+/// \fn bool acpl::Dir::Create(const acpl::Path::Permission &nPerm = 0755)
+/// \brief Create a directory.
+/// \param nPerm Permissions to create the directory with.
+/// \note Permissions setting depends heavily on global <code>\b umask</code>. See acpl::Path::SetUmask
+/// \warning Not all file systems support UNIX style permissions.
+/// \return <code>\b true</code> if directory creation was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Dir::GetLastError for error code
+/// \see acpl::Path::SetUmask
+
+/// \fn bool acpl::Dir::Remove()
+/// \brief Remove a directory.
+/// \warning Directory has to be empty before it can be removed. Attempt to remove a non-empty directory will fail.
+/// \return <code>\b true</code> if directory removing was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Dir::GetLastError for error code
+
+
+/// \enum acpl::Dir::LastError
+/// \brief Error values produced by directory calls.
+
+/// \var acpl::Dir::leNone
+/// \brief Initial (reset) value.
+
+/// \var acpl::Dir::leSysErr
+/// \brief System error.
+
+/// \var acpl::Dir::leNoSupport
+/// \brief Operation not supported.
+
+/// \var acpl::Dir::lePathEmpty
+/// \brief Path string is empty.
+
+/// \var acpl::Dir::lePathTooLong
+/// \brief Path string is too long.
+
+/// \var acpl::Dir::leExists
+/// \brief Element to which path string points to already exists.
+
+/// \var acpl::Dir::leNonExist
+/// \brief Element to which path string points to does not exist.
+
+/// \var acpl::Dir::leNotDir
+/// \brief Element to which path string points to is not a directory.
+
+/// \var acpl::Dir::leSymlinkLoop
+/// \brief Too many symbolic links encountered in the path string.
+
+/// \var acpl::Dir::leNoPerm
+/// \brief Operation is not allowed under current permissions.
+
+/// \var acpl::Dir::leNotEmpty
+/// \brief Directory is not empty.
+
+
+/// \typedef acpl::Dir::EntryList
+/// \brief Entry list type.
+
+
+/// \typedef bool (*acpl::Dir::fpFilter)(const acpl::Dir::Entry &nEntry)
+/// \brief Filtering function pointer type.
+/// 
+/// Function that is called (if provided a pointer to) for every element encountered during a listing process.
+/// 
+/// \param nEntry Directory element (entry) based on which to decide the return value.
+/// \return <code>\b true</code> if directory element should be included in the calling procedure, <code>\b false</code> if it should be filtered out.
+
+
+
+/// \class acpl::Dir::Entry
+/// \brief Directory element (entry) class.
+
+
+/// \fn acpl::Dir::Entry::Entry()
+/// \brief Empty constructor.
+
+/// \fn acpl::Dir::Entry::~Entry()
+/// \brief Destructor.
+
+
+/// \fn void acpl::Dir::Entry::Clear()
+/// \brief Clear directory element fields.
+
+
+/// \fn const acpl::Dir::Entry::Name &acpl::Dir::Entry::GetName() const
+/// \brief Get directory element name.
+/// \return Directory element name.
+
+/// \fn bool acpl::Dir::Entry::IsHidden() const
+/// \brief Is directory element a hidden element.
+/// \note Different file systems consider files to be hidden in different ways.
+/// \note \li Windows file systems through MSCRT have a <code>{<b>FILE_ATTRIBUTE_HIDDEN</b>}</code> flag.
+/// \note \li UNIX systems do not have an standard hidden designation flag, but files whose names start with <code>'.'</code> are unofficially considered hidden - that includes current directory (<code>'.'</code>) and parent directory (<code>'..'</code>).
+/// \return <code>\b true</code> if directory element is hidden, <code>\b false</code> otherwise.
+
+
+/// \fn acpl::Dir::Entry::InfoBasic &acpl::Dir::Entry::GetInfoBasic()
+/// \brief Get basic directory element (entry) information struct.
+/// \return Basic directory element (entry) information struct.
+
+
+
+/// \class acpl::Dir::Entry::Name
+/// \brief Directory element (entry) name class.
+/// \note This is a pure extend (no extra functionality) of acpl::Path::String.
+
+
+
+/// \struct acpl::Dir::Entry::InfoBasic
+/// \brief Basic directory element (entry) information struct.
+
+
+/// \fn acpl::Dir::Entry::InfoBasic::InfoBasic(acpl::Path::StatBase::TypeCont &nTypeRef)
+/// \brief Setter constructor.
+/// \param nTypeRef Reference to the element type.
+/// \note This bizarrely convoluted constructor has to be there because acpl::Dir::Entry::InfoBasic::sTypeRef is a reference, and references can only be initialised at construction time.
+
+
+/// \var acpl::Dir::Entry::InfoBasic::sName
+/// \brief Directory element name.
+
+/// \var acpl::Dir::Entry::InfoBasic::sTypeRef
+/// \brief Reference to an element type.
+
+/// \var acpl::Dir::Entry::InfoBasic::sIsHidden
+/// \brief Hidden designation flag.
+

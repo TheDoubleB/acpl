@@ -1,0 +1,253 @@
+/// \file Uri.h
+/// \brief Uniform resource identifier (URI) functionality.
+/// 
+/// 
+
+
+
+/// \class acpl::Uri
+/// \brief URI manipulation class.
+/// \note Detailed information on URI can be found in:
+/// \note \li RFC 3986 - Uniform Resource Identifier (URI) ( http://tools.ietf.org/html/rfc3986 )
+
+
+/// \fn acpl::Uri::Uri()
+/// \brief Empty constructor.
+
+/// \fn acpl::Uri::~Uri()
+/// \brief Destructor.
+
+
+/// \fn void acpl::Uri::Clear()
+/// \brief Clear URI fields.
+
+
+/// \fn bool acpl::Uri::Parse(const acpl::String::Ref &nUri, acpl::Uri::ValidationLevel nLevel = acpl::Uri::vlUri)
+/// \brief Parse input URI.
+/// \param nUri URI string to parse.
+/// \param nLevel URI validation level.
+/// \return <code>\b true</code> if input URI was able to be parsed (is valid), <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Uri::Build(acpl::String &nString, acpl::Uri::ValidationLevel nLevel = acpl::Uri::vlUri) const
+/// \brief Build URI from set fields.
+/// \param nString Reference to a string to which built URI will be set.
+/// \param nLevel URI validation level to use for build.
+/// \return <code>\b true</code> if URI was able to be built (fields are valid), <code>\b false</code> otherwise.
+
+
+/// \fn const acpl::String &acpl::Uri::GetScheme() const
+/// \brief Get scheme field.
+/// \return Value of scheme field.
+
+/// \fn bool acpl::Uri::SetScheme(const acpl::String::Ref &nScheme)
+/// \brief Set scheme field.
+/// \param nScheme Scheme string to set.
+/// \note Find description of scheme here: http://tools.ietf.org/html/rfc3986#section-3.1
+/// \return <code>\b true</code> if scheme is valid, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Uri::HasAuthority() const
+/// \brief Get whether or not authority is a part of this URI.
+/// \note See acpl::Uri::HasAuthority for more notes.
+/// \return <code>\b true</code> if authority is a part of this URI, <code>\b false</code> otherwise.
+
+/// \fn void acpl::Uri::HasAuthority(bool nHasAuthority)
+/// \brief Set whether or not authority should be a part of this URI.
+/// \param nHasAuthority Whether or not authority should be a part of this URI.
+/// \note Find description of authority here: http://tools.ietf.org/html/rfc3986#section-3.2
+/// \see acpl::Uri::SetUserInfo
+/// \see acpl::Uri::SetHost
+/// \see acpl::Uri::SetPort
+
+/// \fn const acpl::String &acpl::Uri::GetUserInfo() const
+/// \brief Get user information field.
+/// \return Value of user information field.
+
+/// \fn bool acpl::Uri::SetUserInfo(const acpl::String::Ref &nUserInfo)
+/// \brief Set user information field.
+/// \param nUserInfo User information string to set.
+/// \note Find description of user information here: http://tools.ietf.org/html/rfc3986#section-3.2.1
+/// \return <code>\b true</code> if user information is valid, <code>\b false</code> otherwise.
+
+/// \fn const acpl::String &acpl::Uri::GetHost() const
+/// \brief Get host field.
+/// \return Value of host field.
+
+/// \fn bool acpl::Uri::SetHost(const acpl::String::Ref &nHost, acpl::Uri::HostType nHostTypeHint = acpl::Uri::htUndef)
+/// \brief Set host field.
+/// \param nHost Host string to set.
+/// \param nHostTypeHint Host type hint. If left as acpl::Uri::htUndef the validation process will figure it out on its own.
+/// \note Find description of host here: http://tools.ietf.org/html/rfc3986#section-3.2.2
+/// \return <code>\b true</code> if host is valid, <code>\b false</code> otherwise.
+
+/// \fn acpl::Uri::HostType acpl::Uri::GetHostType() const
+/// \brief Get host field type.
+/// \return Host field type.
+
+/// \fn acpl::UInt16 acpl::Uri::GetPort() const
+/// \brief Get port field.
+/// \return Value of port field.
+
+/// \fn void acpl::Uri::SetPort(acpl::UInt16 nPort)
+/// \brief Set port field.
+/// \param nPort Port number to set.
+/// \note Find description of port here: http://tools.ietf.org/html/rfc3986#section-3.2.3
+
+/// \fn const acpl::String &acpl::Uri::GetPath() const
+/// \brief Get path field.
+/// \return Value of path field.
+
+/// \fn bool acpl::Uri::SetPath(const acpl::String::Ref &nPath)
+/// \brief Set path field.
+/// \param nPath Path string to set.
+/// \note Find description of path here: http://tools.ietf.org/html/rfc3986#section-3.3
+/// \return <code>\b true</code> if path is valid, <code>\b false</code> otherwise.
+
+/// \fn const acpl::String &acpl::Uri::GetQuery() const
+/// \brief Get query field.
+/// \return Value of query field.
+
+/// \fn void acpl::Uri::GetQuery(acpl::Uri::KeyValueList &nKeyValueList) const
+/// \brief Parse query field as PHP style key/value pairs form.
+/// \param nKeyValueList Reference to a list of key/value pairs to add to.
+/// \note See acpl::Uri::ParseKvString for more notes.
+/// \see acpl::Uri::ParseKvString
+
+/// \fn bool acpl::Uri::SetQuery(const acpl::String::Ref &nQuery)
+/// \brief Set query field.
+/// \param nQuery Query string to set.
+/// \note Find description of query here: http://tools.ietf.org/html/rfc3986#section-3.4
+/// \return <code>\b true</code> if query is valid, <code>\b false</code> otherwise.
+
+/// \fn void acpl::Uri::SetQuery(const acpl::Uri::KeyValueList &nKeyValueList)
+/// \brief Set query field from PHP style key/value pairs.
+/// \param nKeyValueList List of key/value pairs to set query from.
+/// \note Key/value pairs do not need to be encoded by the user but will be encoded by this call automatically.
+
+/// \fn const acpl::String &acpl::Uri::GetFragment() const
+/// \brief Get fragment field.
+/// \return Value of fragment field.
+
+/// \fn bool acpl::Uri::SetFragment(const acpl::String::Ref &nFragment)
+/// \brief Set fragment field.
+/// \param nFragment Fragment string to set.
+/// \note Find description of fragment here: http://tools.ietf.org/html/rfc3986#section-3.5
+/// \return <code>\b true</code> if fragment is valid, <code>\b false</code> otherwise.
+
+
+/// \fn void acpl::Uri::PctEncode(const acpl::String::Ref &nRaw, acpl::String &nEncoded, bool nApndEncoded = false)
+/// \brief Percent-encode a raw string.
+/// \param nRaw acpl::String::Ref string to encode.
+/// \param nEncoded Reference to a string to which encoded string should be set/appended.
+/// \param nApndEncoded Whether encoded string should be appended (<code>\b true</code>) or set (<code>\b false</code>) to \a nEncoded.
+
+/// \fn void acpl::Uri::PctDecode(const acpl::String::Ref &nEncoded, acpl::String &nRaw, bool nApndRaw = false)
+/// \brief Decode a percent-encoded string.
+/// \param nEncoded acpl::String::Ref string to decode.
+/// \param nRaw Reference to a string to which decoded string should be set/appended.
+/// \param nApndRaw Whether decoded string should be appended (<code>\b true</code>) or set (<code>\b false</code>) to \a nRaw.
+
+
+/// \fn void acpl::Uri::ParseKvString(const acpl::String::Ref &nKvString, acpl::Uri::KeyValueList &nKeyValueList)
+/// \brief Parse a (query) string as PHP style key/value pairs form.
+/// \param nKvString acpl::String::Ref string containing key/value pairs.
+/// \param nKeyValueList Reference to a list of key/value pairs to add parsed pairs to.
+/// \note PHP style key/value query string takes a form of: <code>"${KEY_1}=${VALUE_1}&${KEY_2}=${VALUE_2}&..."</code>
+/// \note This is a dumb parser of key/value pairs, which means:
+/// \note \li pairs with a missing key (<code>"=${VALUE_1}&=${VALUE_2}&..."</code>) are permissible;
+/// \note \li all occurances of pairs with the same key (<code>"${KEY}=${VALUE_1}&${KEY}=${VALUE_2}&..."</code>) are added to the parsed list;
+/// \note \li array-style keys (<code>"${KEY}[]=${VALUE_1}&${KEY}[]=${VALUE_2}&..."</code>) are treated as normal keys and, thus, behave exactly as described in the above bullet point.
+/// \note Examples of pairs:
+/// \note \li <code>"key1=val1&key2=val2&key3=val3"</code> - straightforward 3 pairs
+/// \note \li <code>"&&&"</code> - 0 pairs
+/// \note \li <code>"&key1=val1&"</code> - 1 pair
+/// \note \li <code>"key1&key2=val2"</code> - 2 pairs, first pair is missing a value
+/// \note \li <code>"key1=val1&key2"</code> - 2 pairs, last pair is missing a value
+/// \note \li <code>"=val1&key2=val2"</code> - 2 pairs, first pair is missing a key
+/// \note \li <code>"key1=val1&=val2"</code> - 2 pairs, last pair is missing a key
+
+/// \fn void acpl::Uri::BuildKvString(const acpl::Uri::KeyValueList &nKeyValueList, acpl::String &nKvString)
+/// \brief Build a (query) string as PHP style key/value pairs form.
+/// \param nKeyValueList Key/value pairs list from which to generate the string.
+/// \param nKvString Reference to a string to which generated string is set.
+/// \note See acpl::Uri::ParseKvString for more notes.
+/// \see acpl::Uri::ParseKvString
+
+
+/// \fn bool acpl::Uri::Validate(const acpl::String::Ref &nUri, acpl::Uri::ValidationLevel nLevel = acpl::Uri::vlUri)
+/// \brief Validae input URI.
+/// \param nUri URI string to validate.
+/// \param nLevel URI validation level.
+/// \return <code>\b true</code> if input URI is valid, <code>\b false</code> otherwise.
+
+
+/// \enum acpl::Uri::HostType
+/// \brief URI host field type.
+/// \note Find description of host types here: http://tools.ietf.org/html/rfc3986#section-3.2.2
+
+/// \var acpl::Uri::htUndef
+/// \brief Undefined type.
+
+/// \var acpl::Uri::htIpv4Addr
+/// \brief IPv4 address type.
+
+/// \var acpl::Uri::htIpv6Addr
+/// \brief IPv6 address type.
+
+/// \var acpl::Uri::htIpvFutureAddr
+/// \brief IPvFuture address type.
+
+/// \var acpl::Uri::htDomainName
+/// \brief Domain name type.
+
+/// \var acpl::Uri::htRegisteredName
+/// \brief Registered name type.
+
+
+/// \enum acpl::Uri::ValidationLevel
+/// \brief URI parse/build validation level.
+
+/// \var acpl::Uri::vlUrl
+/// \brief URL validation level.
+/// \note Valid URL has to contain at least URI scheme and host part of URI authority.
+/// \note Valid URL host field can only be of IPv4 address, IPv6 address, or a domain name type.
+
+/// \var acpl::Uri::vlUri
+/// \brief URI validation level.
+/// \note The only requirement for a valid URI is the presence of scheme.
+
+/// \var acpl::Uri::vlUriRef
+/// \brief URI reference validation level.
+/// \note URI reference is a relative URI consisting of any combination of URI elements. It does not require to have a set scheme.
+
+
+/// \typedef acpl::Uri::KeyValueList
+/// \brief Key/value list type.
+
+
+
+/// \class acpl::Uri::KeyValue
+/// \brief Key/value holder class.
+
+
+/// \fn acpl::Uri::KeyValue::KeyValue()
+/// \brief Empty constructor.
+
+/// \fn acpl::Uri::KeyValue::~KeyValue()
+/// \brief Destructor.
+
+
+/// \fn const acpl::String &acpl::Uri::KeyValue::GetKey() const
+/// \brief Get key string.
+/// \return Key string reference.
+
+/// \fn acpl::String &acpl::Uri::KeyValue::GetKey()
+/// \brief Get key string.
+/// \return Key string reference.
+
+/// \fn const acpl::String &acpl::Uri::KeyValue::GetValue() const
+/// \brief Get value string.
+/// \return Key string reference.
+
+/// \fn acpl::String &acpl::Uri::KeyValue::GetValue()
+/// \brief Get value string.
+/// \return Key string reference.

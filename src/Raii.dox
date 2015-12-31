@@ -1,0 +1,272 @@
+/// \file Raii.h
+/// \brief General RAII release classes.
+
+
+
+/// \class acpl::RaiiFunc0
+/// \brief RAII release class for calling of <code>void</code> returning function without arguments.
+/// \tparam tFunc Function pointer to a <code>void</code> returning function without arguments to call at destructor.
+
+/// \fn acpl::RaiiFunc0::RaiiFunc0()
+/// \brief Constructor.
+
+/// \fn acpl::RaiiFunc0::~RaiiFunc0()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiFunc0::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::RaiiFunc0::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::RaiiFuncR0
+/// \brief RAII release class for calling of \a tRet returning function without arguments.
+/// \tparam tRet Return value type of a function pointed to by \a tFunc.
+/// \tparam tFunc Function pointer to a function without arguments to call at destructor.
+
+/// \fn acpl::RaiiFuncR0::RaiiFuncR0()
+/// \brief Constructor.
+
+/// \fn acpl::RaiiFuncR0::~RaiiFuncR0()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiFuncR0::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::RaiiFuncR0::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::RaiiFunc1
+/// \brief RAII release class for calling of <code>void</code> returning function with one argument.
+/// \tparam tParam Argument type to be passed to a function pointed to by \a tFunc.
+/// \tparam tFunc Function pointer to a function with one argument to call at destructor.
+
+/// \fn acpl::RaiiFunc1::RaiiFunc1(tParam &nParam)
+/// \param nParam Reference to an argument to be passed to release call.
+/// \brief Constructor.
+
+/// \fn acpl::RaiiFunc1::~RaiiFunc1()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiFunc1::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::RaiiFunc1::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::RaiiFuncR1
+/// \brief RAII release class for calling of \a tRet returning function one argument.
+/// \tparam tRet Return value type of a function pointed to by \a tFunc.
+/// \tparam tParam Argument type to be passed to a function pointed to by \a tFunc.
+/// \tparam tFunc Function pointer to a function with one argument to call at destructor.
+
+/// \fn acpl::RaiiFuncR1::RaiiFuncR1(tParam &nParam)
+/// \param nParam Reference to an argument to be passed to release call.
+/// \brief Constructor.
+
+/// \fn acpl::RaiiFuncR1::~RaiiFuncR1()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiFuncR1::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::RaiiFuncR1::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::RaiiFunc2
+/// \brief RAII release class for calling of <code>void</code> returning function with two arguments.
+/// \tparam tParam Argument type to be passed to a function pointed to by \a tFunc.
+/// \tparam tAddParam Second argument type to be passed to a function pointed to by \a tFunc.
+/// \tparam tFunc Function pointer to a function with two arguments to call at destructor.
+
+/// \fn acpl::RaiiFunc2::RaiiFunc2(tParam &nParam, tAddParam &nAddParam)
+/// \param nParam Reference to an argument to be passed to release call.
+/// \param nAddParam Reference to a second argument to be passed to release call.
+/// \brief Constructor.
+
+/// \fn acpl::RaiiFunc2::~RaiiFunc2()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiFunc2::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::RaiiFunc2::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::RaiiFuncR2
+/// \brief RAII release class for calling of \a tRet returning function two arguments.
+/// \tparam tRet Return value type of a function pointed to by \a tFunc.
+/// \tparam tParam Argument type to be passed to a function pointed to by \a tFunc.
+/// \tparam tAddParam Second argument type to be passed to a function pointed to by \a tFunc.
+/// \tparam tFunc Function pointer to a function with two arguments to call at destructor.
+
+/// \fn acpl::RaiiFuncR2::RaiiFuncR2(tParam &nParam, tAddParam &nAddParam)
+/// \param nParam Reference to an argument to be passed to release call.
+/// \param nAddParam Reference to a second argument to be passed to release call.
+/// \brief Constructor.
+
+/// \fn acpl::RaiiFuncR2::~RaiiFuncR2()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiFuncR2::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::RaiiFuncR2::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::RaiiMethod0
+/// \brief RAII release class for calling of <code>void</code> returning method without arguments.
+/// \tparam tClass Class type containing a \a tMethod method.
+/// \tparam tMethod Function pointer to a method with without arguments to call at destructor.
+
+/// \fn acpl::RaiiMethod0::RaiiMethod0(tClass &nClass)
+/// \param nClass Reference to a class containing <code>tMethod</code> method.
+/// \brief Constructor.
+
+/// \fn acpl::RaiiMethod0::~RaiiMethod0()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiMethod0::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::RaiiMethod0::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::RaiiMethodR0
+/// \brief RAII release class for calling of \a tRet returning method without arguments.
+/// \tparam tClass Class type containing a \a tMethod method.
+/// \tparam tRet Return value type of a method pointed to by \a tMethod.
+/// \tparam tMethod Function pointer to a method with without arguments to call at destructor.
+
+/// \fn acpl::RaiiMethodR0::RaiiMethodR0(tClass &nClass)
+/// \param nClass Reference to a class containing <code>tMethod</code> method.
+/// \brief Constructor.
+
+/// \fn acpl::RaiiMethodR0::~RaiiMethodR0()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiMethodR0::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::RaiiMethodR0::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::RaiiMethod1
+/// \brief RAII release class for calling of <code>void</code> returning method with one argument.
+/// \tparam tClass Class type containing a \a tMethod method.
+/// \tparam tParam Argument type to be passed to a method pointed to by \a tMethod.
+/// \tparam tMethod Function pointer to a method with one argument to call at destructor.
+
+/// \fn acpl::RaiiMethod1::RaiiMethod1(tClass &nClass, tParam &nParam)
+/// \param nClass Reference to a class containing <code>tMethod</code> method.
+/// \param nParam Reference to an argument to be passed to release call.
+/// \brief Constructor.
+
+/// \fn acpl::RaiiMethod1::~RaiiMethod1()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiMethod1::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::RaiiMethod1::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::RaiiMethodR1
+/// \brief RAII release class for calling of \a tRet returning method one argument.
+/// \tparam tClass Class type containing a \a tMethod method.
+/// \tparam tRet Return value type of a method pointed to by \a tMethod.
+/// \tparam tParam Argument type to be passed to a method pointed to by \a tMethod.
+/// \tparam tMethod Function pointer to a method with one argument to call at destructor.
+
+/// \fn acpl::RaiiMethodR1::RaiiMethodR1(tClass &nClass, tParam &nParam)
+/// \param nClass Reference to a class containing <code>tMethod</code> method.
+/// \param nParam Reference to an argument to be passed to release call.
+/// \brief Constructor.
+
+/// \fn acpl::RaiiMethodR1::~RaiiMethodR1()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiMethodR1::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::RaiiMethodR1::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::RaiiMethod2
+/// \brief RAII release class for calling of <code>void</code> returning method with two arguments.
+/// \tparam tClass Class type containing a \a tMethod method.
+/// \tparam tParam Argument type to be passed to a method pointed to by \a tMethod.
+/// \tparam tAddParam Second argument type to be passed to a method pointed to by \a tMethod.
+/// \tparam tMethod Function pointer to a method with two arguments to call at destructor.
+
+/// \fn acpl::RaiiMethod2::RaiiMethod2(tClass &nClass, tParam &nParam, tAddParam &nAddParam)
+/// \param nClass Reference to a class containing <code>tMethod</code> method.
+/// \param nParam Reference to an argument to be passed to release call.
+/// \param nAddParam Reference to a second argument to be passed to release call.
+/// \brief Constructor.
+
+/// \fn acpl::RaiiMethod2::~RaiiMethod2()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiMethod2::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::RaiiMethod2::Disable()
+/// \brief Disable RAII release at destructor.
+
+
+
+/// \class acpl::RaiiMethodR2
+/// \brief RAII release class for calling of \a tRet returning method two arguments.
+/// \tparam tClass Class type containing a \a tMethod method.
+/// \tparam tRet Return value type of a method pointed to by \a tMethod.
+/// \tparam tParam Argument type to be passed to a method pointed to by \a tMethod.
+/// \tparam tAddParam Second argument type to be passed to a method pointed to by \a tMethod.
+/// \tparam tMethod Function pointer to a method with two arguments to call at destructor.
+
+/// \fn acpl::RaiiMethodR2::RaiiMethodR2(tClass &nClass, tParam &nParam, tAddParam &nAddParam)
+/// \param nClass Reference to a class containing <code>tMethod</code> method.
+/// \param nParam Reference to an argument to be passed to release call.
+/// \param nAddParam Reference to a second argument to be passed to release call.
+/// \brief Constructor.
+
+/// \fn acpl::RaiiMethodR2::~RaiiMethodR2()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiMethodR2::Enable()
+/// \brief Enable RAII release at destructor.
+/// \note By default, RAII release is enabled.
+
+/// \fn void acpl::RaiiMethodR2::Disable()
+/// \brief Disable RAII release at destructor.

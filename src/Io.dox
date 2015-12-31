@@ -1,0 +1,166 @@
+/// \file Io.h
+/// \brief Input/output interfaces and framework.
+/// 
+/// 
+
+
+
+/// \class acpl::IoChannel
+/// \brief Input/output interface.
+
+/// \fn acpl::IoChannel::IoChannel()
+/// \brief Constructor.
+
+/// \fn acpl::IoChannel::~IoChannel()
+/// \brief Destructor.
+
+/// \fn bool acpl::IoChannel::WriteAll(const void *nData, acpl::SizeT nDataSize)
+/// \brief Writing helper method to write until all given data has been written.
+/// \param nData Pointer to data to be written.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \return <code>\b true</code> if writing was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::IoChannel::ReadAll(void *nData, acpl::SizeT nDataSize)
+/// \brief Reading helper method to read until all requested data has been read.
+/// \param nData Pointer to memory chunk to which read data will be set.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \note This method should not be used as it will return <code>\b false</code> if \a nDataSize bytes of data is not (currently) available. Use acpl::IoChannel::Read instead.
+/// \return <code>\b true</code> if reading was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::IoChannel::Write(const void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesWritten)
+/// \brief Interface for writing.
+/// \param nData Pointer to data to be written.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \param nBytesWritten Reference to a variable to which a number of bytes written will be set.
+/// \return <code>\b true</code> if writing was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::IoChannel::Read(void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesRead)
+/// \brief Interface for reading.
+/// \param nData Pointer to memory chunk to which read data will be set.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \param nBytesRead Reference to a variable to which a number of bytes read will be set.
+/// \return <code>\b true</code> if reading was successful, <code>\b false</code> otherwise.
+
+
+/// \enum acpl::IoChannel::Whence
+/// \brief Position relative to which new offset value should start from.
+
+/// \var acpl::IoChannel::whStart
+/// \brief Start from the beginning.
+
+/// \var acpl::IoChannel::whCurrent
+/// \brief Start from the current position.
+
+/// \var acpl::IoChannel::whEnd
+/// \brief Start from the end.
+
+
+
+/// \class acpl::IoNull
+/// \brief NULL input/output channel.
+/// \note This is useful mainly for writing to "null" channel, effectively discarding written data.
+
+
+/// \fn acpl::IoNull::IoNull()
+/// \brief Constructor.
+
+/// \fn acpl::IoNull::~IoNull()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::IoNull::Write(const void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesWritten)
+/// \brief Writes to "null" channel.
+/// \param nData Pointer to data to be written.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \param nBytesWritten Reference to a variable to which a number of bytes written will be set.
+/// \note This is useful for discarding data written to an acpl::IoChannel.
+/// \return Always <code>\b true</code>.
+
+/// \fn bool acpl::IoNull::Read(void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesRead)
+/// \brief Read from "null" channel.
+/// \param nData Pointer to memory chunk to which read data will be set.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \param nBytesRead Reference to a variable to which a number of bytes read will be set.
+/// \return Always <code>\b false</code>.
+
+
+
+/// \class acpl::IoStd
+/// \brief Standard input/output channel.
+/// \note Standard input/output refers to the (command-line) stdin, stdout, and stderr pipes.
+
+
+/// \fn acpl::IoStd::IoStd()
+/// \brief Constructor.
+
+/// \fn acpl::IoStd::~IoStd()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::IoStd::Read(void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesRead)
+/// \brief Read data from stdin pipe.
+/// \param nData Pointer to memory chunk to which read data will be set.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \param nBytesRead Reference to a variable to which a number of bytes read will be set.
+/// \return <code>\b true</code> if reading was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::IoStd::Write(const void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesWritten)
+/// \brief Write data to stdout pipe.
+/// \param nData Pointer to data to be written.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \param nBytesWritten Reference to a variable to which a number of bytes written will be set.
+/// \return <code>\b true</code> if writing was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::IoStd::ReadAll(void *nData, acpl::SizeT nDataSize)
+/// \brief Read data from stdin pipe until \a nDataSize bytes have been read.
+/// \param nData Pointer to memory chunk to which read data will be set.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \note This method should not be used as it will return <code>\b false</code> if \a nDataSize bytes of data is not (currently) available. Use acpl::IoStd::Read instead.
+/// \return <code>\b true</code> if reading was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::IoStd::WriteAll(const void *nData, acpl::SizeT nDataSize)
+/// \brief Write data to stdout pipe until \a nDataSize bytes have been read.
+/// \param nData Pointer to data to be written.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \return <code>\b true</code> if writing was successful, <code>\b false</code> otherwise.
+
+
+/// \fn static bool acpl::IoStd::ReadIn(void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesRead)
+/// \brief Read data from stdin pipe.
+/// \param nData Pointer to memory chunk to which read data will be set.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \param nBytesRead Reference to a variable to which a number of bytes read will be set.
+/// \return <code>\b true</code> if reading was successful, <code>\b false</code> otherwise.
+
+/// \fn static bool acpl::IoStd::ReadInAll(void *nData, acpl::SizeT nDataSize)
+/// \brief Read data from stdin pipe until \a nDataSize bytes have been read.
+/// \param nData Pointer to memory chunk to which read data will be set.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \note This method should not be used as it will return <code>\b false</code> if \a nDataSize bytes of data is not (currently) available. Use acpl::IoStd::ReadIn instead.
+/// \return <code>\b true</code> if reading was successful, <code>\b false</code> otherwise.
+
+/// \fn static bool acpl::IoStd::WriteOut(const void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesWritten)
+/// \brief Write data to stdout pipe.
+/// \param nData Pointer to data to be written.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \param nBytesWritten Reference to a variable to which a number of bytes written will be set.
+/// \return <code>\b true</code> if writing was successful, <code>\b false</code> otherwise.
+
+/// \fn static bool acpl::IoStd::WriteOutAll(const void *nData, acpl::SizeT nDataSize)
+/// \brief Write data to stdout pipe until \a nDataSize bytes have been read.
+/// \param nData Pointer to data to be written.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \return <code>\b true</code> if writing was successful, <code>\b false</code> otherwise.
+
+/// \fn static bool acpl::IoStd::WriteErr(const void *nData, acpl::SizeT nDataSize, acpl::SizeT &nBytesWritten)
+/// \brief Write data to stderr pipe.
+/// \param nData Pointer to data to be written.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \param nBytesWritten Reference to a variable to which a number of bytes written will be set.
+/// \return <code>\b true</code> if writing was successful, <code>\b false</code> otherwise.
+
+/// \fn static bool acpl::IoStd::WriteErrAll(const void *nData, acpl::SizeT nDataSize)
+/// \brief Write data to stderr pipe until \a nDataSize bytes have been read.
+/// \param nData Pointer to data to be written.
+/// \param nDataSize Size of the memory chunk pointed to by \a nData.
+/// \return <code>\b true</code> if writing was successful, <code>\b false</code> otherwise.

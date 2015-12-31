@@ -1,0 +1,614 @@
+/// \file Path.h
+/// \brief File system path functionality.
+/// 
+/// 
+
+
+
+/// \class acpl::Path
+/// \brief File system path manipulation class.
+
+
+/// \fn acpl::Path::Path()
+/// \brief Empty constructor.
+
+/// \fn acpl::Path::Path(const acpl::String::Ref &nPath)
+/// \brief Setter constructor.
+/// \param nPath acpl::String::Ref path string.
+
+/// \fn acpl::Path::~Path()
+/// \brief Destructor.
+
+
+/// \fn acpl::Path::LastError acpl::Path::GetLastError() const
+/// \brief Returns the the error value set by the last failed path call.
+/// \return Error value set by the last failed path call.
+
+/// \fn void acpl::Path::ResetLastError()
+/// \brief Resets the error value set by the last failed path call.
+
+
+/// \fn const acpl::Pathchar *acpl::Path::GetStr() const
+/// \brief Get path string.
+/// \note The return type is <code>{<b>acpl::Pathchar *</b>}</code> which differs depending on the underlaying system.
+/// \return Path string if set, empty string (<code>""</code> or <code>L""</code>) otherwise.
+
+/// \fn bool acpl::Path::IsEmpty() const
+/// \brief Checks whether or not the path string is empty.
+/// \return <code>\b true</code> if path string is empty, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::IsAbsolute() const
+/// \brief Checks whether or not the path string is set and is absolute.
+/// \note For UNIX systems, absolute path is any path that starts with <code>"/"</code>.
+/// \note For Windows system, absolute path is any path that starts with:
+/// \note \li <code>"${DRIVE_LETTER}:\"</code>
+/// \note \li <code>"${DRIVE_LETTER}:/"</code>
+/// \note \li <code>"\"</code>
+/// \note \li <code>"/"</code>
+/// \note \li <code>"\\${SERVER_NAME}"</code>
+/// \return <code>\b true</code> if path string is absolute, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::IsRoot() const
+/// \brief Checks whether or not the path string is set and is pointing to a root directory.
+/// \note For UNIX systems, root directory path is a path including only <code>"/"</code> and no other sub-elements.
+/// \note For Windows system, root directory path is any of the following options and no other sub-elements:
+/// \note \li <code>"${DRIVE_LETTER}:\"</code>
+/// \note \li <code>"${DRIVE_LETTER}:/"</code>
+/// \note \li <code>"\"</code>
+/// \note \li <code>"/"</code>
+/// \note \li <code>"\\${SERVER_NAME}"</code>
+/// \return <code>\b true</code> if path string is pointing to a root directory, <code>\b false</code> otherwise.
+
+
+/// \fn acpl::Path &acpl::Path::Set(const acpl::Path::String &nPath)
+/// \brief Set path string.
+/// \param nPath acpl::Path::String path string.
+/// \note Keep in mind that acpl::Path object strips all trailing element delimiters from the end of the path string.
+/// \return Reference to this object.
+
+/// \fn acpl::Path &acpl::Path::Set(const acpl::String::Ref &nPath)
+/// \brief Set path string.
+/// \param nPath acpl::String::Ref path string.
+/// \note See acpl::Path::Set for more notes.
+/// \return Reference to this object.
+
+/// \fn acpl::Path &acpl::Path::Apnd(const acpl::Path::String &nPath)
+/// \brief Append raw string to the path string.
+/// \param nPath acpl::Path::String string to append.
+/// \note Keep in mind that acpl::Path object strips all trailing element delimiters from the end of the path string.
+/// \return Reference to this object.
+
+/// \fn acpl::Path &acpl::Path::Apnd(const acpl::String::Ref &nPath)
+/// \brief Append raw string to the path string.
+/// \param nPath acpl::String::Ref string to append.
+/// \note See acpl::Path::Apnd for more notes.
+/// \return Reference to this object.
+
+/// \fn acpl::Path &acpl::Path::Clear()
+/// \brief Clear path string.
+/// \return Reference to this object.
+
+
+/// \fn acpl::Path &acpl::Path::Current()
+/// \brief Set path string to a current directory.
+/// \note If path string is empty, this call it will set path string to a current directory designator - for both UNIX and Windows system, this means setting it to <code>"."</code>.
+/// \note If path string is not empty, this call will have no effect.
+/// \return Reference to this object.
+
+/// \fn acpl::Path &acpl::Path::Parent()
+/// \brief Set path string to a parent directory.
+/// \note If path string is empty, this call it will set path string to a parent directory designator - for both UNIX and Windows systems: <code>".."</code>.
+/// \note If path string is not empty, and:
+/// \note \li is pointing to a root directory, this call will have no effect, as there is no parent to the root directory;
+/// \note \li the only element is the current directory designator, it will set the path to the parent directory designator - for both UNIX and Windows systems: <code>"."</code> -> <code>".."</code>;
+/// \note \li the only element is the parent directory designator, it will simply append the directory delimiter and the parent directory designator - on UNIX: <code>".."</code> -> <code>"../.."</code>; on Windows: <code>".."</code> -> <code>"..\.."</code>;
+/// \note \li the last element is the parent directory designators, it act the same as the previous situation - on UNIX: <code>"dir/.."</code> -> <code>"dir/../.."</code>; on Windows: <code>"dir\.."</code> -> <code>"dir\..\.."</code>;
+/// \note \li the only element is a normal element, it will set the path to the current directory designator - for both UNIX and Windows systems: <code>"dir"</code> -> <code>"."</code>;
+/// \note \li the last element is a normal element, it will remove the last element and directory delimiter - on UNIX: <code>"dir/subdir"</code> -> <code>"dir"</code>; on Windows: <code>"dir\subdir"</code> -> <code>"dir"</code>.
+/// \return Reference to this object.
+
+/// \fn acpl::Path &acpl::Path::Child(const acpl::Path::String &nChild)
+/// \brief Set path string to a child element.
+/// \param nChild acpl::Path::String child string to set to.
+/// \note If path string is empty, this call it will set path string to the child string - for both UNIX and Windows systems: <code>"${CHILD_STRING}"</code>.
+/// \note If path string is not empty, and:
+/// \note \li is pointing to a root directory, this call will append only the child string - on UNIX: <code>"/"</code> -> <code>"/${CHILD_STRING}"</code>; on Windows (an example of a rood directory): <code>"C:\"</code> -> <code>"C:\${CHILD_STRING}"</code>.
+/// \note \li is not pointing to a root directory, this call will append the directory delimiter and child string - on UNIX: <code>"dir"</code> -> <code>"dir/${CHILD_STRING}"</code>; on Windows: <code>"dir"</code> -> <code>"dir\${CHILD_STRING}"</code>.
+/// \return Reference to this object.
+
+/// \fn acpl::Path &acpl::Path::Child(const acpl::String::Ref &nChild)
+/// \brief Set path string to a child element.
+/// \param nChild acpl::String::Ref child string to set to.
+/// \note See acpl::Path::Child for more notes.
+/// \return Reference to this object.
+
+
+/// \fn void acpl::Path::GetDirName(acpl::Path::String &nDirName) const
+/// \brief Extract directory part of the path string.
+/// \param nDirName Reference to a string to which directory part will be set.
+
+/// \fn void acpl::Path::GetBaseName(acpl::Path::String &nBaseName) const
+/// \brief Extract base part of the path string.
+/// \param nBaseName Reference to a string to which base part will be set.
+
+/// \fn void acpl::Path::GetFileName(acpl::Path::String &nFileName) const
+/// \brief Extract file name from the base part of the path string.
+/// \param nFileName Reference to a string to which file name will be set.
+/// \warning This is a non-standard file name/extension determination.
+/// \note The following examples are in a form of <code>"${BASE_NAME}"</code> -> <code>"${FILE_NAME}"</code>:
+/// \note \li <code>""</code> -> <code>""</code>
+/// \note \li <code>"....."</code> -> <code>"....."</code>
+/// \note \li <code>".aaa"</code> -> <code>".aaa"</code>
+/// \note \li <code>"..aaa"</code> -> <code>"."</code>
+/// \note \li <code>".aaa."</code> -> <code>".aaa."</code>
+/// \note \li <code>".aaa.bbb"</code> -> <code>".aaa"</code>
+
+/// \fn void acpl::Path::GetFileExt(acpl::Path::String &nFileExt) const
+/// \brief Extract file extension from the base part of the path string.
+/// \param nFileExt Reference to a string to which file extension will be set.
+/// \warning This is a non-standard file name/extension determination.
+/// \note The following examples are in a form of <code>"${BASE_NAME}"</code> -> <code>"${FILE_EXTENSION}"</code>:
+/// \note \li <code>""</code> -> <code>""</code>
+/// \note \li <code>"....."</code> -> <code>""</code>
+/// \note \li <code>".aaa"</code> -> <code>""</code>
+/// \note \li <code>"..aaa"</code> -> <code>"aaa"</code>
+/// \note \li <code>".aaa."</code> -> <code>""</code>
+/// \note \li <code>".aaa.bbb"</code> -> <code>"bbb"</code>
+
+
+/// \fn void acpl::Path::GetFileName(const acpl::Path::String &nPath, acpl::Path::String &nFileName)
+/// \brief Extract file name from the base part of the path string.
+/// \param nPath Path string from which file name is extracted.
+/// \param nFileName Reference to a string to which file name will be set.
+/// \see acpl::Path::GetFileName
+
+/// \fn void acpl::Path::GetFileExt(const acpl::Path::String &nPath, acpl::Path::String &nFileExt)
+/// \brief Extract file extension from the base part of the path string.
+/// \param nPath Path string from which file extension is extracted.
+/// \param nFileExt Reference to a string to which file extension will be set.
+/// \see acpl::Path::GetFileExt
+
+
+/// \fn bool acpl::Path::Resolve()
+/// \brief Resolve path and any symbolic links into a fully qualified absolute path.
+/// \return <code>\b true</code> if path string was able to be resolved, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Path::GetLastError for error code
+
+
+/// \fn bool acpl::Path::SetPerm(const acpl::Path::Permission &nPerm)
+/// \brief Set access permissions on a file pointed to by path string.
+/// \param nPerm Permissions to set.
+/// \note UNIX-style permissions system does not work the same everywhere, for example on Windows system.
+/// \return <code>\b true</code> if file permissions were able to be set, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Path::GetLastError for error code
+
+
+/// \fn void acpl::Path::SetUmask(acpl::UInt16 nVal)
+/// \brief Set global permissions umask.
+/// \param nVal Umask value to set.
+/// \note UNIX-style permissions system does not work the same everywhere, for example on Windows system.
+
+
+/// \fn const acpl::Path::String::Holder &acpl::Path::GetStrHolder() const
+/// \brief Returns the path string holder.
+/// \return Path string holder.
+
+
+/// \enum acpl::Path::LastError
+/// \brief Error values produced by path calls.
+
+/// \var acpl::Path::leNone
+/// \brief Initial (reset) value.
+
+/// \var acpl::Path::leSysErr
+/// \brief System error.
+
+/// \var acpl::Path::leNoSupport
+/// \brief Operation not supported.
+
+/// \var acpl::Path::leIsEmpty
+/// \brief Path string is empty.
+
+/// \var acpl::Path::leTooLong
+/// \brief Path string is too long.
+
+/// \var acpl::Path::leNonExist
+/// \brief Element to which path string points to does not exist.
+
+/// \var acpl::Path::leNotDir
+/// \brief One or more elements/components in path string is not a directory.
+
+/// \var acpl::Path::leSymlinkLoop
+/// \brief Too many symbolic links encountered in the path string.
+
+/// \var acpl::Path::leNoPerm
+/// \brief Operation is not allowed under current permissions.
+
+
+
+/// \class acpl::Path::String
+/// \brief Path string holder and manipulation class.
+
+
+/// \fn acpl::Path::String::String()
+/// \brief Empty constructor.
+
+/// \fn acpl::Path::String::String(const acpl::String::Ref &nPath)
+/// \brief Setter constructor.
+/// \param nPath acpl::String::Ref string to set.
+
+/// \fn acpl::Path::String::~String()
+/// \brief Destructor.
+
+
+/// \fn const acpl::Pathchar *acpl::Path::String::GetStr() const
+/// \brief Get string.
+/// \note The return type is <code>{<b>acpl::Pathchar *</b>}</code> which differs depending on the underlaying system.
+/// \return Path string if set, empty string (<code>""</code> or <code>L""</code>) otherwise.
+
+/// \fn bool acpl::Path::String::IsEmpty() const
+/// \brief Checks whether or not the string is empty.
+/// \return <code>\b true</code> if string is empty, <code>\b false</code> otherwise.
+
+
+/// \fn acpl::Path::String &acpl::Path::String::Set(const acpl::Path::String &nPath)
+/// \brief Set string.
+/// \param nPath acpl::Path::String string to set.
+/// \return Reference to this object.
+
+/// \fn acpl::Path::String &acpl::Path::String::Set(const acpl::String::Ref &nPath)
+/// \brief Set string.
+/// \param nPath acpl::String::Ref string to set.
+/// \return Reference to this object.
+
+/// \fn acpl::Path::String &acpl::Path::String::Apnd(const acpl::Path::String &nPath)
+/// \brief Append string.
+/// \param nPath acpl::Path::String string to append.
+/// \return Reference to this object.
+
+/// \fn acpl::Path::String &acpl::Path::String::Apnd(const acpl::String::Ref &nPath)
+/// \brief Append string.
+/// \param nPath acpl::String::Ref string to append.
+/// \return Reference to this object.
+
+/// \fn acpl::Path::String &acpl::Path::String::Clear()
+/// \brief Clear string.
+/// \return Reference to this object.
+
+
+/// \fn typedef acpl::Path::String::Holder
+/// \brief String holder memory block.
+
+
+/// \fn const acpl::Path::String::Holder &acpl::Path::String::GetHolder() const
+/// \brief Returns string holder memory block.
+/// \return String holder memory block.
+
+/// \fn acpl::Path::String::Holder &acpl::Path::String::GetHolder()
+/// \brief Returns string holder memory block.
+/// \return String holder memory block.
+
+
+
+/// \class acpl::Path::Permission
+/// \brief UNIX style file system permissions class.
+
+
+/// \fn acpl::Path::Permission::Permission()
+/// \brief Empty constructor.
+
+/// \fn acpl::Path::Permission::Permission(acpl::UInt16 nVal)
+/// \brief Setter constructor.
+
+/// \fn acpl::Path::Permission::~Permission()
+/// \brief Destructor.
+
+
+/// \fn acpl::UInt16 acpl::Path::Permission::GetValue() const
+/// \brief Get permissions (naked) value.
+/// \return Permissions (naked) value.
+
+/// \fn void acpl::Path::Permission::SetValue(acpl::UInt16 nVal)
+/// \brief Set permissions (naked) value.
+/// \param nVal Permissions (naked) value.
+
+/// \fn void acpl::Path::Permission::Clear()
+/// \brief Clear (reset) permissions value.
+
+
+/// \fn bool acpl::Path::Permission::HasSetuid()   const
+/// \brief Has <code>\b setuid</code> bit set.
+/// \return <code>\b true</code> if has <code>\b setuid</code> bit set, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::Permission::HasSetgid()   const
+/// \brief Has <code>\b setgid</code> bit set.
+/// \return <code>\b true</code> if has <code>\b setgid</code> bit set, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::Permission::HasSticky()   const
+/// \brief Has sticky bit set.
+/// \return <code>\b true</code> if has sticky bit set, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::Permission::CanUsrRead()  const
+/// \brief Can user read.
+/// \return <code>\b true</code> if user can read, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::Permission::CanUsrWrite() const
+/// \brief Can user write.
+/// \return <code>\b true</code> if user can write, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::Permission::CanUsrExec()  const
+/// \brief Can user execute.
+/// \return <code>\b true</code> if user can execute, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::Permission::CanGrpRead()  const
+/// \brief Can group read.
+/// \return <code>\b true</code> if group can read, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::Permission::CanGrpWrite() const
+/// \brief Can group write.
+/// \return <code>\b true</code> if group can write, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::Permission::CanGrpExec()  const
+/// \brief Can group execute.
+/// \return <code>\b true</code> if group can execute, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::Permission::CanOthRead()  const
+/// \brief Can others read.
+/// \return <code>\b true</code> if others can read, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::Permission::CanOthWrite() const
+/// \brief Can others write.
+/// \return <code>\b true</code> if others can write, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Path::Permission::CanOthExec()  const
+/// \brief Can others execute.
+/// \return <code>\b true</code> if others can execute, <code>\b false</code> otherwise.
+
+
+/// \fn void acpl::Path::Permission::MakeStr(acpl::Path::Permission::Str &nModeStr) const
+/// \brief Generate UNIX terminal style permissions string.
+/// \param nModeStr Reference to a permissions string to which generated string will be set.
+/// \note UNIX terminal style permissions string takes the form of <code>"-rwxrwxrwx"</code>
+/// \note This call leaves the first character (element type) undefined, or set as if it is a file: <code>'-'</code>.
+/// \note Flag representations:
+/// \note \li <code>"---------x"</code> - Others execute flag.
+/// \note \li <code>"--------w-"</code> - Others write flag.
+/// \note \li <code>"-------r--"</code> - Others read flag.
+/// \note \li <code>"------x---"</code> - Group execute flag.
+/// \note \li <code>"-----w----"</code> - Group write flag.
+/// \note \li <code>"----r-----"</code> - Group read flag.
+/// \note \li <code>"---x------"</code> - User execute flag.
+/// \note \li <code>"--w-------"</code> - User write flag.
+/// \note \li <code>"-r--------"</code> - User read flag.
+/// \note \li <code>"---------T"</code> - Sticky bit alone.
+/// \note \li <code>"---------t"</code> - Sticky bit + others execute flag.
+/// \note \li <code>"------S---"</code> - <code>\b setgid</code> bit alone.
+/// \note \li <code>"------s---"</code> - <code>\b setgid</code> bit + group execute flag.
+/// \note \li <code>"---S------"</code> - <code>\b setuid</code> bit alone.
+/// \note \li <code>"---s------"</code> - <code>\b setuid</code> bit + user execute flag.
+
+
+/// \typedef acpl::Path::Permission::Str
+/// \brief UNIX terminal style permissions string type.
+
+
+/// \enum acpl::Path::Permission::FlagSingle
+/// \brief Single permission flag enumerator.
+
+/// \var acpl::Path::Permission::fsNone
+/// \brief <code>(00000)</code> None.
+
+/// \var acpl::Path::Permission::fsOthE
+/// \brief <code>(00001)</code> Others can execute bit.
+
+/// \var acpl::Path::Permission::fsOthW
+/// \brief <code>(00002)</code> Others can write bit.
+
+/// \var acpl::Path::Permission::fsOthR
+/// \brief <code>(00004)</code> Others can read bit.
+
+/// \var acpl::Path::Permission::fsGrpE
+/// \brief <code>(00010)</code> Group can execute bit.
+
+/// \var acpl::Path::Permission::fsGrpW
+/// \brief <code>(00020)</code> Group can write bit.
+
+/// \var acpl::Path::Permission::fsGrpR
+/// \brief <code>(00040)</code> Group can read bit.
+
+/// \var acpl::Path::Permission::fsUsrE
+/// \brief <code>(00100)</code> User can execute bit.
+
+/// \var acpl::Path::Permission::fsUsrW
+/// \brief <code>(00200)</code> User can write bit.
+
+/// \var acpl::Path::Permission::fsUsrR
+/// \brief <code>(00400)</code> User can read bit.
+
+/// \var acpl::Path::Permission::fsStck
+/// \brief <code>(01000)</code> Sticky bit.
+
+/// \var acpl::Path::Permission::fsSgid
+/// \brief <code>(02000)</code> <code>\b setgid</code> bit.
+
+/// \var acpl::Path::Permission::fsSuid
+/// \brief <code>(04000)</code> <code>\b setuid</code> bit.
+
+
+/// \enum acpl::Path::Permission::FlagGroup
+/// \brief Grouped permission clusters.
+
+/// \var acpl::Path::Permission::fgNone
+/// \brief <code>(00000)</code> None.
+
+/// \var acpl::Path::Permission::fgOth 
+/// \brief <code>(00007)</code> Others bits cluster.
+
+/// \var acpl::Path::Permission::fgGrp 
+/// \brief <code>(00070)</code> Group bits cluster.
+
+/// \var acpl::Path::Permission::fgUsr 
+/// \brief <code>(00700)</code> User bits cluster.
+
+/// \var acpl::Path::Permission::fgAll 
+/// \brief <code>(00777)</code> All user, group, and others bits clusters.
+
+/// \var acpl::Path::Permission::fgFull
+/// \brief <code>(07777)</code> All user, group, and others bits clusters, plus <code>\b setuid</code> bit, <code>\b setgid</code> bit, and sticky bit cluster.
+
+
+
+/// \class acpl::Path::StatBase
+/// \brief Base holder class for stat information.
+
+
+/// \fn acpl::Path::StatBase::~StatBase()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::Path::StatBase::IsStatted() const
+/// \brief Checks whether the stat information is set.
+/// \return <code>\b true</code> if stat information is set, <code>\b false</code> otherwise.
+
+/// \fn acpl::Path::StatBase::Type acpl::Path::StatBase::GetType() const
+/// \brief Get statted element's type.
+/// \return Element's type.
+
+/// \fn const acpl::Path::Permission &acpl::Path::StatBase::GetPerm() const
+/// \brief Get statted element's permissions.
+/// \return Element's permissions.
+
+/// \fn acpl::OffT acpl::Path::StatBase::GetSize() const
+/// \brief Get statted element's size (in bytes).
+/// \return Element's size (in bytes).
+
+/// \fn acpl::TimeT acpl::Path::StatBase::GetTimeCre() const
+/// \brief Get statted element's creation time (<code>\b ctime</code>).
+/// \warning Not all file systems or mounting methods implement or allow <code>\b ctime</code>.
+/// \return Element's creation time (<code>\b ctime</code>).
+
+/// \fn acpl::TimeT acpl::Path::StatBase::GetTimeMod() const
+/// \brief Get statted element's modification time (<code>\b mtime</code>).
+/// \return Element's modification time (<code>\b mtime</code>).
+
+/// \fn acpl::TimeT acpl::Path::StatBase::GetTimeAcc() const
+/// \brief Get statted element's access time (<code>\b atime</code>).
+/// \warning Not all file systems or mounting methods implement or allow <code>\b atime</code>.
+/// \return Element's access time (<code>\b atime</code>).
+
+
+/// \fn void acpl::Path::StatBase::MakePermStr(acpl::Path::Permission::Str &nModeStr) const
+/// \brief Generate UNIX terminal style permissions string.
+/// \param nModeStr Reference to a permissions string to which generated string will be set.
+/// \note UNIX terminal style permissions string takes the form of <code>"-rwxrwxrwx"</code>
+/// \note Unlinke acpl::Path::Permission::MakeStr, this call sets the first character (element type) as well. These are the possible types:
+/// \note \li <code>"?rwxrwxrwx"</code> - Unknown/unset type.
+/// \note \li <code>"-rwxrwxrwx"</code> - File.
+/// \note \li <code>"drwxrwxrwx"</code> - Directory.
+/// \note \li <code>"lrwxrwxrwx"</code> - Symbolic link.
+/// \note \li <code>"brwxrwxrwx"</code> - Block device.
+/// \note \li <code>"crwxrwxrwx"</code> - Character device.
+/// \note \li <code>"srwxrwxrwx"</code> - Socket.
+/// \note \li <code>"prwxrwxrwx"</code> - FIFO/Pipe.
+/// \see acpl::Path::Permission::MakeStr for further reference.
+
+
+/// \fn acpl::Path::StatBase::StatBase()
+/// \brief Empty protected constructor.
+
+/// \fn acpl::Path::StatBase::InfoStat &acpl::Path::StatBase::GetInfoStat()
+/// \brief Get stat information struct.
+/// \return Stat information struct.
+
+/// \fn void acpl::Path::StatBase::Clear()
+/// \brief Clear stat information.
+
+
+/// \enum acpl::Path::StatBase::Type
+/// \brief Statted element's type.
+
+/// \var acpl::Path::StatBase::tUnknown
+/// \brief Unknown/unset type.
+
+/// \var acpl::Path::StatBase::tFile
+/// \brief File.
+
+/// \var acpl::Path::StatBase::tDir
+/// \brief Directory.
+
+/// \var acpl::Path::StatBase::tSymLink
+/// \brief Symbolic link.
+
+/// \var acpl::Path::StatBase::tDevBlock
+/// \brief Block device.
+
+/// \var acpl::Path::StatBase::tDevChar
+/// \brief Character device.
+
+/// \var acpl::Path::StatBase::tSocket
+/// \brief Socket.
+
+/// \var acpl::Path::StatBase::tPipe
+/// \brief FIFO/Pipe.
+
+
+/// \typedef acpl::Path::StatBase::TypeCont
+/// \brief Statted element's type enumerator container type.
+
+
+/// \struct acpl::Path::StatBase::InfoStat
+/// \brief Stat information struct.
+
+/// \var acpl::Path::StatBase::InfoStat::sIsSet
+/// \brief Is this struct filled with actual element's information.
+
+/// \var acpl::Path::StatBase::InfoStat::sType
+/// \brief Element's type.
+
+/// \var acpl::Path::StatBase::InfoStat::sPerm
+/// \brief Element's permissions.
+
+/// \var acpl::Path::StatBase::InfoStat::sSize
+/// \brief Element's size (in bytes).
+
+/// \var acpl::Path::StatBase::InfoStat::sTimeCre
+/// \brief Element's <code>\b ctime</code>.
+
+/// \var acpl::Path::StatBase::InfoStat::sTimeMod
+/// \brief Element's <code>\b mtime</code>.
+
+/// \var acpl::Path::StatBase::InfoStat::sTimeAcc
+/// \brief Element's <code>\b atime</code>.
+
+
+
+/// \class acpl::Path::Stat
+/// \brief File system element statting class.
+
+
+/// \fn acpl::Path::Stat::Stat()
+/// \brief Empty constructor.
+
+/// \fn acpl::Path::Stat::~Stat()
+/// \brief Destructor.
+
+
+/// \fn acpl::Path::LastError acpl::Path::Stat::GetLastError() const
+/// \brief Returns the the error value set by the last failed stat call.
+/// \return Error value set by the last failed stat call.
+
+/// \fn void acpl::Path::Stat::ResetLastError()
+/// \brief Resets the error value set by the last failed stat call.
+
+
+/// \fn void acpl::Path::Stat::Clear()
+/// \brief Clear stat information.
+
+
+/// \fn bool acpl::Path::Stat::DoStat(const acpl::Path &nPath, bool nResolveLink = true)
+/// \brief Perform stat on a provided path.
+/// \param nPath Path string to stat.
+/// \param nResolveLink If the path string points to a symbolic link, stat the element the symbolic link points to (<code>\b true</code>) or stat the actual symbolic link itself (<code>\b false</code>).
+/// \note Statting the actual symbolic link is not supported in MSCRT, and, thus, will ignore \a nResolveLink value.
+/// \return <code>\b true</code> if statting was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Path::Stat::GetLastError for error code

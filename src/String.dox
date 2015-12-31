@@ -1,0 +1,901 @@
+/// \file String.h
+/// \brief String-related functionality.
+
+
+/// \class acpl::String
+/// \brief UTF-8-based string class. 
+
+
+/// \fn acpl::String::String()
+/// \brief Empty constructor.
+
+/// \fn acpl::String::String(const acpl::String &nRef, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Copy constructor.
+/// \param nRef acpl::String reference.
+/// \param nMaxCount Maximum number of sequences (characters) to copy.
+/// \param nStartOffset Sequence (character) offset to start at.
+
+/// \fn acpl::String::String(const acpl::String::Ref &nRef, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Setter-constructor.
+/// \param nRef acpl::String::Ref reference.
+/// \param nMaxCount Maximum number of sequences (characters) to copy.
+/// \param nStartOffset Sequence (character) offset to start at.
+
+/// \fn acpl::String::~String()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::String::IsNull()  const
+/// \brief Checks whether or not the string is uninitialized (or purged).
+/// \return <code>\b true</code> if string is uninitialized (or purged), <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::IsEmpty() const
+/// \brief Checks whether or not the string is empty (or cleared).
+/// \return <code>\b true</code> if string is empty (or cleared), <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::IsAllBlanks() const
+/// \brief Checks whether or not the string contains only blank characters (check note).
+/// \note The following unicode code points represent blank characters:
+///   \li U+0009 - horizontal tab (HT)
+///   \li U+0020 - space
+/// \return <code>\b true</code> if string contains only blank characters, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::IsAllWspaces() const
+/// \brief Checks whether or not the string contains only whitespace characters (check note).
+/// \note The following unicode code points represent whitespace characters:
+///   \li U+0009 - horizontal tab (HT)
+///   \li U+000A - line feed (LF)
+///   \li U+000B - vertical tab (VT)
+///   \li U+000C - form feed (FF)
+///   \li U+000D - carriage return (CR)
+///   \li U+0020 - space
+///   \li U+0085 - next line (NEL)
+///   \li U+00A0 - no-break space (NBSP)
+///   \li U+1680 - ogham space mark
+///   \li U+180E - mongolian vowel separator
+///   \li U+2000 - en quad
+///   \li U+2001 - em quad
+///   \li U+2002 - en space
+///   \li U+2003 - em space
+///   \li U+2004 - three-per-em space
+///   \li U+2005 - four-per-em space
+///   \li U+2006 - six-per-em space
+///   \li U+2007 - figure space
+///   \li U+2008 - punctuation space
+///   \li U+2009 - thin space
+///   \li U+200A - hair space
+///   \li U+2028 - line separator
+///   \li U+2029 - paragraph separator
+///   \li U+202F - narrow no-break space
+///   \li U+205F - medium mathematical space
+///   \li U+3000 - ideographic space
+/// \return <code>\b true</code> if string contains only whitespace characters, <code>\b false</code> otherwise.
+
+/// \fn acpl::SizeT acpl::String::Length() const
+/// \brief Returns the number of sequences (characters) is the string.
+/// \return Number of sequences (characters) is the string.
+
+/// \fn acpl::SizeT acpl::String::ByteLength() const
+/// \brief Returns string's size in bytes <b>excluding NULL terminator</b>.
+/// \return String's size in bytes <b>excluding NULL terminator</b>.
+
+
+/// \fn const char *acpl::String::Utf8() const
+/// \brief Returns a C-style NULL-terminated string in UTF-8 encoding.
+/// \note Even if the string is uninitialized, this method will return an empty string (<code>""</code>). In other words, the return value will always be a valid C-style NULL-terminated string.
+/// \return C-style NULL-terminated string in UTF-8 encoding.
+
+
+/// \fn acpl::String &acpl::String::Set(const acpl::String::Ref &nRef, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Overwrites the existing string with provided (portion of a) string.
+/// \param nRef acpl::String::Ref reference.
+/// \param nMaxCount Maximum number of sequences (characters) to copy.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::Apnd(const acpl::String::Ref &nRef, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Appends the provided (portion of a) string to the existing string.
+/// \param nRef acpl::String::Ref reference.
+/// \param nMaxCount Maximum number of sequences (characters) to copy.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::Ins(acpl::SizeT nIndex, const acpl::String::Ref &nRef, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Inserts provided (portion of a) string to the existing string just before the specified sequence offset.
+/// \param nIndex Sequence offset at which to insert the provided (portion of a) string. If this parameter is greater or equal to the length of the existing string, this method will act as acpl::String::Apnd.
+/// \param nRef acpl::String::Ref reference.
+/// \param nMaxCount Maximum number of sequences (characters) to copy.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::Ins(const acpl::String::Pos &nAtPos, bool nBef, const acpl::String::Ref &nRef, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Inserts provided (portion of a) string to the existing string just before or just after the specified sequence offset.
+/// \param nAtPos acpl::String::Pos position at which to insert the provided (portion of a) string.
+/// \param nBef Flag specifying whether to insert the provided (portion of a) string at (<code>\b true</code>) or after (<code>\b false</code>) the provided position.
+/// \param nRef acpl::String::Ref reference.
+/// \param nMaxCount Maximum number of sequences (characters) to copy.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::Repl(acpl::SizeT nIndex, acpl::SizeT nCount, const acpl::String::Ref &nRef, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Replaces a specified number of sequences at a specified sequence offset in the existing string with a provided (portion of a) string.
+/// \param nIndex Offset of the first sequence to be replaced by the provided (portion of a) string. If this parameter is greater or equal to the length of the existing string, this method will act as acpl::String::Apnd.
+/// \param nCount Starting with \a nIndex, number of sequences to be replaced by the provided (portion of a) string. If this parameter is zero (<code>\b 0</code>), this method will act as acpl::String::Ins.
+/// \param nRef acpl::String::Ref reference.
+/// \param nMaxCount Maximum number of sequences (characters) to copy.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::Repl(const acpl::String::Pos &nAtPos, bool nBef, acpl::SizeT nCount, const acpl::String::Ref &nRef, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Replaces a specified number of sequences at a specified position in the existing string with a provided (portion of a) string.
+/// \param nAtPos acpl::String::Pos position of the first or just before the first sequence to be replaced by the provided (portion of a) string.
+/// \param nBef Flag specifying whether to begin replacement with the provided (portion of a) string at (<code>\b true</code>) or after (<code>\b false</code>) the provided position.
+/// \param nCount Starting before or after \a nAtPos position, number of sequences to be replaced by the provided (portion of a) string. If this parameter is zero (<code>\b 0</code>), this method will act as acpl::String::Ins.
+/// \param nRef acpl::String::Ref reference.
+/// \param nMaxCount Maximum number of sequences (characters) to copy.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::Repl(const acpl::String::Pos &nFromPos, bool nBef, const acpl::String::Pos &nToPos, bool nExcl, const acpl::String::Ref &nRef, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Replaces a part of the existing string between (including or excluding) two specified positions with a provided (portion of a) string.
+/// \param nFromPos acpl::String::Pos position of the first or just before the first sequence to be replaced by the provided (portion of a) string.
+/// \param nBef Flag specifying whether to begin replacement with the provided (portion of a) string at (<code>\b true</code>) or after (<code>\b false</code>) the provided position.
+/// \param nToPos acpl::String::Pos position of the last or just before the last sequence to be replaced by the provided (portion of a) string.
+/// \param nExcl Flag specifying whether to end replacement with the provided (portion of a) string excluding (<code>\b true</code>) or including (<code>\b false</code>) the sequence at the provided position.
+/// \param nRef acpl::String::Ref reference.
+/// \param nMaxCount Maximum number of sequences (characters) to copy.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return Reference to this object.
+
+
+/// \fn acpl::String &acpl::String::PadLeft(acpl::Unichar nUc, acpl::SizeT nNewLen)
+/// \brief Pad the string at the beginning to a specified length with the provided character.
+/// \param nUc Unicode character to pad the string.
+/// \param nNewLen Length of the padded string. If this parameter is smaller than the current length, this method does nothing.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::PadRight(acpl::Unichar nUc, acpl::SizeT nNewLen)
+/// \brief Pad the string at the end to a specified length with the provided character.
+/// \param nUc Unicode character to pad the string.
+/// \param nNewLen Length of the padded string. If this parameter is smaller than the current length, this method does nothing.
+/// \return Reference to this object.
+
+
+/// \fn acpl::String &acpl::String::Clear()
+/// \brief Empties the existing string.
+/// \return Reference to this object.
+/// \see acpl::String::IsEmpty
+
+/// \fn acpl::String &acpl::String::Purge()
+/// \brief Empties and deinitializes the string's resources.
+/// \return Reference to this object.
+/// \see acpl::String::IsNull
+
+/// \fn acpl::String &acpl::String::Cut(acpl::SizeT nIndex, acpl::SizeT nCount)
+/// \brief Cuts a portion of the existing string.
+/// \param nIndex Offset of the first sequence to be cut. If this parameter is greater or equal to the length of the existing string, this method will have no effect.
+/// \param nCount Starting with \a nIndex, number of sequences to be cut. If this parameter is zero (<code>\b 0</code>), this method will have no effect.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::Cut(const acpl::String::Pos &nAtPos, bool nBef, acpl::SizeT nCount)
+/// \brief Cuts a portion of the existing string.
+/// \param nAtPos acpl::String::Pos position of the first or just before the first sequence to be cut.
+/// \param nBef Flag specifying whether to begin cutting at (<code>\b true</code>) or after (<code>\b false</code>) the provided position.
+/// \param nCount Starting before or after \a nAtPos position, number of sequences to be cut. If this parameter is zero (<code>\b 0</code>), this method will have no effect.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::Cut(const acpl::String::Pos &nFromPos, bool nBef, const acpl::String::Pos &nToPos, bool nExcl)
+/// \brief Cuts a portion of the existing string.
+/// \param nFromPos acpl::String::Pos position of the first or just before the first sequence to be cut.
+/// \param nBef Flag specifying whether to begin cutting at (<code>\b true</code>) or after (<code>\b false</code>) the provided position.
+/// \param nToPos acpl::String::Pos position of the last or just before the last sequence to be cut.
+/// \param nExcl Flag specifying whether to end cutting excluding (<code>\b true</code>) or including (<code>\b false</code>) the sequence at the provided position.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::CutLeft(acpl::SizeT nCount)
+/// \brief Cuts a portion of the existing string from the beginning.
+/// \param nCount Number of sequences to be cut from the beginning of the string. If this parameter is zero (<code>\b 0</code>), this method will have no effect.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::CutLeft(const acpl::String::Pos &nAtPos, bool nExcl)
+/// \brief Cuts a portion of the existing string from the beginning.
+/// \param nAtPos acpl::String::Pos position of the last or just before the last sequence to be cut.
+/// \param nExcl Flag specifying whether to end cutting excluding (<code>\b true</code>) or including (<code>\b false</code>) the sequence at the provided position.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::CutRight(acpl::SizeT nCount)
+/// \brief Cuts a portion of the existing string from the end.
+/// \param nCount Number of sequences to be cut from the end of the string. If this parameter is zero (<code>\b 0</code>), this method will have no effect.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::CutRight(const acpl::String::Pos &nAtPos, bool nExcl)
+/// \brief Cuts a portion of the existing string from the end.
+/// \param nAtPos acpl::String::Pos position of the first or just before the first sequence to be cut.
+/// \param nExcl Flag specifying whether to begin cutting excluding (<code>\b true</code>) or including (<code>\b false</code>) the sequence at the provided position.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::Trim()
+/// \brief Removes all whitespaces from the beginning and the end of the existing string.
+/// \note See acpl::String::IsAllWspaces for the list of whitespace characters.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::TrimLeft()
+/// \brief Removes all whitespaces from the beginning of the existing string.
+/// \note See acpl::String::IsAllWspaces for the list of whitespace characters.
+/// \return Reference to this object.
+
+/// \fn acpl::String &acpl::String::TrimRight()
+/// \brief Removes all whitespaces from the end of the existing string.
+/// \note See acpl::String::IsAllWspaces for the list of whitespace characters.
+/// \return Reference to this object.
+
+
+/// \fn void acpl::String::ToUtf8(acpl::Mem::Block<char>::Type &nChars, bool nClearBfr = true) const
+/// \brief Copy internal UTF-8 string.
+/// \param nChars Memory buffer to which copied string is stored.
+/// \param nClearBfr Whether or not provided memory buffer should be cleared before copy (use <code>\b false</code> for appending functionality; <b>see notes</b>).
+/// \note This method adds a NULL terminator at the end of the buffer, so in order to have a proper appending functionality, the NULL terminator should be manually removed before any subsequential call to this method.
+
+/// \fn void acpl::String::ToMbs(acpl::Mem::Block<char>::Type &nChars, bool nClearBfr = true) const
+/// \brief Convert internal UTF-8 string to system's multi-byte <code>{<b>char *</b>}</code> string.
+/// \param nChars Memory buffer to which converted string is stored.
+/// \param nClearBfr Whether or not provided memory buffer should be cleared before copy (use <code>\b false</code> for appending functionality; <b>see notes</b>).
+/// \note This method adds a NULL terminator at the end of the buffer, so in order to have a proper appending functionality, the NULL terminator should be manually removed before any subsequential call to this method.
+
+/// \fn void acpl::String::ToWcs(acpl::Mem::Block<wchar_t>::Type &nChars, bool nClearBfr = true) const
+/// \brief Convert internal UTF-8 string to system's unicode <code>{<b>wchar_t *</b>}</code> string.
+/// \param nChars Memory buffer to which converted string is stored.
+/// \param nClearBfr Whether or not provided memory buffer should be cleared before copy (use <code>\b false</code> for appending functionality; <b>see notes</b>).
+/// \note This method adds a NULL terminator at the end of the buffer, so in order to have a proper appending functionality, the NULL terminator should be manually removed before any subsequential call to this method.
+
+/// \fn void acpl::String::ToUcs(acpl::Mem::Block<acpl::Unichar>::Type &nChars, bool nClearBfr = true) const
+/// \brief Convert internal UTF-8 string to ACPL's unicode <code>{<b>acpl::Unichar *</b>}</code> string.
+/// \param nChars Memory buffer to which converted string is stored.
+/// \param nClearBfr Whether or not provided memory buffer should be cleared before copy (use <code>\b false</code> for appending functionality; <b>see notes</b>).
+/// \note This method adds a NULL terminator at the end of the buffer, so in order to have a proper appending functionality, the NULL terminator should be manually removed before any subsequential call to this method.
+
+
+/// \fn bool acpl::String::ToInt(tType &nValue, acpl::UInt8 nBase, bool nSwapDecMarks = false)
+/// \brief Convert the existing string to an integer value.
+/// \tparam tType Integer type. Note that the type <b>can</b> be a floating-point type, but the string will be converted to an integer and subsequently casted to the floating-point type \a nValue.
+/// \param nValue Reference to a \a tType -typed variable.
+/// \param nBase Numeral system (base). This parameter can be between <code>\b 2</code> (binary) and <code>\b 36</code>, inclusive, or a special value <code>\b 0</code>, which activates automatic numeral system determination. See notes for the determination rules.
+/// \param nSwapDecMarks Flag specifying whether or not to swap whole/fraction part separator (<code>'.'</code>) and decimal groupping (<code>','</code>) characters. Many languages have these two decimal marks swapped.
+/// \note The string may begin and end with an arbitrary amount of whitespaces. See acpl::String::IsAllWspaces for the list of whitespace characters.
+/// \note If the numeral base is specified or determined as decimal (<code>\b 10</code>), the first character of the number may be a plus (<code>'+'</code>) or a minus (<code>'-'</code>) sign, signifying a positive or a negative number, respectively. If neither of these characters is present, the number is presumed positive.
+/// \note If the numeral base is specified or determined as decimal (<code>\b 10</code>), the string can include an arbitrary number of decimal groupping characters (<code>','</code> or <code>'.'</code>, depending on the \a nSwapDecMarks setting).
+/// \note If the numeral base is specified or determined as hexadecimal (<code>\b 16</code>), the first two characters may be a zero (<code>'0'</code>) followed by a case-insensitive <code>'x'</code>.
+/// \note Automatic numeral system determination determins the number to be:
+/// \note   \li decimal (<code>\b 10</code>), if the first character of the number is a plus (<code>'+'</code>), a minus (<code>'-'</code>), a decimal groupping character (<code>','</code> or <code>'.'</code>, depending on the \a nSwapDecMarks setting), or any of the numeric characters <b>except</b> zero (<code>'0'</code>);
+/// \note   \li octal (<code>\b 8</code>), if the first character of the number is a zero (<code>'0'</code>);
+/// \note   \li hexadecimal (<code>\b 16</code>), if the first two characters of the number are a zero (<code>'0'</code>) followed by a case-insensitive <code>'x'</code>.
+/// \return <code>\b true</code> if the string was successfully converted, <code>\b false</code> otherwise.
+
+
+// \fn int acpl::String::Compare(const acpl::String::Ref &nRef, bool nCaseSensitive = true) const
+// \brief Compare the string against the provided string.
+// \param nRef acpl::String::Ref reference.
+// \param nCaseSensitive Flag notifying whether or not the comparison should be case-sensitive or not. Default value is true (comparison is case-sensitive).
+// \return 0 (zero) if the strings are equal, non-zero otherwise.
+
+// \fn int acpl::String::Compare(const acpl::String::Ref &nRef, acpl::SizeT nMaxCount, bool nCaseSensitive = true) const
+// \brief Compare a provided number of sequences/characters in the string against provided string.
+// \param nRef acpl::String::Ref reference.
+// \param nMaxCount Number of sequences/characters to compare.
+// \param nCaseSensitive Flag notifying whether or not the comparison should be case-sensitive or not. Default value is true (comparison is case-sensitive).
+// \return 0 (zero) if the strings are equal, non-zero otherwise.
+
+// \fn bool acpl::String::Match(const acpl::String::Ref &nRegEx, acpl::ArrayEdaDelete<acpl::String *>::Type &nMatchList, bool nCaseSensitive = true) const
+// \brief Match the string against provided regular expression.
+// \param nRegEx Regular expression.
+// \param nMatchList List of matches against the regular expression.
+// \param nCaseSensitive Flag notifying whether or not the matching should be case-sensitive or not. Default value is true (matching is case-sensitive).
+// \return True if regular expression is valid, false otherwise.
+
+// \fn acpl::SizeT acpl::String::StrRepl(const acpl::String::Ref &nFind, const acpl::String::Ref &nRepl, acpl::SizeT nNumOccur = acpl::Num<acpl::SizeT>::Max())
+// \brief Replaces occurances of a substring with another string. Number of occurances to replace can be limited.
+// \param nFind Substring to search for.
+// \param nRepl String to replace the substring with.
+// \param nNumOccur Number of occurances to replace.
+// \return Actual number of occurances replaced.
+
+// \fn bool acpl::String::Explode(const acpl::String::Ref &nDelim, acpl::ArrayEdaDelete<acpl::String *>::Type &nTokens, acpl::SizeT nLimit = acpl::Num<acpl::SizeT>::Max())
+// \brief Fills a list with substrings of this string. A substring is created between (exclusive) two successive pivot points. Pivot points are start of the string, end
+//        of the string, and any occurance of an arbitrary delimiter string. Number of substrings can be optionally limited.
+// \param nDelim Delimiter string.
+// \param nTokens Array to fill with substrings.
+// \param nLimit Maximum number of array elements to add.
+// \return False in case delimiter string is NULL or empty.
+
+// \fn bool acpl::String::Implode(const acpl::ArrayEdaDelete<acpl::String *>::Type &nTokens, const acpl::String::Ref &nSep, acpl::SizeT nMaxTokens = acpl::Num<acpl::SizeT>::Max())
+// \brief Concatenates strings from an array. Two adjacent strings from the array are delimited with an arbitrary separator string.
+// \param nTokens Array of strings to concatenate.
+// \param nSep Separator string.
+// \param nMaxTokens Maximum number of array items to process.
+// \return False if memory allocation failed or separator string is NULL.
+
+
+
+/// \class acpl::String::Ref
+/// \brief Reference class for string-based types for acpl::String.
+/// 
+/// Class used for referencing string-based types. It is also used for implicit conversions and acts as a base class for other acpl::String reference classes.
+
+
+/// \fn acpl::String::Ref::Ref(const char *nStr, bool nIsLocale = false)
+/// \brief Constructor for a C-style NULL-terminated string of <code>{<b>const char *</b>}</code> type.
+/// \param nStr C-style NULL-terminated string of <code>{<b>const char *</b>}</code> type. This parameter can be NULL in which case this object will reference a NULL string.
+/// \param nIsLocale Flag specifying whether or not the \a nStr is in encoded using encoding specified in current locale (<code>\b true</code>) or it is in an UTF-8 encoding (<code>\b false</code>).
+
+/// \fn acpl::String::Ref::Ref(const wchar_t *nStr)
+/// \brief Constructor for C-style NULL-terminated string of <code>{<b>const wchar_t *</b>}</code> type.
+/// \param nStr C-style NULL-terminated string of <code>{<b>const wchar_t *</b>}</code> type. This parameter can be NULL in which case this object will reference a NULL string.
+/// \warning <code>{<b>wchar_t</b>}</code> is defined differently on different platforms. GCC defines it as a 32-bit integer using UCS-4 encoding, while MSVC defines it as a 16-bit integer using UTF-16 encoding.
+
+/// \fn acpl::String::Ref::Ref(const acpl::Unichar *nStr)
+/// \brief Constructor for NULL-terminated string of <code>{<b>const acpl::Unichar *</b>}</code> type.
+/// \param nStr NULL-terminated string of <code>{<b>const acpl::Unichar *</b>}</code> type. This parameter can be NULL in which case this object will reference a NULL string.
+/// \note Unlike <code>{<b>wchar_t</b>}</code>, acpl::Unichar is a platform-independant type defined as a 32-bit integer using UCS-4 (full unicode) encoding.
+
+/// \fn acpl::String::Ref::Ref(const acpl::String &nStr)
+/// \brief Constructor for acpl::String reference.
+/// \param nStr Reference to an acpl::String object.
+
+/// \fn acpl::String::Ref::Ref(const acpl::String *nStr)
+/// \brief Constructor for acpl::String pointer.
+/// \param nStr Pointer to an acpl::String object. This parameter can be NULL in which case this object will reference a NULL string.
+
+/// \fn acpl::String::Ref::~Ref()
+/// \brief Destructor.
+
+
+/// \fn bool acpl::String::Ref::IsNull() const
+/// \brief Checks whether or not the reference data is NULL.
+/// \return <code>\b true</code> if reference data is NULL, <code>\b false</code> otherwise.
+
+/// \fn const void *acpl::String::Ref::GetPtr() const
+/// \brief Returns a pointer to the reference data.
+/// \return Pointer to the reference data, or NULL.
+
+/// \fn acpl::String::Ref::Type acpl::String::Ref::GetType() const
+/// \brief Returns type of the reference data.
+/// \return Type of the reference data.
+
+
+/// \fn void acpl::String::Ref::Measure(acpl::SizeT nStrMaxLen, acpl::SizeT nStrOff, acpl::SizeT &nRefOff, acpl::SizeT &nEncByteSize) const
+/// \brief Calculates necessary parameters for conversion.
+/// \param nStrMaxLen Maximum number of characters to convert.
+/// \param nStrOff Character offset from which to start conversion.
+/// \param nRefOff Reference to a variable to which offset in reference data will be set.
+/// \param nEncByteSize Reference to a variable to which byte size of the encoded string will be set.
+/// \note This method, along with acpl::String::Ref::Convert, is intended for internal purposes and is not of any concern for a casual user.
+/// \see acpl::String::Ref::Convert
+
+/// \fn void acpl::String::Ref::Convert(acpl::SizeT nRefOff, acpl::SizeT nEncByteSize, char *nDst) const
+/// \brief Converts (a portion of) the reference data string to an UTF-8 string.
+/// \param nRefOff Offset in reference data returned by prior call to acpl::String::Ref::Measure.
+/// \param nEncByteSize Byte size of the encoded string returned by prior call to acpl::String::Ref::Measure.
+/// \param nDst Pointer to the string buffer to which converted string will be set. There needs to be <b>at least</b> \a nEncByteSize bytes available in this buffer.
+/// \warning This method <b>does not</b> append a NULL terminator.
+/// \note This method, along with acpl::String::Ref::Measure, is intended for internal purposes and is not of any concern for a casual user.
+/// \see acpl::String::Ref::Measure
+
+
+/// \enum acpl::String::Ref::Type
+/// \brief Type of reference data.
+
+/// \var acpl::String::Ref::Type acpl::String::Ref::rtNone
+/// \brief Specifies an uninitialized (NULL) reference data.
+/// \warning This type is used exclusively for internal purposes and should not be used by any extender class.
+
+/// \var acpl::String::Ref::Type acpl::String::Ref::rtSelf
+/// \brief Specifies a <b>validated</b> UTF-8 string of type <code>{<b>const char *</b>}</code> in the reference data.
+/// \warning Extreme caution is required when defining an acpl::String::Ref extender class with this type, as there is undefined behaviour of the acpl::String class if an invalid UTF-8 sequence appears in the string.
+/// \note For safer handling of input strings in UTF-8 encoding, use acpl::String::Ref::rtUtf8.
+
+/// \var acpl::String::Ref::Type acpl::String::Ref::rtUtf8
+/// \brief Specifies an non-validated UTF-8 string of type <code>{<b>const char *</b>}</code> in the reference data.
+
+/// \var acpl::String::Ref::Type acpl::String::Ref::rtMbs
+/// \brief Specifies a multi-byte string (MBS; a string encoded using encoding specified in current locale) of type <code>{<b>const char *</b>}</code> in the reference data.
+
+/// \var acpl::String::Ref::Type acpl::String::Ref::rtWcs
+/// \brief Specifies a wide-char string (WCS) of type <code>{<b>const wchar_t *</b>}</code> in the reference data.
+
+/// \var acpl::String::Ref::Type acpl::String::Ref::rtUcs
+/// \brief Specifies a unicode-char string (UCS) of type <code>{<b>const acpl::Unichar *</b>}</code> in the reference data.
+
+
+/// \fn acpl::String::Ref::Ref(acpl::String::Ref::Type nType)
+/// \brief Empty constructor used by extender classes.
+/// \param nType Type of reference data.
+
+
+/// \var union acpl::String::Ref::mTgt
+/// \brief A union holding either a pointer to a reference data (acpl::String::Ref::uPtr) or an offset (acpl::String::Ref::uOff).
+
+/// \var const void *acpl::String::Ref::uPtr
+/// \brief Pointer to a reference data.
+
+/// \var acpl::SizeT acpl::String::Ref::uOff
+/// \brief Offset/position in a string (used by acpl::String::Pos).
+
+
+
+/// \class acpl::String::SelfRefBase
+/// \brief Base class for acpl::String::Ref::rtSelf reference class extenders.
+
+
+/// \fn const char *acpl::String::SelfRefBase::Utf8() const
+/// \brief Returns a C-style NULL-terminated string in UTF-8 encoding from the current position onwards.
+/// \warning For extenders: This method <b>MUST</b> return a valid C-style NULL-terminated string.
+/// \note This method will always return a valid C-style NULL-terminated string.
+/// \return C-style NULL-terminated string in UTF-8 encoding.
+
+
+
+/// \class acpl::String::Pos
+/// \brief Positioning class for acpl::String.
+
+
+/// \fn acpl::String::Pos::Pos()
+/// \brief Empty constructor.
+
+/// \fn acpl::String::Pos::Pos(const acpl::String &nString)
+/// \brief Attach constructor for acpl::String reference.
+/// \param nString acpl::String reference to attach to.
+
+/// \fn acpl::String::Pos::Pos(const acpl::String *nString)
+/// \brief Attach constructor for acpl::String pointer.
+/// \param nString acpl::String pointer to attach to. This parameter can be NULL.
+
+/// \fn acpl::String::Pos::Pos(const acpl::String::Pos &nPos)
+/// \brief Copy constructor.
+/// \param nPos acpl::String::Pos reference to position to.
+
+/// \fn acpl::String::Pos::~Pos()
+/// \brief Destructor.
+
+
+/// \fn acpl::String::Pos &acpl::String::Pos::Attach(const acpl::String &nString)
+/// \brief Attaches to a provided string.
+/// \param nString acpl::String reference to attach to.
+/// \return Reference to this object.
+
+/// \fn acpl::String::Pos &acpl::String::Pos::Attach(const acpl::String *nString)
+/// \brief Attaches to a provided string.
+/// \param nString acpl::String pointer to attach to.
+/// \return Reference to this object.
+
+/// \fn acpl::String::Pos &acpl::String::Pos::Attach(const acpl::String::Pos &nPos)
+/// \brief Positiones to the same location in the same string as provided position.
+/// \param nPos acpl::String::Pos reference.
+/// \return Reference to this object.
+
+/// \fn const acpl::String *acpl::String::Pos::GetString() const
+/// \brief Returns a pointer to acpl::String object the position object is attached to.
+/// \warning Return value can be NULL if the position object is not currently attached to any acpl::String object.
+/// \return Pointer to acpl::String object the position object is attached to, or NULL if the position object is not currently attached.
+
+/// \fn bool acpl::String::Pos::IsSameString(const acpl::String::Pos &nPos) const
+/// \brief Checks whether or not this position object is attached to the same acpl::String object as the provided position object.
+/// \param nPos acpl::String::Pos reference to compare.
+/// \return <code>\b true</code> if this position object is attached to the same acpl::String object as the provided position object, <code>\b false</code> otherwise.
+
+
+/// \fn bool acpl::String::Pos::IsInBounds() const
+/// \brief Checks whether or not the current position is in bounds of the acpl::String attached to.
+/// \note The length of the acpl::String this position object is attached to can change without this object being aware of it.
+/// \return <code>\b true</code> if the current position is in bounds of the acpl::String attached to, <code>\b false</code> otherwise.
+
+
+/// \fn const char *acpl::String::Pos::Utf8() const
+/// \brief Returns a C-style NULL-terminated string in UTF-8 encoding from the current position onwards.
+/// \note This method will always return a valid C-style NULL-terminated string.
+/// \return C-style NULL-terminated string in UTF-8 encoding from the current position onwards.
+
+
+/// \fn char acpl::String::Pos::GetChar() const
+/// \brief Returns the byte value this position object is currently located on.
+/// \warning This method will return only one byte of the UTF-8 sequence - usually the main (first) byte, but might be any of the following bytes of the sequence.
+/// \return Byte value this position object is current located on.
+
+/// \fn acpl::Unichar acpl::String::Pos::GetUnichar() const
+/// \brief Decodes the UTF-8 sequence at the current position.
+/// \warning If current position does not point to the first (main) byte of the sequence, the decoding will fail.
+/// \return Decoded acpl::Unichar unicode code point if decoding was successful, U+0000 unicode code point otherwise.
+
+/// \fn bool acpl::String::Pos::GetUnichar(acpl::Unichar &nChar) const
+/// \brief Decodes the UTF-8 sequence at the current position.
+/// \param nChar Reference to an acpl::Unichar variable to which a decoded unicode code point will be set. If decoding fails, the value set to the variable will be U+0000 unicode code point.
+/// \warning If current position does not point to the first (main) byte of the sequence, the decoding will fail.
+/// \return <code>\b true</code> if decoding was successful, <code>\b false</code> otherwise.
+
+
+/// \fn bool acpl::String::Pos::IsFirst() const
+/// \brief Checks whether or not this position object is positioned on the first sequence of the string.
+/// \return <code>\b true</code> if this position object is positioned on the first sequence of the string, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::IsLast() const
+/// \brief Checks whether or not this position object is positioned on the last sequence of the string.
+/// \return <code>\b true</code> if this position object is positioned on the last sequence of the string, <code>\b false</code> otherwise.
+
+
+/// \fn bool acpl::String::Pos::First()
+/// \brief Moves the position to the first sequence of the string.
+/// \return <code>\b true</code> if moving was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::First(acpl::Unichar nUc)
+/// \brief Moves the position to the first occurance of the specified unicode code point.
+/// \param nUc Unicode code point (character) to search for.
+/// \return <code>\b true</code> if moving was successful (character was found), <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::First(const acpl::String::Ref &nSubStr)
+/// \brief Moves the position to the beginning of the first occurance of the specified (sub)string.
+/// \param nSubStr (Sub)string to search for.
+/// \return <code>\b true</code> if moving was successful ((sub)string was found), <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::Last()
+/// \brief Moves the position to the last sequence of the string.
+/// \return <code>\b true</code> if moving was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::Last(acpl::Unichar nUc)
+/// \brief Moves the position to the last occurance of the specified unicode code point.
+/// \param nUc Unicode code point (character) to search for.
+/// \return <code>\b true</code> if moving was successful (character was found), <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::Last(const acpl::String::Ref &nSubStr)
+/// \brief Moves the position to the beginning of the last occurance of the specified (sub)string.
+/// \param nSubStr (Sub)string to search for.
+/// \return <code>\b true</code> if moving was successful ((sub)string was found), <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::Next()
+/// \brief Moves the position to the next sequence of the string.
+/// \return <code>\b true</code> if moving was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::Next(acpl::Unichar nUc)
+/// \brief Moves the position to the next occurance of the specified unicode code point.
+/// \param nUc Unicode code point (character) to search for.
+/// \return <code>\b true</code> if moving was successful (character was found), <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::Next(const acpl::String::Ref &nSubStr)
+/// \brief Moves the position to the beginning of the next occurance of the specified (sub)string.
+/// \param nSubStr (Sub)string to search for.
+/// \return <code>\b true</code> if moving was successful ((sub)string was found), <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::Prev()
+/// \brief Moves the position to the previous sequence of the string.
+/// \return <code>\b true</code> if moving was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::Prev(acpl::Unichar nUc)
+/// \brief Moves the position to the previous occurance of the specified unicode code point.
+/// \param nUc Unicode code point (character) to search for.
+/// \return <code>\b true</code> if moving was successful (character was found), <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::Prev(const acpl::String::Ref &nSubStr)
+/// \brief Moves the position to the beginning of the previous occurance of the specified (sub)string.
+/// \param nSubStr (Sub)string to search for.
+/// \return <code>\b true</code> if moving was successful ((sub)string was found), <code>\b false</code> otherwise.
+
+
+/// \fn bool acpl::String::Pos::Forth(acpl::SizeT nCount)
+/// \brief Moves the position forward for a specified number of sequences.
+/// \param nCount Number of sequences to move forward for.
+/// \note If \a nCount is larger than the number of sequences left, moving will stop at the last sequence and the return value will still be <code>\b true</code>.
+/// \return <code>\b true</code> if moving was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::Back(acpl::SizeT nCount)
+/// \brief Moves the position backward for a specified number of sequences.
+/// \param nCount Number of sequences to move backward for.
+/// \note If \a nCount is larger than the number of sequences left, moving will stop at the first sequence and the return value will still be <code>\b true</code>.
+/// \return <code>\b true</code> if moving was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::SkipFirst(acpl::SizeT nCount)
+/// \brief Places the position on the first sequence and moves forward for a specified number of sequences.
+/// \param nCount Number of sequences to move forward for from the beginning.
+/// \note If \a nCount is larger than the number of sequences left, moving will stop at the last sequence and the return value will still be <code>\b true</code>.
+/// \return <code>\b true</code> if moving was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::String::Pos::SkipLast(acpl::SizeT nCount)
+/// \brief Places the position on the last sequence and moves backward for a specified number of sequences.
+/// \param nCount Number of sequences to move backward for from the end.
+/// \note If \a nCount is larger than the number of sequences left, moving will stop at the first sequence and the return value will still be <code>\b true</code>.
+/// \return <code>\b true</code> if moving was successful, <code>\b false</code> otherwise.
+
+
+
+/// \class acpl::String::PermRef
+/// \brief Base class for permanent reference extender classes.
+
+
+/// \fn acpl::String::PermRef::PermRef()
+/// \brief Empty constructor.
+
+
+
+/// \class acpl::String::AllocPermRef
+/// \brief Base class for permanent reference extender classes that require allocation.
+
+
+/// \fn acpl::String::AllocPermRef::~AllocPermRef()
+/// \brief Destructor.
+
+
+/// \fn acpl::String::AllocPermRef::AllocPermRef()
+/// \brief Empty constructor.
+
+/// \fn void acpl::String::AllocPermRef::Alloc(const acpl::String::Ref &nRef, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Converts, allocates, and stores the provided string reference.
+/// \param nRef acpl::String reference.
+/// \param nMaxCount Maximum number of sequences (characters) to copy.
+/// \param nStartOffset Sequence (character) offset to start at.
+
+
+
+/// \class acpl::String::StringRef
+/// \brief Permanent string reference class.
+
+
+/// \fn acpl::String::StringRef::StringRef(const acpl::String::Ref &nRef, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Constructor for permanent string reference.
+/// \param nRef acpl::String::Ref reference.
+/// \param nMaxCount Maximum number of sequences (characters) to copy.
+/// \param nStartOffset Sequence (character) offset to start at.
+
+
+
+/// \class acpl::String::IntRef
+/// \brief Reference class for integer types for acpl::String.
+/// 
+/// Class used for referencing integer types for stringification. It acts as a base class for referencing other integer-based types.
+
+
+/// \fn acpl::String::IntRef::IntRef(const acpl::String::IntRef::Type &nArg, acpl::UInt8 nBase = 10, bool nUpperCase = false, acpl::UInt8 nPadding = 0, char nPaddingChar = ' ')
+/// \brief Constructor for number stringification.
+/// \param nArg acpl::String::IntRef::Type reference. Take advantage of implicit conversions!
+/// \param nBase Numeral system (base). This parameter can be between <code>\b 2</code> (binary) and <code>\b 36</code>, inclusive.
+/// \param nUpperCase Flag specifying whether or not the alphabetic characters should be in upper- (<code>\b true</code>) or lower-case (<code>\b false</code>) for \a nBase numeral system above <code>\b 10</code> (decimal).
+/// \param nPadding Number of characters to which the stringified number should be padded. See notes at acpl::String::IntRef::Conv.
+/// \param nPaddingChar Character to use to pad the stringified number. See notes at acpl::String::IntRef::Conv.
+
+
+/// \fn acpl::String::IntRef::IntRef()
+/// \brief Empty constructor for extender classes.
+
+/// \fn void acpl::String::IntRef::Conv(const acpl::String::IntRef::Type &nArg, acpl::UInt8 nBase, bool nUpperCase, acpl::UInt8 nPadding, char nPaddingChar, const char *nPrepand = NULL)
+/// \brief Stringifies the provided number to string.
+/// \param nArg acpl::String::IntRef::Type reference. Take advantage of implicit conversions!
+/// \param nBase Numeral system (base). This parameter can be between <code>\b 2</code> (binary) and <code>\b 36</code>, inclusive.
+/// \param nUpperCase Flag specifying whether or not the alphabetic characters should be in upper- (<code>\b true</code>) or lower-case (<code>\b false</code>) for \a nBase numeral system above <code>\b 10</code> (decimal).
+/// \param nPadding Number of characters to which the stringified number should be padded. See notes below.
+/// \param nPaddingChar Character to use to pad the stringified number. See notes below.
+/// \param nPrepand Prepand the provided string to the stringified number (e.g.: an <code>"0x"</code> for acpl::String::PtrRef or <code>"U+"</code> for acpl::String::UnicharRef). Limits apply - see notes below.
+/// \note The maximum number of characters in a stringified number is limited to 64.
+/// \note Padding notes:
+/// \note   \li If the stringified number's length is already that of \a nPadding or higher, no action is taken.
+/// \note   \li Allowed characters for padding passed to \a nPaddingChar are between <code>\b 0x20</code> (<code>' '</code> - space) and <code>\b 0x7E</code> (<code>'~'</code> - tilde), inclusive, in ASCII encoding. If any other character outside this range is passed, the character used will be a space (<code>\b 0x20</code>).
+/// \note   \li When padding, there is a special case when the stringified number is negative and in decimal numeral system (base). If padding character is a zero (<code>'0'</code>), the padding will appear after the negative sign (e.g.: value of <code>\b -1</code> padded with three zeros: <code>"-0001"</code>), and if padding character is any other character, the padding will appear before the negative sign (e.g.: value of <code>\b -1</code> padded with three commas: <code>",,,-1"</code>).
+
+
+
+/// \class acpl::String::IntRef::Type
+/// \brief Class for holding an integer value for integer type stringification.
+/// \note This class should be used through implicit conversions. Its functionality is intended for internal purposes and is not of any concern for a casual user.
+
+
+/// \fn acpl::String::IntRef::Type::Type(tType nValue)
+/// \brief Constructor for setting the value held by this object.
+/// \tparam tType Integer type name. Note that this type <b>can</b> be a floating-point type, but \a nValue will be casted to integer type.
+/// \param nValue Integer value. Note that this value <b>can</b> be of floating-point type, but it will be casted to integer type.
+
+/// \fn acpl::UInt64 acpl::String::IntRef::Type::GetValue()
+/// \brief Returns the integer value held by the object.
+/// \note The value is always a non-negative equivalent.
+/// \return Integer value held by the object.
+
+/// \fn acpl::UInt8  acpl::String::IntRef::Type::GetMeta()
+/// \brief Returns the meta data about the integer value held by the object.
+/// \note The meta data contains integer value's type size and its sign.
+/// \return Meta data about the integer value held by the object.
+
+
+
+/// \class acpl::String::UnicharRef
+/// \brief Reference class for unicode code point type for acpl::String.
+/// 
+/// Class used for referencing unicode code point type for stringification to the <code>"U+xxxxxxxx"</code> notation.
+
+
+/// \fn acpl::String::UnicharRef::UnicharRef(acpl::Unichar nArg, acpl::UInt8 nPadding = 4)
+/// \brief Constructor for unicode code point stringification.
+/// \param nArg acpl::Unichar unicode code point.
+/// \param nPadding Number of characters to which the stringified unicode code point should be padded. Default and minimum value is <code>\b 4</code> (<code>"U+xxxx"</code>), and maximum value is <code>\b 8</code> (<code>"U+xxxxxxxx"</code>).
+
+
+
+/// \class acpl::String::PtrRef
+/// \brief Reference class for pointer type for acpl::String.
+/// 
+/// Class used for referencing pointer type for stringification to the hexadecimal numeral system with prepended <code>"0x"</code>.
+
+
+/// \fn acpl::String::PtrRef::PtrRef(const void *nArg, bool nUpperCase = false, acpl::UInt8 nPadding = 0)
+/// \brief Constructor for pointer type stringification.
+/// \param nArg <code>{<b>const void *</b>}</code> pointer.
+/// \param nUpperCase Flag specifying whether or not the alphabetic characters should be in upper- (<code>\b true</code>) or lower-case (<code>\b false</code>).
+/// \param nPadding Number of characters to which the stringified number should be padded. The maximum value is <code>\b 16</code> which is the maximum length of a stringified 64-bit integer in a hexadecimal numeral system.
+
+/// \fn acpl::UInt8 acpl::String::PtrRef::NativePadding()
+/// \brief Returns a native padding length.
+/// \note Native padding is determined by the bitness of the program (e.g.: if the program is 32-bit, the returned value is <code>\b 8</code>, and if the program is 64-bit, the returned value is <code>\b 16</code>).
+/// \return Native padding length.
+
+
+
+/// \class acpl::String::IpAddrRef
+/// \brief Reference class for IPv4 and IPv6 address types.
+
+
+/// \fn acpl::String::IpAddrRef::IpAddrRef(const acpl::Ipv4Addr &nIpv4Addr)
+/// \brief Constructor for IPv4 address.
+/// \param nIpv4Addr acpl::Ipv4Addr reference.
+
+/// \fn acpl::String::IpAddrRef::IpAddrRef(const acpl::Ipv6Addr &nIpv6Addr, bool nOptimize = false, bool nIpv4Mode = false)
+/// \brief Constructor for IPv6 address.
+/// \param nIpv6Addr acpl::Ipv6Addr reference.
+/// \param nOptimize Flag specifying whether or not the stringified address should be optimized (i.e.: the <code>"::"</code> is used in the most appropriate place).
+/// \param nIpv4Mode Flag specifying whether or not the last two groups of a stringified address should be in IPv4 notation.
+
+
+
+/// \class acpl::String::NetAddrRef
+/// \brief Reference class for any network address type.
+
+
+/// \fn acpl::String::NetAddrRef::NetAddrRef(const acpl::NetworkAddr &nNetAddr)
+/// \brief Constructor for any network address.
+/// \param nNetAddr acpl::NetworkAddr reference.
+
+/// \fn acpl::String::NetAddrRef::NetAddrRef(const acpl::Ipv4Addr &nIpv4Addr)
+/// \brief Constructor for IPv4 address.
+/// \param nIpv4Addr acpl::Ipv4Addr reference.
+
+/// \fn acpl::String::NetAddrRef::NetAddrRef(const acpl::Ipv6Addr &nIpv6Addr, bool nOptimize = false, bool nIpv4Mode = false)
+/// \brief Constructor for IPv6 address.
+/// \param nIpv6Addr acpl::Ipv6Addr reference.
+/// \param nOptimize Flag specifying whether or not the stringified address should be optimized (i.e.: the <code>"::"</code> is used in the most appropriate place).
+/// \param nIpv4Mode Flag specifying whether or not the last two groups of a stringified address should be in IPv4 notation.
+
+
+
+/// \class acpl::String::RefList
+/// \brief Reference list class intended primarily as a list of arguments for acpl::String::FmtRef formatting class.
+
+
+/// \fn acpl::String::RefList::RefList()
+/// \brief Empty constructor.
+
+/// \fn acpl::String::RefList::~RefList()
+/// \brief Destructor.
+
+
+/// \fn acpl::String::RefList::Type &acpl::String::RefList::List()
+/// \brief Returns the array of acpl::String::Ref references.
+/// \return Array of acpl::String::PermRef references.
+
+/// \fn const acpl::String::RefList::Type &acpl::String::RefList::List() const
+/// \brief Returns the array of acpl::String::Ref references.
+/// \return Array of acpl::String::PermRef references.
+
+
+/// \fn acpl::String::RefList &acpl::String::RefList::String(const acpl::String::Ref &nArg, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0)
+/// \brief Adds a new string reference.
+/// \param nArg acpl::String::Ref reference.
+/// \param nMaxCount Maximum number of sequences (characters) to copy.
+/// \param nStartOffset Sequence (character) offset to start at.
+/// \return Reference to this object.
+
+/// \fn acpl::String::RefList &acpl::String::RefList::Int(const acpl::String::IntRef::Type &nArg, acpl::UInt8 nBase = 10, bool nUpperCase = false, acpl::UInt8 nPadding = 0, char nPaddingChar = ' ')
+/// \brief Adds a new integer reference.
+/// \param nArg acpl::String::IntRef::Type reference. Take advantage of implicit conversions!
+/// \param nBase Numeral system (base). This parameter can be between <code>\b 2</code> (binary) and <code>\b 36</code>, inclusive.
+/// \param nUpperCase Flag specifying whether or not the alphabetic characters should be in upper- (<code>\b true</code>) or lower-case (<code>\b false</code>) for \a nBase numeral system above <code>\b 10</code> (decimal).
+/// \param nPadding Number of characters to which the stringified number should be padded. See notes at acpl::String::IntRef::Conv.
+/// \param nPaddingChar Character to use to pad the stringified number. See notes at acpl::String::IntRef::Conv.
+/// \return Reference to this object.
+
+
+/// \typedef acpl::String::RefList::Type
+/// \brief Reference list type.
+
+
+
+/// \class acpl::String::FmtRefBase
+/// \brief Base class for formatting classes.
+
+
+/// \fn acpl::String::FmtRefBase::~FmtRefBase()
+/// \brief Destructor.
+
+
+/// \fn const char *acpl::String::FmtRefBase::FmtUtf8() const
+/// \brief Returns a C-style NULL-terminated string in UTF-8 encoding of the format template string.
+/// \note This method will always return a valid C-style NULL-terminated string.
+/// \return C-style NULL-terminated string in UTF-8 encoding of the format template string.
+
+/// \fn void acpl::String::FmtRefBase::SetFmt(const acpl::String::Ref &nRef)
+/// \brief Sets the format template string.
+/// \param nRef acpl::String::Ref reference to format template string.
+
+
+/// \fn acpl::String::FmtRefBase::FmtRefBase()
+/// \brief Empty constructor for extender classes.
+
+
+
+/// \class acpl::String::FmtRef
+/// \brief Class for formatting of provided acpl::String::RefList arguments.
+
+
+/// \fn acpl::String::FmtRef::FmtRef()
+/// \brief Empty constructor.
+
+/// \fn acpl::String::FmtRef::FmtRef(const acpl::String::Ref &nFmt)
+/// \brief Constructor with format template only.
+/// \param nFmt acpl::String::Ref reference to format template string.
+/// \see acpl::String::FmtRef::Format
+
+/// \fn acpl::String::FmtRef::FmtRef(const acpl::String::Ref &nFmt, const acpl::String::RefList &nRefList)
+/// \brief Constructor with format template and a list of arguments to format.
+/// \param nFmt acpl::String::Ref reference to format template string.
+/// \param nRefList acpl::String::RefList list of references to format.
+/// \see acpl::String::FmtRef::Format
+
+
+/// \fn void acpl::String::FmtRef::Format(const acpl::String::RefList &nRefList)
+/// \brief Formats the list of arguments.
+/// \param nRefList acpl::String::RefList list of references to format.
+/// \note Referencing an argument from the argument list in format template (<b>note</b>: regular expression notation is used):
+/// \note   \li short form: <code>"\$[0-9]"</code>, which means you can access only arguments indexed from <code>0</code> to <code>9</code>, inclusive (e.g.: <code>"$0"</code> for 0th argument, <code>"$9"</code> for 9th argument);
+/// \note   \li long form: <code>"\$\{[0-9]+\}"</code>, which means you can access any argument (e.g.: <code>"${0}"</code> for 0th argument, <code>"${9}"</code> for 9th argument, <code>"${18}"</code> for 18th argument, etc.).
+/// \note If argument referencing in format template is invalid, the invalid part will be written to formatted string verbatim.
+/// \note If argument referencing in format template is valid but not found in the provided list of references, the <code>"(no-arg)"</code> is written to the formatted string.
+/// \note Any character preceeded by a backslash (<code>'\'</code>) is considered escaped and thus written to the string verbatim - useful mainly to escape <code>'$'</code> or <code>'\'</code> themselves.
+
+
+
+/// \class acpl::String::FmtDtRef
+/// \brief Class for formatting of provided acpl::DateTime date+time objects.
+
+
+/// \fn acpl::String::FmtDtRef::FmtDtRef()
+/// \brief Empty constructor.
+
+/// \fn acpl::String::FmtDtRef::FmtDtRef(const acpl::String::Ref &nFmt)
+/// \brief Constructor with format template only.
+/// \param nFmt acpl::String::Ref reference to format template string.
+/// \see acpl::String::FmtDtRef::Format
+
+/// \fn acpl::String::FmtDtRef::FmtDtRef(const acpl::String::Ref &nFmt, const acpl::DateTime &nDateTime)
+/// \brief Constructor with format template and the date+time object.
+/// \param nFmt acpl::String::Ref reference to format template string.
+/// \param nDateTime acpl::DateTime reference to format.
+/// \see acpl::String::FmtDtRef::Format
+
+
+/// \fn void acpl::String::FmtDtRef::Format(const acpl::DateTime &nDateTime)
+/// \brief Formats the date+time object.
+/// \param nDateTime acpl::DateTime reference to format.
+/// \note Referencing a part of date+time (<b>case is important</b>):
+/// \note   \li <code>"%C"</code> - century part of the year (e.g.: if the year is 2012, the century part is 20);
+/// \note   \li <code>"%d"</code> - day of the month (range is from <code>"01"</code> to <code>"31"</code>);
+/// \note   \li <code>"%F"</code> - ISO 8601 date format (equivalent to <code>"%Y-%m-%d"</code>).
+/// \note   \li <code>"%H"</code> - hour (range is from <code>"00"</code> to <code>"23"</code>).
+/// \note   \li <code>"%m"</code> - month as a number (range is from <code>"01"</code> to <code>"12"</code>).
+/// \note   \li <code>"%M"</code> - minute (range is from <code>"00"</code> to <code>"59"</code>).
+/// \note   \li <code>"%S"</code> - second (range is from <code>"00"</code> to <code>"60"</code>; range is up to <code>"60"</code> to allow for occasional leap seconds);
+/// \note   \li <code>"%T"</code> - commonest time format (equivalent to <code>"%H:%M:%S"</code>);
+/// \note   \li <code>"%y"</code> - year without a century (range is from <code>"00"</code> to <code>"99"</code>);
+/// \note   \li <code>"%Y"</code> - full year (including the century);
+/// \note A <code>'\%'</code> sign followed by any character not mentioned in the previous list is to be written to the formatted string verbatim. <b>Note that new options might come in the future.</b>
+/// \note A <code>"%%"</code> is considered an escaped <code>'\%'</code> character to be written to the formatted string verbatim.

@@ -1,0 +1,169 @@
+/// \file Types.h
+/// \brief Header file holding general types.
+/// 
+/// 
+
+
+
+/// \typedef acpl::SInt8
+/// \brief Signed 8-bit integer type.
+
+/// \typedef acpl::SInt16
+/// \brief Signed 16-bit integer type.
+
+/// \typedef acpl::SInt32
+/// \brief Signed 32-bit integer type.
+
+/// \typedef acpl::SInt64
+/// \brief Signed 64-bit integer type.
+
+/// \typedef acpl::UInt8
+/// \brief Unsigned 8-bit integer type.
+
+/// \typedef acpl::UInt16
+/// \brief Unsigned 16-bit integer type.
+
+/// \typedef acpl::UInt32
+/// \brief Unsigned 32-bit integer type.
+
+/// \typedef acpl::UInt64
+/// \brief Unsigned 64-bit integer type.
+
+/// \typedef acpl::Float32
+/// \brief Single-precision (32-bit) floating-point type.
+
+/// \typedef acpl::Float64
+/// \brief Double-precision (64-bit) floating-point type.
+
+/// \typedef acpl::SizeT
+/// \brief (Unsigned) size type.
+
+/// \typedef acpl::SSizeT
+/// \brief Signed size type.
+
+/// \typedef acpl::OffT
+/// \brief Offset type
+
+/// \typedef acpl::TimeT
+/// \brief UNIX timestamp type.
+
+/// \typedef acpl::Pathchar
+/// \brief Char type used for file system path strings.
+
+/// \typedef acpl::Unichar
+/// \brief Unicode (ISO/IEC 10646) code point type.
+
+
+
+/// \class acpl::Const
+/// \brief Class holding aggregate methods for outputting 64-bit integer constants.
+
+
+/// \fn acpl::UInt64 acpl::Const::UI64(acpl::UInt32 nUpper, acpl::UInt32 nLower)
+/// \brief Aggregate method for outputting 64-bit unsigned integer constant.
+/// \param nUpper Upper word (32-bit) of constant value.
+/// \param nLower Lower word (32-bit) of constant value.
+/// \return Aggregated 64-bit unsigned integer constant value.
+/// \note This function is a necessity, for example, in 32-bit GCC to avoid getting a compiler warning.
+
+
+/// \fn acpl::SInt64 acpl::Const::SI64(acpl::UInt32 nUpper, acpl::UInt32 nLower)
+/// \brief Aggregate method for outputting 64-bit signed integer constant.
+/// \param nUpper Upper word (32-bit) of constant value.
+/// \param nLower Lower word (32-bit) of constant value.
+/// \return Aggregated 64-bit signed integer constant value.
+/// \note This function is a necessity, for example, in 32-bit GCC to avoid getting a compiler warning.
+
+
+
+/// \class acpl::Num
+/// \brief Template class for retrieving basic numeric (integer and floating-point) type information.
+/// \tparam tType Basic numeric type name.
+/// \warning This class will only work for basic numeric (integer and floating-point) types.
+/// \warning There is no guarantee that this class will work for any basic type other than the types defined in Types.h. One of the non-standard types for which acpl::Num::Min and acpl::Num::Max will not work is GCC's <code>{<b>long double</b>}</code>, which is an 80-bit type.
+
+
+/// \fn bool acpl::Num::IsSigned()
+/// \brief Returns <code>\b true</code> if \a tType is a signed type.
+/// \note Both signed integers and floating-point types qualify as signed.
+/// \return <code>\b true</code> if \a tType is signed, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Num::IsFloat()
+/// \brief Returns <code>\b true</code> if \a tType is a floating-point type.
+/// \return <code>\b true</code> if \a tType is a floating-point type.
+
+/// \fn tType acpl::Num::Min()
+/// \brief Returns the lowest value for the \a tType.
+/// \return Lowest value for the \a tType.
+
+/// \fn tType acpl::Num::Max()
+/// \brief Returns the highest value for the \a tType.
+/// \return Highest value for the \a tType.
+
+
+
+/// \class acpl::Enum
+/// \brief Enumerator container template class
+/// \tparam tEnumType Enumerator type.
+/// \tparam tHolderType Enumerator container type.
+/// \note The purpose of this class is to reduce type size of the enum type.
+/// \warning Note that \a tHolderType type needs to be big enough to hold the largest value of the \a tEnumType type.
+
+
+/// \fn acpl::Enum::Enum()
+/// \brief Empty constructor.
+
+/// \fn acpl::Enum::Enum(const acpl::Enum<tEnumType, tHolderType> &nObj) : mHolder(nObj.mHolder)
+/// \brief Copy constructor.
+/// \param nObj Object reference to copy from.
+
+/// \fn acpl::Enum::Enum(const tEnumType &nVal) : mHolder(static_cast<tHolderType>(nVal))
+/// \brief Value setter constructor.
+/// \param nVal Value to set.
+
+/// \fn acpl::Enum::~Enum()
+/// \brief Destructor.
+
+
+/// \fn tEnumType acpl::Enum::Value() const
+/// \brief Value getter.
+/// \return Enumerator value.
+
+
+/// \fn acpl::Enum<tEnumType, tHolderType> &acpl::Enum::operator=(const acpl::Enum<tEnumType, tHolderType> &nObj)
+/// \brief Assignment operator overload.
+/// \param nObj Object reference to copy from.
+/// \return Reference to this object.
+
+
+/// \fn bool acpl::Enum::operator==(const acpl::Enum<tEnumType, tHolderType> &nObj)
+/// \brief Equality operator overload.
+/// \param nObj Object reference to compare to.
+/// \return <code>\b true</code> if equal, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Enum::operator!=(const acpl::Enum<tEnumType, tHolderType> &nObj)
+/// \brief Inequality operator overload.
+/// \param nObj Object reference to compare to.
+/// \return <code>\b true</code> if not equal, <code>\b false</code> otherwise.
+
+
+/// \fn bool acpl::Enum::operator< (const acpl::Enum<tEnumType, tHolderType> &nObj)
+/// \brief Less-than operator overload.
+/// \param nObj Object reference to compare to.
+/// \return <code>\b true</code> if less than, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Enum::operator> (const acpl::Enum<tEnumType, tHolderType> &nObj)
+/// \brief Greater-than operator overload.
+/// \param nObj Object reference to compare to.
+/// \return <code>\b true</code> if greater than, <code>\b false</code> otherwise.
+
+
+/// \fn bool acpl::Enum::operator<=(const acpl::Enum<tEnumType, tHolderType> &nObj)
+/// \brief Less-than-or-equal-to operator overload.
+/// \param nObj Object reference to compare to.
+/// \return <code>\b true</code> if less than or equal to, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Enum::operator>=(const acpl::Enum<tEnumType, tHolderType> &nObj)
+/// \brief Greater-than-or-equal-to operator overload.
+/// \param nObj Object reference to compare to.
+/// \return <code>\b true</code> if greater than or equal to, <code>\b false</code> otherwise.

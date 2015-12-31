@@ -1,0 +1,861 @@
+/// \file Header.h
+/// \brief Internet protocol (IP) headers functionality.
+
+
+
+/// \class acpl::IpHeader
+/// \brief Class containing general IP header functionality.
+
+
+/// \enum acpl::IpHeader::ProtocolId
+/// \brief IANA assigned internet protocol numbers.
+
+/// \var acpl::IpHeader::piNone
+/// \brief None/zero protocol number.
+
+/// \var acpl::IpHeader::piHopOpt
+/// \brief HOPOPT (IPv6 Hop-by-Hop Option) number.
+
+/// \var acpl::IpHeader::piIcmp
+/// \brief ICMP (Internet Control Message Protocol) number.
+
+/// \var acpl::IpHeader::piIgmp
+/// \brief IGMP (Internet Group Management Protocol) number.
+
+/// \var acpl::IpHeader::piTcp
+/// \brief TPC (Transmission Control Protocol) number.
+
+/// \var acpl::IpHeader::piUdp
+/// \brief UDP (User Datagram Protocol) number.
+
+/// \var acpl::IpHeader::piIcmpv6
+/// \brief IPv6-ICMP (Internet Control Message Protocol for IPv6) number.
+
+
+
+/// \class acpl::IpHeader::Checksum
+/// \brief Class for internet protocol checksum manipulation/calculation.
+
+
+/// \fn acpl::IpHeader::Checksum::Checksum()
+/// \brief Constructor.
+
+/// \fn acpl::IpHeader::Checksum::~Checksum()
+/// \brief Destructor.
+
+
+/// \fn void acpl::IpHeader::Checksum::Reset()
+/// \brief Reset checksum value.
+
+/// \fn void acpl::IpHeader::Checksum::DataClear(acpl::IpHeader::Checksum::DataType &nCsum)
+/// \brief Clear checksum data.
+/// \param nCsum Reference to the checksum data holder to be cleared.
+
+
+/// \fn void acpl::IpHeader::Checksum::Add(const void *nBfr, acpl::SizeT nBfrLen)
+/// \brief Add to checksum value.
+/// \param nBfr Pointer to a buffer containing data for which checksum should be added.
+/// \param nBfrLen Number of bytes in \a nBfr for which checksum should be added.
+
+/// \fn void acpl::IpHeader::Checksum::Calc(acpl::IpHeader::Checksum::DataType &nCsum)
+/// \brief Calculate checksum.
+/// \param nCsum Reference to the checksum data holder to which checksum data should be written.
+
+/// \fn bool acpl::IpHeader::Checksum::Verify()
+/// \brief Verify checksum value of added buffers.
+/// \return True if verification is correct, false otherwise.
+
+
+/// \typedef acpl::IpHeader::Checksum::DataType
+/// \brief Data holder type for checksum.
+
+
+
+/// \class acpl::Ipv4Header
+/// \brief Class for IPv4 header manipulation.
+/// \note Detailed information on IPv4 and its header can be found in:
+/// \li RFC 791 - Internet Protocol ( http://tools.ietf.org/html/rfc791 )
+
+
+/// \fn acpl::Ipv4Header::Ipv4Header()
+/// \brief Constructor.
+
+/// \fn acpl::Ipv4Header::~Ipv4Header()
+/// \brief Destructor.
+
+
+/// \fn acpl::Ipv4Header::DataType &acpl::Ipv4Header::Data()
+/// \brief Get header data.
+/// \return Header data.
+
+/// \fn const acpl::Ipv4Header::DataType &acpl::Ipv4Header::Data() const
+/// \brief Get header data.
+/// \return Header data.
+
+
+/// \fn void acpl::Ipv4Header::Reset()
+/// \brief Reset header.
+
+
+/// \fn acpl::UInt8 acpl::Ipv4Header::GetIhl() const
+/// \brief Get IHL field value.
+/// \return IHL field value.
+
+/// \fn void acpl::Ipv4Header::SetIhl(acpl::UInt8 nIhl)
+/// \brief Set IHL field value.
+/// \warning IHL is a 4 bit field, so the value will be truncated to 4 bits.
+/// \param nIhl IHL field value. See note.
+
+
+/// \fn acpl::UInt8 acpl::Ipv4Header::GetTos() const
+/// \brief Get Type of Service field value.
+/// \return Type of Service field value.
+
+/// \fn void acpl::Ipv4Header::SetTos(acpl::UInt8 nTos)
+/// \brief Set Type of Service field value.
+/// \warning Type of Service is an 8 bit field with bottom 2 bits reserved, so the bottom 2 bits of the value will be truncated.
+/// \param nTos Type of Service field value.
+
+
+/// \fn acpl::UInt16 acpl::Ipv4Header::GetLen() const
+/// \brief Get Total Length field value.
+/// \return Total Length field value.
+
+/// \fn void acpl::Ipv4Header::SetLen(acpl::UInt16 nLen)
+/// \brief Set Total Length field value.
+/// \param nLen Total Length field value.
+
+
+/// \fn acpl::UInt16 acpl::Ipv4Header::GetId() const
+/// \brief Get Identification field value.
+/// \return Identification field value.
+
+/// \fn void acpl::Ipv4Header::SetId(acpl::UInt16 nId)
+/// \brief Set Identification field value.
+/// \param nId Identification field value.
+
+
+/// \fn acpl::UInt8 acpl::Ipv4Header::GetFragFlags() const
+/// \brief Get Fragmentation Flags field value.
+/// \return Fragmentation Flags field value.
+
+/// \fn void acpl::Ipv4Header::SetFragFlags(acpl::UInt8 nFragFlags)
+/// \brief Set Fragmentation Flags field value.
+/// \warning Fragmentation Flags is a 3 bit field with 1 reserved bit, so the value will be truncated to 2 bits.
+/// \param nFragFlags Fragmentation Flags field value. See note.
+
+/// \fn acpl::UInt16 acpl::Ipv4Header::GetFragOff() const
+/// \brief Get Fragmentation Offset field value.
+/// \return Fragmentation Offset field value.
+
+/// \fn void acpl::Ipv4Header::SetFragOff(acpl::UInt16 nFragOff)
+/// \brief Set Fragmentation Offset field value.
+/// \warning Fragmentation Offset is a 13 bit field, so the value will be truncated to 13 bits.
+/// \param nFragOff Fragmentation Offset field value. See note.
+
+
+/// \fn acpl::UInt8 acpl::Ipv4Header::GetTtl() const
+/// \brief Get Time to Live field value.
+/// \return Time to Live field value.
+
+/// \fn void acpl::Ipv4Header::SetTtl(acpl::UInt8 nTtl)
+/// \brief Set Time to Live field value.
+/// \param nTtl Time to Live field value.
+
+
+/// \fn acpl::UInt8 acpl::Ipv4Header::GetProto() const
+/// \brief Get Protocol field value.
+/// \return Protocol field value.
+
+/// \fn void acpl::Ipv4Header::SetProto(acpl::UInt8 nProto)
+/// \brief Set Protocol field value.
+/// \param nProto Protocol field value.
+
+
+/// \fn acpl::IpHeader::Checksum::DataType &acpl::Ipv4Header::GetCsum()
+/// \brief Get Header Checksum field data.
+/// \return Header Checksum field data.
+
+/// \fn const acpl::IpHeader::Checksum::DataType &acpl::Ipv4Header::GetCsum() const
+/// \brief Get Header Checksum field data.
+/// \return Header Checksum field data.
+
+
+/// \fn acpl::Ipv4Addr::DataType &acpl::Ipv4Header::GetSrcAddr()
+/// \brief Get Source Address field data.
+/// \return Source Address field data.
+
+/// \fn const acpl::Ipv4Addr::DataType &acpl::Ipv4Header::GetSrcAddr() const
+/// \brief Get Source Address field data.
+/// \return Source Address field data.
+
+
+/// \fn acpl::Ipv4Addr::DataType &acpl::Ipv4Header::GetDstAddr()
+/// \brief Get Destination Address field data.
+/// \return Destination Address field data.
+
+/// \fn const acpl::Ipv4Addr::DataType &acpl::Ipv4Header::GetDstAddr() const
+/// \brief Get Destination Address field data.
+/// \return Destination Address field data.
+
+
+/// \fn void acpl::Ipv4Header::AddTcpPshCsum(acpl::IpHeader::Checksum &nCs, acpl::UInt16 nTcpLen) const
+/// \brief Add a TCP pseudo-header checksum to the provided checksum value holder.
+/// \param nCs Checksum value holder to add TCP pseudo-header checksum to.
+/// \param nTcpLen TCP length value to be included in TCP pseudo-header.
+
+
+/// \typedef acpl::Ipv4Header::DataType
+/// \brief Data holder type for IPv4 header.
+
+/// \enum acpl::Ipv4Header::TosPrec
+/// \brief Type of service (TOS) precedence.
+
+/// \var acpl::Ipv4Header::tpRout
+/// \brief Routine TOS precedence.
+
+/// \var acpl::Ipv4Header::tpPrio
+/// \brief Priority TOS precedence.
+
+/// \var acpl::Ipv4Header::tpImmed
+/// \brief Immediate TOS precedence.
+
+/// \var acpl::Ipv4Header::tpFlash
+/// \brief Flash TOS precedence.
+
+/// \var acpl::Ipv4Header::tpFlashOvr
+/// \brief Flash Override TOS precedence.
+
+/// \var acpl::Ipv4Header::tpCritEcp
+/// \brief CRITIC/ECP TOS precedence.
+
+/// \var acpl::Ipv4Header::tpInwkCtrl
+/// \brief Internetwork Control TOS precedence.
+
+/// \var acpl::Ipv4Header::tpNwkCtrl
+/// \brief Network Control TOS precedence.
+
+/// \enum acpl::Ipv4Header::TosFlags
+/// \brief Type of service (TOS) flags.
+
+/// \var acpl::Ipv4Header::tfDelay
+/// \brief Low delay TOS flag.
+
+/// \var acpl::Ipv4Header::tfTput
+/// \brief High throughput TOS flag.
+
+/// \var acpl::Ipv4Header::tfRel
+/// \brief High relibility TOS flag.
+
+/// \enum acpl::Ipv4Header::FragFlags
+/// \brief Fragmentation control flags.
+
+/// \var acpl::Ipv4Header::ffDont
+/// \brief Don't fragment control flag.
+
+/// \var acpl::Ipv4Header::ffMore
+/// \brief More fragments control flag.
+
+
+
+/// \class acpl::Ipv6Header
+/// \brief Class for IPv6 header manipulation.
+/// \note Detailed information on IPv6 and its header can be found in:
+/// \li RFC 2460 - Internet Protocol, Version 6 (IPv6) Specification ( http://tools.ietf.org/html/rfc2460 )
+
+
+/// \fn acpl::Ipv6Header::Ipv6Header()
+/// \brief Constructor.
+
+/// \fn acpl::Ipv6Header::~Ipv6Header()
+/// \brief Destructor.
+
+
+/// \fn acpl::Ipv6Header::DataType &acpl::Ipv6Header::Data()
+/// \brief Get header data.
+/// \return Header data.
+
+/// \fn const acpl::Ipv6Header::DataType &acpl::Ipv6Header::Data() const
+/// \brief Get header data.
+/// \return Header data.
+
+
+/// \fn void acpl::Ipv6Header::Reset()
+/// \brief Reset header.
+
+
+/// \fn acpl::UInt8 acpl::Ipv6Header::GetTrac() const
+/// \brief Get Traffic Class field value.
+/// \return Traffic Class field value.
+
+/// \fn void acpl::Ipv6Header::SetTrac(acpl::UInt8 nTrac)
+/// \brief Set Traffic Class field value.
+/// \param nTrac Traffic Class field value.
+
+
+/// \fn acpl::UInt32 acpl::Ipv6Header::GetFlab() const
+/// \brief Get Flow Label field value.
+/// \return Flow Label field value.
+
+/// \fn void acpl::Ipv6Header::SetFlab(acpl::UInt32 nFlab)
+/// \brief Set Flow Label field value.
+/// \warning Flow Label is a 20 bit field, so the value will be truncated to 20 bits.
+/// \param nFlab Flow Label field value.
+
+
+/// \fn acpl::UInt16 acpl::Ipv6Header::GetPlen() const
+/// \brief Get Payload Length field value.
+/// \return Payload Length field value.
+
+/// \fn void acpl::Ipv6Header::SetPlen(acpl::UInt16 nPlen)
+/// \brief Set Payload Length field value.
+/// \param nPlen Payload Length field value.
+
+
+/// \fn acpl::UInt8 acpl::Ipv6Header::GetNeh() const
+/// \brief Get Next Header field value.
+/// \return Next Header field value.
+
+/// \fn void acpl::Ipv6Header::SetNeh(acpl::UInt8 nNeh)
+/// \brief Set Next Header field value.
+/// \param nNeh Next Header field value.
+
+
+/// \fn acpl::UInt8 acpl::Ipv6Header::GetHol() const
+/// \brief Get Hop Limit field value.
+/// \return Hop Limit field value.
+
+/// \fn void acpl::Ipv6Header::SetHol(acpl::UInt8 nHol)
+/// \brief Set Hop Limit field value.
+/// \param nHol Hop Limit field value.
+
+
+/// \fn acpl::Ipv6Addr::DataType &acpl::Ipv6Header::GetSrcAddr()
+/// \brief Get Source Address field data.
+/// \return Source Address field data.
+
+/// \fn const acpl::Ipv6Addr::DataType &acpl::Ipv6Header::GetSrcAddr() const
+/// \brief Get Source Address field data.
+/// \return Source Address field data.
+
+
+/// \fn acpl::Ipv6Addr::DataType &acpl::Ipv6Header::GetDstAddr()
+/// \brief Get Destination Address field data.
+/// \return Destination Address field data.
+
+/// \fn const acpl::Ipv6Addr::DataType &acpl::Ipv6Header::GetDstAddr() const
+/// \brief Get Destination Address field data.
+/// \return Destination Address field data.
+
+
+/// \fn void acpl::Ipv6Header::AddTcpPshCsum(acpl::IpHeader::Checksum &nCs, acpl::UInt16 nTcpLen) const
+/// \brief Add a TCP pseudo-header checksum to the provided checksum value holder.
+/// \param nCs Checksum value holder to add TCP pseudo-header checksum to.
+/// \param nTcpLen TCP length value to be included in TCP pseudo-header.
+
+
+/// \typedef acpl::Ipv6Header::DataType
+/// \brief Data holder type for IPv6 header.
+
+
+
+/// \class acpl::IpHeaderTcp
+/// \brief Class for TCP header manipulation.
+/// \note Detailed information on TCP and its header can be found in:
+/// \li RFC 793 - Transmission Control Protocol ( http://tools.ietf.org/html/rfc793 )
+
+
+/// \fn acpl::IpHeaderTcp::IpHeaderTcp()
+/// \brief Constructor.
+
+/// \fn acpl::IpHeaderTcp::~IpHeaderTcp()
+/// \brief Destructor.
+
+
+/// \fn acpl::IpHeaderTcp::DataType &acpl::IpHeaderTcp::Data()
+/// \brief Get header data.
+/// \return Header data.
+
+/// \fn const acpl::IpHeaderTcp::DataType &acpl::IpHeaderTcp::Data() const
+/// \brief Get header data.
+/// \return Header data.
+
+
+/// \fn void acpl::IpHeaderTcp::Reset()
+/// \brief Reset header.
+
+
+/// \fn const acpl::NetworkPort::DataType &acpl::IpHeaderTcp::GetSrcPort() const
+/// \brief Get Source Port field data.
+/// \return Source Port field data.
+
+/// \fn acpl::NetworkPort::DataType &acpl::IpHeaderTcp::GetSrcPort()
+/// \brief Get Source Port field data.
+/// \return Source Port field data.
+
+
+/// \fn const acpl::NetworkPort::DataType &acpl::IpHeaderTcp::GetDstPort() const
+/// \brief Get Destination Port field data.
+/// \return Destination Port field data.
+
+/// \fn acpl::NetworkPort::DataType &acpl::IpHeaderTcp::GetDstPort()
+/// \brief Destination Port field data.
+/// \return Destination Port field data.
+
+
+/// \fn acpl::UInt32 acpl::IpHeaderTcp::GetSeqNum() const
+/// \brief Get Sequence Number field value.
+/// \return Sequence Number field value.
+
+/// \fn void acpl::IpHeaderTcp::SetSeqNum(acpl::UInt32 nSeqNum)
+/// \brief Set Sequence Number field value.
+/// \param nSeqNum Sequence Number field value.
+
+
+/// \fn acpl::UInt32 acpl::IpHeaderTcp::GetAckNum() const
+/// \brief Get Acknowledgment Number field value.
+/// \return Acknowledgment Number field value.
+
+/// \fn void acpl::IpHeaderTcp::SetAckNum(acpl::UInt32 nAckNum)
+/// \brief Set Acknowledgment Number field value.
+/// \param nAckNum Acknowledgment Number field value.
+
+
+/// \fn acpl::UInt8 acpl::IpHeaderTcp::GetDataOff() const
+/// \brief Get Data Offset field value.
+/// \return Data Offset field value.
+
+/// \fn void acpl::IpHeaderTcp::SetDataOff(acpl::UInt8 nDataOff)
+/// \brief Set Data Offset field value.
+/// \warning Data Offset is a 4 bit field, so the value will be truncated to 4 bits.
+/// \param nDataOff Data Offset field value.
+
+
+/// \fn acpl::UInt8 acpl::IpHeaderTcp::GetCtrlBits() const
+/// \brief Get Control Bits field value.
+/// \return Control Bits field value.
+
+/// \fn void acpl::IpHeaderTcp::SetCtrlBits(acpl::UInt8 nCtrlBits)
+/// \brief Set Control Bits field value.
+/// \warning Control Bits is a 6 bit field, so the value will be truncated to 6 bits.
+/// \param nCtrlBits Control Bits field value.
+
+
+/// \fn acpl::UInt16 acpl::IpHeaderTcp::GetWndw() const
+/// \brief Get Window field value.
+/// \return Window field value.
+
+/// \fn void acpl::IpHeaderTcp::SetWndw(acpl::UInt16 nWndw)
+/// \brief Set Window field value.
+/// \param nWndw Window field value.
+
+
+/// \fn acpl::IpHeader::Checksum::DataType &acpl::IpHeaderTcp::GetCsum()
+/// \brief Get Checksum field data.
+/// \return Checksum field data.
+
+/// \fn const acpl::IpHeader::Checksum::DataType &acpl::IpHeaderTcp::GetCsum() const
+/// \brief Get Checksum field data.
+/// \return Checksum field data.
+
+
+/// \fn acpl::UInt16 acpl::IpHeaderTcp::GetUrgPtr() const
+/// \brief Get Urgent Pointer field value.
+/// \return Urgent Pointer field value.
+
+/// \fn void acpl::IpHeaderTcp::SetUrgPtr(acpl::UInt16 nUrgPtr)
+/// \brief Set Urgent Pointer field value.
+/// \param nUrgPtr Urgent Pointer field value.
+
+
+/// \typedef acpl::IpHeaderTcp::DataType
+/// \brief Data holder type for TCP header.
+
+/// \enum acpl::IpHeaderTcp::CtrlBits
+/// \brief Control bits.
+
+/// \var acpl::IpHeaderTcp::cbUrg
+/// \brief Urgent Pointer field significant flag.
+
+/// \var acpl::IpHeaderTcp::cbAck
+/// \brief Acknowledgment field significant flag.
+
+/// \var acpl::IpHeaderTcp::cbPsh
+/// \brief Push Function flag.
+
+/// \var acpl::IpHeaderTcp::cbRst
+/// \brief Reset the connection flag.
+
+/// \var acpl::IpHeaderTcp::cbSyn
+/// \brief Synchronize sequence numbers flag.
+
+/// \var acpl::IpHeaderTcp::cbFin
+/// \brief No more data from sender flag.
+
+
+
+/// \class acpl::IpHeaderUdp
+/// \brief Class for UDP header manipulation.
+/// \note Detailed information on UDP and its header can be found in:
+/// \li RFC 768 - User Datagram Protocol ( http://tools.ietf.org/html/rfc768 )
+
+
+/// \fn acpl::IpHeaderUdp::IpHeaderUdp()
+/// \brief Constructor.
+
+/// \fn acpl::IpHeaderUdp::~IpHeaderUdp()
+/// \brief Destructor.
+
+
+/// \fn acpl::IpHeaderUdp::DataType &acpl::IpHeaderUdp::Data()
+/// \brief Get header data.
+/// \return Header data.
+
+/// \fn const acpl::IpHeaderUdp::DataType &acpl::IpHeaderUdp::Data() const
+/// \brief Get header data.
+/// \return Header data.
+
+
+/// \fn void acpl::IpHeaderUdp::Reset()
+/// \brief Reset header.
+
+
+/// \fn const acpl::NetworkPort::DataType &acpl::IpHeaderUdp::GetSrcPort() const
+/// \brief Get Source Port field data.
+/// \return Source Port field data.
+
+/// \fn acpl::NetworkPort::DataType &acpl::IpHeaderUdp::GetSrcPort()
+/// \brief Get Source Port field data.
+/// \return Source Port field data.
+
+
+/// \fn const acpl::NetworkPort::DataType &acpl::IpHeaderUdp::GetDstPort() const
+/// \brief Get Destination Port field data.
+/// \return Destination Port field data.
+
+/// \fn acpl::NetworkPort::DataType &acpl::IpHeaderUdp::GetDstPort()
+/// \brief Get Destination Port field data.
+/// \return Destination Port field data.
+
+
+/// \fn acpl::UInt16 acpl::IpHeaderUdp::GetLen() const
+/// \brief Get Length field value.
+/// \return Length field value.
+
+/// \fn void acpl::IpHeaderUdp::SetLen(acpl::UInt16 nLen)
+/// \brief Set Length field value.
+/// \param nLen Length field value.
+
+
+/// \fn acpl::IpHeader::Checksum::DataType &acpl::IpHeaderUdp::GetCsum()
+/// \brief Get Checksum field data.
+/// \return Checksum field data.
+
+/// \fn const acpl::IpHeader::Checksum::DataType &acpl::IpHeaderUdp::GetCsum() const
+/// \brief Get Checksum field data.
+/// \return Checksum field data.
+
+
+/// \typedef acpl::IpHeaderUdp::DataType
+/// \brief Data holder type for UDP header.
+
+
+
+/// \class acpl::IpHeaderIcmp
+/// \brief Class for ICMP header manipulation.
+/// \note Detailed information on ICMP and its header can be found in:
+/// \li RFC 792 - Internet Control Message Protocol ( http://tools.ietf.org/html/rfc792 )
+
+
+/// \fn acpl::IpHeaderIcmp::IpHeaderIcmp()
+/// \brief Constructor.
+
+/// \fn acpl::IpHeaderIcmp::~IpHeaderIcmp()
+/// \brief Destructor.
+
+
+/// \fn acpl::IpHeaderIcmp::DataType &acpl::IpHeaderIcmp::Data()
+/// \brief Get header data.
+/// \return Header data.
+
+/// \fn const acpl::IpHeaderIcmp::DataType &acpl::IpHeaderIcmp::Data() const
+/// \brief Get header data.
+/// \return Header data.
+
+
+/// \fn void acpl::IpHeaderIcmp::Reset()
+/// \brief Reset header.
+
+
+/// \fn acpl::UInt8 acpl::IpHeaderIcmp::GetType() const
+/// \brief Get Type field value.
+/// \return Type field value.
+
+/// \fn void acpl::IpHeaderIcmp::SetType(acpl::UInt8 nType)
+/// \brief Set Type field value.
+/// \param nType Type field value.
+
+
+/// \fn acpl::UInt8 acpl::IpHeaderIcmp::GetCode() const
+/// \brief Get Code field value.
+/// \return Code field value.
+
+/// \fn void acpl::IpHeaderIcmp::SetCode(acpl::UInt8 nCode)
+/// \brief Set Code field value.
+/// \param nCode Code field value.
+
+
+/// \fn const acpl::IpHeader::Checksum::DataType &acpl::IpHeaderIcmp::GetCsum() const
+/// \brief Get Checksum field data.
+/// \return Checksum field data.
+
+/// \fn acpl::IpHeader::Checksum::DataType &acpl::IpHeaderIcmp::GetCsum()
+/// \brief Get Checksum field data.
+/// \return Checksum field data.
+
+
+/// \typedef acpl::IpHeaderIcmp::DataType
+/// \brief Data holder type for ICMP header.
+
+/// \enum acpl::IpHeaderIcmp::MessageType
+/// \brief ICMP message type.
+
+/// \var acpl::IpHeaderIcmp::mtEchoRpl
+/// \brief Echo reply message type.
+
+/// \var acpl::IpHeaderIcmp::mtDstUnrch
+/// \brief Destination unreachable message type.
+
+/// \var acpl::IpHeaderIcmp::mtSrcQuench
+/// \brief Source quench message type.
+
+/// \var acpl::IpHeaderIcmp::mtRedir
+/// \brief Redirect message type.
+
+/// \var acpl::IpHeaderIcmp::mtEcho
+/// \brief Echo message type.
+
+/// \var acpl::IpHeaderIcmp::mtTimeExc
+/// \brief Time exceeded message type.
+
+/// \var acpl::IpHeaderIcmp::mtParamProb
+/// \brief Parameter problem message type.
+
+/// \var acpl::IpHeaderIcmp::mtTstamp
+/// \brief Timestamp message type.
+
+/// \var acpl::IpHeaderIcmp::mtTstampRpl
+/// \brief Timestamp reply message type.
+
+/// \var acpl::IpHeaderIcmp::mtInfoReq
+/// \brief Information request message type.
+
+/// \var acpl::IpHeaderIcmp::mtInfoRpl
+/// \brief Information reply message type.
+
+
+
+/// \class acpl::IpHeaderIgmp
+/// \brief Class for IGMP header manipulation.
+/// \note Detailed information on IGMP and its header can be found in:
+/// \li RFC 988 - Host Extensions for IP Multicasting ( http://tools.ietf.org/html/rfc988 )
+/// \li RFC 1112 - Host Extensions for IP Multicasting ( http://tools.ietf.org/html/rfc1112 )
+/// \li RFC 2236 - Internet Group Management Protocol, Version 2 ( http://tools.ietf.org/html/rfc2236 )
+/// \li RFC 3376 - Internet Group Management Protocol, Version 3 ( http://tools.ietf.org/html/rfc3376 )
+/// \li Internet Group Management Protocol (IGMP) Type Numbers ( http://www.iana.org/assignments/igmp-type-numbers/igmp-type-numbers.xml )
+
+
+/// \fn acpl::IpHeaderIgmp::IpHeaderIgmp()
+/// \brief Constructor.
+
+/// \fn acpl::IpHeaderIgmp::~IpHeaderIgmp()
+/// \brief Destructor.
+
+
+/// \fn acpl::IpHeaderIgmp::DataType &acpl::IpHeaderIgmp::Data()
+/// \brief Get header data.
+/// \return Header data.
+
+/// \fn const acpl::IpHeaderIgmp::DataType &acpl::IpHeaderIgmp::Data() const
+/// \brief Get header data.
+/// \return Header data.
+
+
+/// \fn void acpl::IpHeaderIgmp::Reset()
+/// \brief Reset header.
+
+
+/// \fn acpl::UInt8 acpl::IpHeaderIgmp::GetType() const
+/// \brief Get Type field value.
+/// \return Type field value.
+
+/// \fn void acpl::IpHeaderIgmp::SetType(acpl::UInt8 nType)
+/// \brief Set Type field value.
+/// \param nType Type field value.
+
+
+/// \fn acpl::UInt8 acpl::IpHeaderIgmp::GetCode() const
+/// \brief Get Code field value.
+/// \return Code field value.
+
+/// \fn void acpl::IpHeaderIgmp::SetCode(acpl::UInt8 nCode)
+/// \brief Set Code field value.
+/// \param nCode Code field value.
+
+
+/// \fn const acpl::IpHeader::Checksum::DataType &acpl::IpHeaderIgmp::GetCsum() const
+/// \brief Get Checksum field data.
+/// \return Checksum field data.
+
+/// \fn acpl::IpHeader::Checksum::DataType &acpl::IpHeaderIgmp::GetCsum()
+/// \brief Get Checksum field data.
+/// \return Checksum field data.
+
+
+/// \typedef acpl::IpHeaderIgmp::DataType
+/// \brief Data holder type for IGMP header.
+
+/// \enum acpl::IpHeaderIgmp::MessageType
+/// \brief IGMP message type.
+
+/// \var acpl::IpHeaderIgmp::mtCreateReq
+/// \brief (OBSOLETE) Create group request message type.
+
+/// \var acpl::IpHeaderIgmp::mtCreateRpl
+/// \brief (OBSOLETE) Create group reply message type.
+
+/// \var acpl::IpHeaderIgmp::mtJoinReq
+/// \brief (OBSOLETE) Join group request message type.
+
+/// \var acpl::IpHeaderIgmp::mtJoinRpl
+/// \brief (OBSOLETE) Join group reply message type.
+
+/// \var acpl::IpHeaderIgmp::mtLeaveReq
+/// \brief (OBSOLETE) Leave group request message type.
+
+/// \var acpl::IpHeaderIgmp::mtLeaveRpl
+/// \brief (OBSOLETE) Leave group reply message type.
+
+/// \var acpl::IpHeaderIgmp::mtConfirmReq
+/// \brief (OBSOLETE) Confirm group request message type.
+
+/// \var acpl::IpHeaderIgmp::mtConfirmRpl
+/// \brief (OBSOLETE) Confirm group reply message type.
+
+/// \var acpl::IpHeaderIgmp::mtHmembQry
+/// \brief IGMP membership query message type.
+
+/// \var acpl::IpHeaderIgmp::mtHmembRpt
+/// \brief IGMPv1 membership report message type.
+
+/// \var acpl::IpHeaderIgmp::mtDvmrp
+/// \brief DVMRP message type.
+
+/// \var acpl::IpHeaderIgmp::mtPim
+/// \brief PIM version 1 message type.
+
+/// \var acpl::IpHeaderIgmp::mtCiscoTm
+/// \brief Cisco trace messages message type.
+
+/// \var acpl::IpHeaderIgmp::mtHmembRptv2
+/// \brief IGMPv2 membership report message type.
+
+/// \var acpl::IpHeaderIgmp::mtLeavev2
+/// \brief IGMPv2 leave group message type.
+
+/// \var acpl::IpHeaderIgmp::mtMcastTrResp
+/// \brief Multicast traceroute response message type.
+
+/// \var acpl::IpHeaderIgmp::mtMcastTr
+/// \brief Multicast traceroute message type.
+
+/// \var acpl::IpHeaderIgmp::mtHmembRptv3
+/// \brief IGMPv3 membership report message type.
+
+/// \var acpl::IpHeaderIgmp::mtMcastRtrAdv
+/// \brief Multicast router advertisement message type.
+
+/// \var acpl::IpHeaderIgmp::mtMcastRtrSol
+/// \brief Multicast router solicitation message type.
+
+/// \var acpl::IpHeaderIgmp::mtMcastRtrTer
+/// \brief Multicast router termination message type.
+
+
+
+/// \class acpl::IpHeaderIcmpv6
+/// \brief Class for ICMPv6 header manipulation.
+/// \note Detailed information on ICMPv6 and its header can be found in:
+/// \li RFC 2463 - Internet Control Message Protocol (ICMPv6) for the Internet Protocol Version 6 (IPv6) Specification ( http://tools.ietf.org/html/rfc2463 )
+
+
+/// \fn acpl::IpHeaderIcmpv6::IpHeaderIcmpv6()
+/// \brief Constructor.
+
+/// \fn acpl::IpHeaderIcmpv6::~IpHeaderIcmpv6()
+/// \brief Destructor.
+
+
+/// \fn acpl::IpHeaderIcmpv6::DataType &acpl::IpHeaderIcmpv6::Data()
+/// \brief Get header data.
+/// \return Header data.
+
+/// \fn const acpl::IpHeaderIcmpv6::DataType &acpl::IpHeaderIcmpv6::Data() const
+/// \brief Get header data.
+/// \return Header data.
+
+
+/// \fn void acpl::IpHeaderIcmpv6::Reset()
+/// \brief Reset header.
+
+
+/// \fn acpl::UInt8 acpl::IpHeaderIcmpv6::GetType() const
+/// \brief Get Type field value.
+/// \return Type field value.
+
+/// \fn void acpl::IpHeaderIcmpv6::SetType(acpl::UInt8 nType)
+/// \brief Set Type field value.
+/// \param nType Type field value.
+
+
+/// \fn acpl::UInt8 acpl::IpHeaderIcmpv6::GetCode() const
+/// \brief Get Code field value.
+/// \return Code field value.
+
+/// \fn void acpl::IpHeaderIcmpv6::SetCode(acpl::UInt8 nCode)
+/// \brief Set Code field value.
+/// \param nCode Code field value.
+
+
+/// \fn const acpl::IpHeader::Checksum::DataType &acpl::IpHeaderIcmpv6::GetCsum() const
+/// \brief Get Checksum field data.
+/// \return Checksum field data.
+
+/// \fn acpl::IpHeader::Checksum::DataType &acpl::IpHeaderIcmpv6::GetCsum()
+/// \brief Get Checksum field data.
+/// \return Checksum field data.
+
+
+/// \typedef acpl::IpHeaderIcmpv6::DataType
+/// \brief Data holder type for ICMPv6 header.
+
+/// \enum acpl::IpHeaderIcmpv6::MessageType
+/// \brief ICMPv6 message type.
+
+/// \var acpl::IpHeaderIcmpv6::mtDstUnrch
+/// \brief Destination unreachable message type.
+
+/// \var acpl::IpHeaderIcmpv6::mtPktTooBig
+/// \brief Packet too big message type.
+
+/// \var acpl::IpHeaderIcmpv6::mtTimeExc
+/// \brief Time exceeded message type.
+
+/// \var acpl::IpHeaderIcmpv6::mtParamProb
+/// \brief Parameter problem message type.
+
+/// \var acpl::IpHeaderIcmpv6::mtEchoReq
+/// \brief Echo request message type.
+
+/// \var acpl::IpHeaderIcmpv6::mtEchoRpl
+/// \brief Echo reply message type.

@@ -1,0 +1,186 @@
+/// \file Thread.h
+/// \brief Paralleling functionality.
+/// 
+/// 
+
+
+
+/// \class acpl::Mutex
+/// \brief Mutual exclusion (mutex) handling class.
+/// \note The mutex works in a recursive mode which means that the mutex owner thread can recursively lock the mutex as many times as it wishes without deadlocking itself. However, the mutex has to be unlocked the same amount of times as it was locked.
+
+/// \fn acpl::Mutex::Mutex()
+/// \brief Constructor.
+
+/// \fn acpl::Mutex::~Mutex()
+/// \brief Destructor.
+
+/// \fn bool acpl::Mutex::Lock()
+/// \brief Lock the mutex.
+/// \warning This is a blocking call which may result in a deadlock.
+/// \return <code>\b true</code> if locking was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mutex::TryLock()
+/// \brief Try locking the mutex.
+/// \return <code>\b true</code> if locking was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mutex::TimedLock(acpl::UInt32 nMsecs)
+/// \brief Try locking the mutex within the timeout period.
+/// \param nMsecs Timeout (in milli seconds).
+/// \return <code>\b true</code> if locking was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Mutex::Unlock()
+/// \brief Unlock the mutex.
+/// \return <code>\b true</code> if locking was successful, <code>\b false</code> otherwise.
+
+/// \union acpl::Mutex::Handle
+/// \brief (INTERNAL) Platform-specific mutex handle.
+
+/// \var acpl::Mutex::Handle::uBytes
+/// \brief Used by and corresponds to glibc's <code>{<b>pthread_mutex_t</b>}</code> handle type.
+
+/// \var acpl::Mutex::Handle::uPtr
+/// \brief Used by and corresponds to MSCRT's <code>{<b>HANDLE</b>}</code> handle type.
+
+
+
+/// \class acpl::RaiiMutex
+/// \brief RAII release class for acpl::Mutex
+
+/// \fn acpl::RaiiMutex::RaiiMutex(acpl::Mutex &nRef, bool nAutoLock = true)
+/// \brief Attach constructor.
+/// \param nRef Reference to an acpl::Mutex object.
+/// \param nAutoLock Flag notifying whether or not to perform locking of mutex upon construction of this object. Default value is <code>\b true</code> (perform locking upon construction).
+
+/// \fn acpl::RaiiMutex::~RaiiMutex()
+/// \brief Destructor.
+
+/// \fn void acpl::RaiiMutex::Enable()
+/// \brief Enable RAII.
+/// \note By default, RAII is enabled.
+
+/// \fn void acpl::RaiiMutex::Disable()
+/// \brief Disable RAII.
+
+/// \fn void acpl::RaiiMutex::Lock()
+/// \brief Lock mutex.
+
+/// \fn void acpl::RaiiMutex::Unlock()
+/// \brief Unlock mutex.
+
+
+
+/// \class acpl::Condition
+/// \brief Conditional variable handling class.
+
+/// \fn acpl::Condition::Condition()
+/// \brief Constructor.
+
+/// \fn acpl::Condition::~Condition()
+/// \brief Destructor.
+
+/// \fn bool acpl::Condition::Wait(acpl::Mutex &nMutex)
+/// \brief Wait for a signal.
+/// \warning This is a blocking call which may result in a dead lock.
+/// \param nMutex acpl::Mutex object attached to condition.
+/// \return <code>\b true</code> if waiting was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Condition::TimedWait(acpl::Mutex &nMutex, acpl::UInt32 nMsecs)
+/// \brief Try waiting for a signal within the timeout period.
+/// \param nMutex acpl::Mutex object attached to condition.
+/// \param nMsecs Timeout (in milli seconds).
+/// \return <code>\b true</code> if waiting was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Condition::TimedWait(acpl::Mutex &nMutex, acpl::UInt32 nMsecs, bool &nWasTimeout)
+/// \brief Try waiting for a signal within the timeout period.
+/// \param nMutex acpl::Mutex object attached to condition.
+/// \param nMsecs Timeout (in milli seconds).
+/// \param nWasTimeout Reference to a variable to which <code>\b true</code> will be set if timeout was reached or it will be set to <code>\b false</code>.
+/// \return <code>\b true</code> if waiting was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Condition::Signal()
+/// \brief Signal one of the waiters.
+/// \return <code>\b true</code> if signalling was successful, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Condition::Broadcast()
+/// \brief Signal all waiters (broadcast).
+/// \return <code>\b true</code> if broadcasting was successful, <code>\b false</code> otherwise.
+
+/// \union acpl::Condition::Handle
+/// \brief (INTERNAL) Platform-specific condition handle.
+
+/// \var acpl::Condition::Handle::uBytes
+/// \brief Used by and corresponds to glibc's <code>{<b>pthread_cond_t</b>}</code> handle type.
+
+/// \var acpl::Condition::Handle::uStruct
+/// \brief Used by MSCRT to simulate condition functionality.
+
+
+
+/// \class acpl::Thread
+/// \brief Class for handling a thread.
+
+/// \fn acpl::Thread::Thread()
+/// \brief Constructor.
+
+/// \fn acpl::Thread::~Thread()
+/// \brief Destructor.
+
+/// \fn bool acpl::Thread::IsRunning() const
+/// \brief Informs whether or not the thread is running.
+/// \return <code>\b true</code> if the thread is running, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Thread::Start()
+/// \brief Starts the thread.
+/// \return <code>\b true</code> if starting was successful, <code>\b false</code> otherwise.
+
+/// \fn void acpl::Thread::Stop()
+/// \brief Signals the thread to stop and waits for it to stop (synchronous stop).
+
+/// \fn void acpl::Thread::StopAsync()
+/// \brief Signals the thread to stop and returns immediately (asynchronous stop).
+/// \note When acpl::Thread::Main returns the clean-up will be done automatically.
+/// \note This method can be called inside of acpl::Thread::Main to signal itself to stop.
+
+/// \fn bool acpl::Thread::IsStopSig() const
+/// \brief Informs whether or not the thread has been signalled to stop.
+/// \note This should be used as a loop condition inside implementation of acpl::Thread::Main method.
+/// \return <code>\b true</code> if the thread has been signalled to stop, <code>\b false</code> otherwise.
+
+/// \fn void acpl::Thread::Main()
+/// \brief <code>main()</code>-like method of the thread.
+/// \note Implementation of this method should use acpl::Thread::IsStopSig.
+/// \warning Implementation of this method <b>should not</b> call any methods of acpl::Thread class (except acpl::Thread::IsStopSig and acpl::Thread::StopAsync), otherwise there is a big risk of a dead- or livelock.
+/// \see acpl::Thread::IsStopSig
+/// \see acpl::Thread::StopAsync
+
+/// \fn bool acpl::Thread::Init()
+/// \brief Method called before creating a new thread.
+/// \return <code>\b true</code> if initialization was successful, <code>\b false</code> otherwise.
+/// \warning Implementation of this method <b>should not</b> call any methods of acpl::Thread class, otherwise there is a big risk of a deadlock.
+
+/// \fn void acpl::Thread::Terminate()
+/// \brief Method called just before stop has been signalled.
+/// \warning Implementation of this method <b>should not</b> call any methods of acpl::Thread class, otherwise there is a big risk of a deadlock.
+
+/// \fn void acpl::Thread::Finalize()
+/// \brief Method called at the end (after thread has been joined or detached).
+/// \warning Implementation of this method <b>should not</b> call any methods of acpl::Thread class, otherwise there is a big risk of a deadlock.
+
+/// \union acpl::Thread::Handle
+/// \brief (INTERNAL) Platform-specific thread handle.
+
+/// \var acpl::Thread::Handle::uUli
+/// \brief Used by and corresponds to glibc's <code>{<b>pthread_t</b>}</code> handle type.
+
+/// \var acpl::Thread::Handle::uPtr
+/// \brief Used by and corresponds to MSCRT's <code>{<b>HANDLE</b>}</code> handle type.
+
+/// \class acpl::Thread::StartStruct
+/// \brief (INTERNAL) Structure to be passed to a platform-specific thread starting function.
+
+/// \var acpl::Thread::StartStruct::sFunc
+/// \brief Function pointer to a function to be called at thread start.
+
+/// \var acpl::Thread::StartStruct::sParam
+/// \brief Argument to be passed to the function called at thread start.

@@ -1,0 +1,108 @@
+/// \file Endian.h
+/// \brief Endianness-related functions.
+
+
+
+/// \class acpl::Endian
+/// \brief Class containing endianness related methods.
+
+/// \fn static bool acpl::Endian::IsNativeBig();
+/// \brief Informs whether or not native (system's) endianness is big endian.
+/// \return <code>\b true</code> if the system's endianness is big endian, <code>\b false</code> otherwise.
+
+/// \fn static bool acpl::Endian::IsNativeLittle();
+/// \brief Informs whether or not native (system's) endianness is little endian.
+/// \return <code>\b true</code> if the system's endianness is little endian, <code>\b false</code> otherwise.
+
+/// \fn static inline tIntType acpl::Endian::FromBig(const void *nBfr, acpl::SizeT nCount = sizeof(tIntType))
+/// \brief Read specified number of bytes in big endian order and convert to native endianness.
+/// \tparam tIntType Integer type of a return value.
+/// \param nBfr Buffer to read data from.
+/// \param nCount Number of bytes to read from \a nBfr. A maximum of <code>{\b sizeof(\a tIntType)}</code> bytes can be read.
+/// \return Converted value.
+
+/// \fn static inline tIntType acpl::Endian::FromBig(tIntType &nVal, const void *nBfr, acpl::SizeT nCount = sizeof(tIntType))
+/// \brief Read specified number of bytes in big endian order and convert to native endianness.
+/// \tparam tIntType Integer type of a return value.
+/// \param nVal Reference to a variable to which converted value will be written.
+/// \param nBfr Buffer to read data from.
+/// \param nCount Number of bytes to read from \a nBfr. A maximum of <code>{\b sizeof(\a tIntType)}</code> bytes can be read.
+
+/// \fn static inline tIntType acpl::Endian::FromBig(acpl::UInt64 nMask, const void *nBfr, acpl::SizeT nCount = sizeof(tIntType))
+/// \brief Read specified number of bytes in big endian order and convert to native endianness.
+/// \tparam tIntType Integer type of a return value.
+/// \param nMask Binary mask to mask the converted value with.
+/// \param nBfr Buffer to read data from.
+/// \param nCount Number of bytes to read from \a nBfr. A maximum of <code>{\b sizeof(\a tIntType)}</code> bytes can be read.
+/// \return Converted value.
+
+/// \fn static inline tIntType acpl::Endian::FromBig(tIntType &nVal, acpl::UInt64 nMask, const void *nBfr, acpl::SizeT nCount = sizeof(tIntType))
+/// \brief Read specified number of bytes in big endian order and convert to native endianness.
+/// \tparam tIntType Integer type of a return value.
+/// \param nVal Reference to a variable to which converted value will be written.
+/// \param nMask Binary mask to mask the converted value with.
+/// \param nBfr Buffer to read data from.
+/// \param nCount Number of bytes to read from \a nBfr. A maximum of <code>{\b sizeof(\a tIntType)}</code> bytes can be read.
+
+/// \fn static inline tIntType acpl::Endian::FromLittle(const void *nBfr, acpl::SizeT nCount = sizeof(tIntType))
+/// \brief Read specified number of bytes in little endian order and convert to native endianness.
+/// \tparam tIntType Integer type of a return value.
+/// \param nBfr Buffer to read data from.
+/// \param nCount Number of bytes to read from \a nBfr. A maximum of <code>{\b sizeof(\a tIntType)}</code> bytes can be read.
+/// \return Converted value.
+
+/// \fn static inline tIntType acpl::Endian::FromLittle(tIntType &nVal, const void *nBfr, acpl::SizeT nCount = sizeof(tIntType))
+/// \brief Read specified number of bytes in little endian order and convert to native endianness.
+/// \tparam tIntType Integer type of a return value.
+/// \param nVal Reference to a variable to which converted value will be written.
+/// \param nBfr Buffer to read data from.
+/// \param nCount Number of bytes to read from \a nBfr. A maximum of <code>{\b sizeof(\a tIntType)}</code> bytes can be read.
+
+/// \fn static inline tIntType acpl::Endian::FromLittle(acpl::UInt64 nMask, const void *nBfr, acpl::SizeT nCount = sizeof(tIntType))
+/// \brief Read specified number of bytes in little endian order and convert to native endianness.
+/// \tparam tIntType Integer type of a return value.
+/// \param nMask Binary mask to mask the converted value with.
+/// \param nBfr Buffer to read data from.
+/// \param nCount Number of bytes to read from \a nBfr. A maximum of <code>{\b sizeof(\a tIntType)}</code> bytes can be read.
+/// \return Converted value.
+
+/// \fn static inline tIntType acpl::Endian::FromLittle(tIntType &nVal, acpl::UInt64 nMask, const void *nBfr, acpl::SizeT nCount = sizeof(tIntType))
+/// \brief Read specified number of bytes in little endian order and convert to native endianness.
+/// \tparam tIntType Integer type of a return value.
+/// \param nVal Reference to a variable to which converted value will be written.
+/// \param nMask Binary mask to mask the converted value with.
+/// \param nBfr Buffer to read data from.
+/// \param nCount Number of bytes to read from \a nBfr. A maximum of <code>{\b sizeof(\a tIntType)}</code> bytes can be read.
+
+
+/// \fn static inline void acpl::Endian::ToBig(tIntType nVal, acpl::UInt64 nMask, void *nBfr, acpl::SizeT nCount = sizeof(tIntType))
+/// \brief Convert from native endianness and write specified number of bytes in big endian order.
+/// \tparam tIntType Integer type of a return value.
+/// \param nVal Value to convert.
+/// \param nMask Binary mask to mask the value with.
+/// \param nBfr Buffer to write data to.
+/// \param nCount Number of bytes to write to \a nBfr. A maximum of <code>{\b sizeof(\a tIntType)}</code> bytes can be written.
+
+
+/// \fn static inline void acpl::Endian::ToBig(tIntType nVal, void *nBfr, acpl::SizeT nCount = sizeof(tIntType))
+/// \brief Convert from native endianness and write specified number of bytes in big endian order.
+/// \tparam tIntType Integer type of a return value.
+/// \param nVal Value to convert.
+/// \param nBfr Buffer to write data to.
+/// \param nCount Number of bytes to write to \a nBfr. A maximum of <code>{\b sizeof(\a tIntType)}</code> bytes can be written.
+
+/// \fn static inline void acpl::Endian::ToLittle(tIntType nVal, acpl::UInt64 nMask, void *nBfr, acpl::SizeT nCount = sizeof(tIntType))
+/// \brief Convert from native endianness and write specified number of bytes in little endian order.
+/// \tparam tIntType Integer type of a return value.
+/// \param nVal Value to convert.
+/// \param nMask Binary mask to mask the value with.
+/// \param nBfr Buffer to write data to.
+/// \param nCount Number of bytes to write to \a nBfr. A maximum of <code>{\b sizeof(\a tIntType)}</code> bytes can be written.
+
+
+/// \fn static inline void acpl::Endian::ToLittle(tIntType nVal, void *nBfr, acpl::SizeT nCount = sizeof(tIntType))
+/// \brief Convert from native endianness and write specified number of bytes in little endian order.
+/// \tparam tIntType Integer type of a return value.
+/// \param nVal Value to convert.
+/// \param nBfr Buffer to write data to.
+/// \param nCount Number of bytes to write to \a nBfr. A maximum of <code>{\b sizeof(\a tIntType)}</code> bytes can be written.

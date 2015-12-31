@@ -1,0 +1,42 @@
+/// \file Bits.h
+/// \brief Bits functionality.
+/// 
+
+
+
+/// \class acpl::Bits
+/// \brief Container class holding bit methods.
+
+
+
+/// \fn tType acpl::Bits::Get(const tType &nVar, const tTypeCompat &nMask)
+/// \brief Extracts a masked value from a variable.
+/// \tparam tType Data type of a variable (does not need to be specified explicitly).
+/// \tparam tTypeCompat Data type of a mask that is compatible with \a tType (does not need to be specified explicitly).
+/// \param nVar Variable from which bits are extracted.
+/// \param nMask Mask specifying which bits to extract.
+/// \return Masked input variable.
+
+/// \fn bool acpl::Bits::AllSet(const tType &nVar, const tTypeCompat &nMask)
+/// \brief Checks whether all mask bits are set in the variable.
+/// \tparam tType Data type of a variable (does not need to be specified explicitly).
+/// \tparam tTypeCompat Data type of a mask that is compatible with \a tType (does not need to be specified explicitly).
+/// \param nVar Variable in which bits are checked.
+/// \param nMask Mask specifying which bits to check.
+/// \return <code>\b true</code> if all mask bits are set in the variable, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Bits::AnySet(const tType &nVar, const tTypeCompat &nMask)
+/// \brief Checks whether any mask bit is set in the variable.
+/// \tparam tType Data type of a variable (does not need to be specified explicitly).
+/// \tparam tTypeCompat Data type of a mask that is compatible with \a tType (does not need to be specified explicitly).
+/// \param nVar Variable in which bits are checked.
+/// \param nMask Mask specifying which bits to check.
+/// \return <code>\b true</code> if any mask bit is set in the variable, <code>\b false</code> otherwise.
+
+/// \fn void acpl::Bits::Set(tType &nVar, const tTypeCompat &nMask, bool nVal)
+/// \brief Set mask bits in a variable to a desired value.
+/// \tparam tType Data type of a variable (does not need to be specified explicitly).
+/// \tparam tTypeCompat Data type of a mask that is compatible with \a tType (does not need to be specified explicitly).
+/// \param nVar Variable to change bits in.
+/// \param nMask Mask specifying which bits to set.
+/// \param nVal Boolean value specifying whether to set the bits to <code>\b 0</code> (<code>\b false</code>) or <code>\b 1</code> (<code>\b true</code>).

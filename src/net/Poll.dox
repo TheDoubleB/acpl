@@ -1,0 +1,213 @@
+/// \file Poll.h
+/// \brief Network socket polling functionality.
+
+
+
+/// \class acpl::Poll
+/// \brief Network socket polling class.
+/// \warning There is a significant difference in inner workings of this class on glibc or MSCRT systems. Read warnings and notes under functions very carefully.
+
+
+/// \fn acpl::Poll::Poll()
+/// \brief Constructor.
+
+/// \fn acpl::Poll::~Poll()
+/// \brief Destructor.
+
+
+/// \fn acpl::Poll::LastError acpl::Poll::GetLastError() const
+/// \brief Returns the the error value set by the last failed poll call.
+/// \return Error value set by the last failed poll call.
+
+/// \fn void acpl::Poll::ResetLastError()
+/// \brief Resets the error value set by the last failed poll call.
+
+
+/// \fn bool acpl::Poll::IsOpen() const
+/// \brief Returns whether or not this polling mechanism is opened.
+/// \return <code>\b true</code> if this polling mechanism is opened, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Poll::Open()
+/// \brief Open this polling mechanism.
+/// \return <code>\b true</code> if opening of was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Poll::GetLastError for error code
+
+/// \fn void acpl::Poll::Close()
+/// \brief Close this polling mechanism.
+
+
+/// \fn bool acpl::Poll::IsAdded(const acpl::Socket &nSocket) const
+/// \brief Returns whether or not a provided socket is already added to this polling mechanism.
+/// \param nSocket acpl::Socket object to look for.
+/// \return <code>\b true</code> if socket is already added, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Poll::Add(acpl::Socket &nSocket, bool nWatchRead, bool nWatchWrite)
+/// \brief Add a socket to this polling mechanism.
+/// \param nSocket Socket to be added.
+/// \param nWatchRead Watch for socket readiness to read available data or, in case of listening socket, for readiness to accept connections.
+/// \param nWatchWrite Watch for socket readiness to write data or check for successful established connection on the socket.
+/// \note Watching for local or remote connection termination or error on the socket is watched for automatically.
+/// \warning Due to a unique approach to socket polling in MSCRT's WSA events system, adding a socket to a polling mechanism will automatically change it to a non-blocking mode, and as long as it is added to <b>any</b> polling mechanism, it will not be able to be changed to a blocking mode.
+/// \return <code>\b true</code> if adding was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Poll::GetLastError for error code
+
+/// \fn bool acpl::Poll::Modify(acpl::Socket &nSocket, bool nWatchRead, bool nWatchWrite)
+/// \brief Modify an already added socket in this polling mechanism.
+/// \param nSocket Socket to be modified.
+/// \param nWatchRead Watch for socket readiness to read available data or, in case of listening socket, for readiness to accept connections.
+/// \param nWatchWrite Watch for socket readiness to write data or check for successful established connection on the socket.
+/// \note Watching for local or remote connection termination or error on the socket is watched for automatically.
+/// \return <code>\b true</code> if modifying was successful, <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Poll::GetLastError for error code
+
+/// \fn void acpl::Poll::Remove(const acpl::Socket &nSocket)
+/// \brief Remove a socket from this polling mechanism.
+/// \param nSocket Socket to be removed.
+
+
+/// \fn bool acpl::Poll::Wait(acpl::UInt32 nMsecs, acpl::Poll::EventList &nEvents)
+/// \brief Wait for any ready sockets.
+/// \param nMsecs Timeout period - in milliseconds.
+/// \param nEvents Reference to an acpl::Poll::EventList array to which ready sockets will be added.
+/// \warning Unfortunatelly, there is a significant difference in inner workings between glibc's epoll(7) mechanism and MSCRT's WSA events.
+/// \warning Glibc's epoll(7) mechanism is set to work in level-triggered mode, which means that:
+/// \li if you're watching for read on a socket and as long as there is data to read or connections to accept, this method will return immediately;
+/// \li if you're watching for write on a socket and as long as socket is able to be written to, this method will return immediately.
+/// \warning MSCRT's WSA events work a bit differently. There, it's all about so-called re-enabling functions, and it works like this:
+/// \li if you're watching for read on a socket and there is data to read, this method will return immediately, but it will not return at all until a "re-enabling" read function was called on the triggering socket;
+/// \li if you're watching for read on a socket and there are connections to accept, this metod will return immediately, but it will not return at all until a "re-enabling" accept function was called on the triggering socket;
+/// \li if you're watching for write on a socket and the socket is able to be written to, this metod will return immediately, but it will not return at all until a "re-enabling" write function was called on the triggering socket.
+/// \note However, there's still hope for writing cross-platform code, so here's a guide:
+/// \li add socket(s) to be watched for whatever event(s) you want it/them to be watched;
+/// \li this method returns and added socket(s) is/are on the list of events;
+/// \li call appropriate functions (read, accept, and/or write) on socket(s) on the list;
+/// \li run this (waiting) method again.
+/// \note This will ensure that this (waiting) method will return as long as conditions watched for on added socket(s) are met.
+/// \return <code>\b true</code> if waiting was successful (even if there are no ready sockets!), <code>\b false</code> otherwise and error code is set.
+/// \see acpl::Poll::GetLastError for error code
+
+
+/// \union acpl::Poll::Handle
+/// \brief (INTERNAL) Polling mechanism handle.
+
+/// \var acpl::Poll::Handle::uInt
+/// \brief Used by and corresponds to glibc's <code>{<b>int</b>}</code> file descriptor type.
+
+/// \var acpl::Poll::Handle::uPtr
+/// \brief Used by and corresponds to MSCRT's <code>{<b>WSAEVENT</b>}</code> handle type.
+
+
+/// \enum acpl::Poll::LastError
+/// \brief Error values produced by poll calls.
+
+/// \var acpl::Poll::leNone
+/// \brief Initial (reset) value.
+
+/// \var acpl::Poll::leSysErr
+/// \brief System error.
+
+/// \var acpl::Poll::leNoSupport
+/// \brief Operation not supported.
+
+/// \var acpl::Poll::leIsOpened
+/// \brief Poll is (already) opened.
+
+/// \var acpl::Poll::leNotOpened
+/// \brief Poll is not opened.
+
+/// \var acpl::Poll::leIsAdded
+/// \brief Socket is already included in the polling.
+
+/// \var acpl::Poll::leNotAdded
+/// \brief Socket is not included in the polling.
+
+/// \var acpl::Poll::leIsEmpty
+/// \brief Poll socket list is empty.
+
+/// \var acpl::Poll::leSockInval
+/// \brief Provided socket is invalid - it is not opened.
+
+
+/// \typedef acpl::Poll::ItemList
+/// \brief Item list type.
+
+/// \typedef acpl::Poll::EventList
+/// \brief Event list type.
+
+
+
+/// \class acpl::Poll::Item
+/// \brief (INTERNAL) Polling item class.
+
+
+/// \fn acpl::Poll::Item::Item(acpl::Socket &nSocket, bool nWatchRead, bool nWatchWrite)
+/// \brief Constructor.
+/// \param nSocket Socket associated with this polling item.
+/// \param nWatchRead Flag notifying whether this item watches for read or accept events.
+/// \param nWatchWrite Flag notifying whether this item watches for write or connect events.
+
+/// \fn acpl::Poll::Item::~Item()
+/// \brief Destructor.
+
+
+/// \fn acpl::Socket &acpl::Poll::Item::GetSocket()
+/// \brief Return associated socket.
+/// \return Associated socket.
+
+/// \fn const acpl::Socket &acpl::Poll::Item::GetSocket() const
+/// \brief Return associated socket.
+/// \return Associated socket.
+
+/// \fn bool acpl::Poll::Item::IsWatchingRead() const
+/// \brief Return whether this item watches for read or accept events.
+/// \return <code>\b true</code> if this item watches for read or accept events, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Poll::Item::IsWatchingWrite() const
+/// \brief Return whether this item watches for write or connect events.
+/// \return <code>\b true</code> if this item watches for write or connect events, <code>\b false</code> otherwise.
+
+
+
+/// \class acpl::Poll::Event
+/// \brief Triggered polling event class.
+
+
+/// \fn acpl::Poll::Event::Event(acpl::Socket &nSocket, bool nCanRead, bool nCanWrite, bool nHasClosed, bool nHasError)
+/// \brief Constructor.
+/// \param nSocket Socket associated with this event.
+/// \param nCanRead Flag notifying whether or not this event was triggered because of socket's readiness for read or accept.
+/// \param nCanWrite Flag notifying whether or not this event was triggered because of socket's readiness for write or successful connect.
+/// \param nHasClosed Flag notifying whether or not this event was triggered because of socket's local or remote connection termination.
+/// \param nHasError Flag notifying whether or not this event was triggered because of error on the socket.
+
+/// \fn acpl::Poll::Event::~Event()
+/// \brief Destructor.
+
+
+/// \fn acpl::Socket &acpl::Poll::Event::GetSocket()
+/// \brief Return associated socket.
+/// \return Associated socket.
+
+/// \fn const acpl::Socket &acpl::Poll::Event::GetSocket() const
+/// \brief Return associated socket.
+/// \return Associated socket.
+
+/// \fn bool acpl::Poll::Event::CanRead() const
+/// \brief Return whether or not this event was triggered because of socket's readiness for read or accept.
+/// \return <code>\b true</code> if this event was triggered because of socket's readiness for read or accept, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Poll::Event::CanWrite() const
+/// \brief Return whether or not this event was triggered because of socket's readiness for write or successful connect.
+/// \return <code>\b true</code> if this event was triggered because of socket's readiness for write or successful connect, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Poll::Event::HasClosed() const
+/// \brief Return whether or not this event was triggered because of socket's local or remote connection termination.
+/// \return <code>\b true</code> if this event was triggered because of socket's local or remote connection termination, <code>\b false</code> otherwise.
+
+/// \fn bool acpl::Poll::Event::HasError() const
+/// \brief Return whether or not this event was triggered because of error on the socket.
+/// \return <code>\b true</code> if this event was triggered because of error on the socket.
+
+
+/// \typedef acpl::Poll::Event::Data
+/// \brief (INTERNAL) Polling mechanism data.

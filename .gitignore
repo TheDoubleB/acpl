@@ -1,0 +1,6 @@
+# Ignores
+# 
+
+# Ignore any file/dir in the root dir that starts with an underscore (like _docs or, in my case, _build for building the project)
+/_*
+

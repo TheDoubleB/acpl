@@ -55,9 +55,16 @@ add_source_file("net/Socket.cpp")
 #   will be SHARED, otherwise it will be STATIC.
 # 
 
-add_library(acpl ${LIBRARY_SOURCE_FILES})
+add_library("${PROJECT_NAME}" ${LIBRARY_SOURCE_FILES})
+set_target_properties(
+		"${PROJECT_NAME}"
+		PROPERTIES
+		DEBUG_OUTPUT_NAME   "${PROJECT_NAME}${ACPL_LIB_DEBUG_SUFFIX}"
+		RELEASE_OUTPUT_NAME "${PROJECT_NAME}"
+	)
+
 if (BUILD_SHARED_LIBS)
-	target_link_libraries(acpl ${ACPL_DEPLIBRARIES})
+	target_link_libraries("${PROJECT_NAME}" ${ACPL_DEPLIBRARIES})
 endif (BUILD_SHARED_LIBS)
 
 
@@ -66,7 +73,7 @@ endif (BUILD_SHARED_LIBS)
 # 
 
 # Library installation
-install(TARGETS acpl DESTINATION "lib")
+install(TARGETS "${PROJECT_NAME}" DESTINATION "lib${ACPL_LIB_DIR_SUFFIX}")
 
 # Qt support
 install(FILES
@@ -91,14 +98,14 @@ install(FILES
 		Time.h
 		Types.h
 		Uri.h
-	DESTINATION include/acpl)
+	DESTINATION "include/${PROJECT_NAME_LC}")
 
 # IO header files installation
 install(FILES
 		fs/Dir.h
 		fs/File.h
 		fs/Path.h
-	DESTINATION include/acpl/fs)
+	DESTINATION "include/${PROJECT_NAME_LC}/fs")
 
 # Net header files installation
 install(FILES
@@ -106,4 +113,4 @@ install(FILES
 		net/Header.h
 		net/Poll.h
 		net/Socket.h
-	DESTINATION include/acpl/net)
+	DESTINATION "include/${PROJECT_NAME_LC}/net")

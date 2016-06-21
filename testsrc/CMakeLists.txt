@@ -35,10 +35,10 @@ add_source_file("TestsUri.cpp")
 # Building
 # 
 
-add_executable(testacpl ${TEST_SOURCE_FILES})
+add_executable("test${PROJECT_NAME}" ${TEST_SOURCE_FILES})
 
 if (BUILD_SHARED_LIBS)
-	target_link_libraries(testacpl acpl)
+	target_link_libraries("test${PROJECT_NAME}" "${PROJECT_NAME}")
 else (BUILD_SHARED_LIBS)
-	target_link_libraries(testacpl acpl ${ACPL_DEPLIBRARIES})
+	target_link_libraries("test${PROJECT_NAME}" "${PROJECT_NAME}" ${ACPL_DEPLIBRARIES})
 endif (BUILD_SHARED_LIBS)

@@ -37,3 +37,19 @@ macro(acpl_create_file N_NAME N_DIR)
 		file(WRITE "${N_DIR}/${N_NAME}" "")
 	endif()
 endmacro(acpl_create_file)
+
+
+# 
+# Function that sets `lib` directory suffix based on system 'bitness' (for
+# 32-bit system, the value will be "", and for 64-bit system the value will be
+# "64").
+# 
+# OUT_VAR - variable to which the value will be set
+# 
+function(acpl_lib_dir_suffix OUT_VAR)
+	if("${CMAKE_SIZEOF_VOID_P}" MATCHES "8")
+		set(${OUT_VAR} "64" PARENT_SCOPE)
+	else()
+		set(${OUT_VAR} "" PARENT_SCOPE)
+	endif()
+endfunction()

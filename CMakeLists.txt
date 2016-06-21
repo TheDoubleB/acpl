@@ -38,12 +38,8 @@ acpl_process_build_type("Release")
 # Suffixes
 # 
 
+acpl_lib_dir_suffix(ACPL_LIB_DIR_SUFFIX)
 set(ACPL_LIB_DEBUG_SUFFIX "d")
-if("${CMAKE_SIZEOF_VOID_P}" MATCHES "8")
-	set(ACPL_LIB_DIR_SUFFIX "64")
-else()
-    set(ACPL_LIB_DIR_SUFFIX "")
-endif()
 
 
 # 

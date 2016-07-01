@@ -10,7 +10,7 @@
 
 // Defines
 
-#define AppNameBase "testacpl"
+#define AppNameBase "testACPL"
 
 #if   (acplCRuntime == acplCRuntimeGlibc)
 #	define AppName AppNameBase

@@ -5,10 +5,16 @@
 
 #if   (acplCRuntime == acplCRuntimeGlibc)
 #	define _local_SizeOfWcharT 4
+#	define _local_SizeOfLargestFloat 16
+#	define _local_HasSigNaN true
 #elif (acplCRuntime == acplCRuntimeMscrt)
 #	define _local_SizeOfWcharT 2
+#	define _local_SizeOfLargestFloat 8
+#	define _local_HasSigNaN false
 #else
 #	error _local_SizeOfWcharT define missing
+#	error _local_SizeOfLargestFloat define missing
+#	error _local_HasSigNaN define missing
 #endif
 
 
@@ -35,8 +41,9 @@ static int TestTypeSizes()
 	Test(sizeof(acpl::UInt32) ==  4);
 	Test(sizeof(acpl::UInt64) ==  8);
 	
-	Test(sizeof(acpl::Float32) ==  4);
-	Test(sizeof(acpl::Float64) ==  8);
+	Test(sizeof(acpl::Float32) == 4);
+	Test(sizeof(acpl::Float64) == 8);
+	Test(sizeof(acpl::Float::Largest) == _local_SizeOfLargestFloat);
 	
 	Test(sizeof(acpl::SizeT)  == sizeof(void *));
 	Test(sizeof(acpl::SSizeT) == sizeof(void *));
@@ -52,7 +59,145 @@ static int TestTypeSizes()
 	return 0;
 }
 
-static int TestTypeInfo()
+static int TestFloatClass()
+{
+	PrintFn();
+	
+	acpl::Float::Parts oFpp;
+	
+	
+	// Create() method
+	
+	Test(acpl::Float::Create<acpl::Float32>(0, 0x7F, acpl::Const::UI64(0x00000000, 0x00550000)) == 1.6640625);
+	Test(acpl::Float::Create<acpl::Float64>(0, 0x3FF, acpl::Const::UI64(0x000AA000, 0x00000000)) == 1.6640625);
+	Test(acpl::Float::Create<acpl::Float::Largest>(0, 0x3FFF, acpl::Const::UI64(0xD5000000, 0x00000000)) == 1.6640625 || acpl::Float::HasExtPrec() == false);
+	
+	
+	// Min() method
+	
+	acpl::Float::GetParts(acpl::Float::Min<acpl::Float32>(), oFpp);
+	Test(oFpp.sSign == 1);
+	Test(oFpp.sExp  == 0xFE);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x00000000, 0x007FFFFF));
+	
+	acpl::Float::GetParts(acpl::Float::Min<acpl::Float64>(), oFpp);
+	Test(oFpp.sSign == 1);
+	Test(oFpp.sExp  == 0x7FE);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x000FFFFF, 0xFFFFFFFF));
+	
+	acpl::Float::GetParts(acpl::Float::Min<acpl::Float::Largest>(), oFpp);
+	Test(oFpp.sSign == 1);
+	Test(oFpp.sExp  == 0x7FFE || acpl::Float::HasExtPrec() == false);
+	Test(oFpp.sMan  == acpl::Const::UI64(0xFFFFFFFF, 0xFFFFFFFF) || acpl::Float::HasExtPrec() == false);
+	
+	
+	// Max() method
+	
+	acpl::Float::GetParts(acpl::Float::Max<acpl::Float32>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0xFE);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x00000000, 0x007FFFFF));
+	
+	acpl::Float::GetParts(acpl::Float::Max<acpl::Float64>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0x7FE);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x000FFFFF, 0xFFFFFFFF));
+	
+	acpl::Float::GetParts(acpl::Float::Max<acpl::Float::Largest>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0x7FFE || acpl::Float::HasExtPrec() == false);
+	Test(oFpp.sMan  == acpl::Const::UI64(0xFFFFFFFF, 0xFFFFFFFF) || acpl::Float::HasExtPrec() == false);
+	
+	
+	// Inf() method
+	
+	acpl::Float::GetParts(acpl::Float::Inf<acpl::Float32>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0xFF);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x00000000, 0x00000000));
+	
+	acpl::Float::GetParts(acpl::Float::Inf<acpl::Float64>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0x7FF);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x00000000, 0x00000000));
+	
+	acpl::Float::GetParts(acpl::Float::Inf<acpl::Float::Largest>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0x7FFF || acpl::Float::HasExtPrec() == false);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x80000000, 0x00000000) || acpl::Float::HasExtPrec() == false); // NOTE: the integer part (bit 63) is 1 !!!
+	
+	
+	// *NaN() methods
+	
+	acpl::Float::GetParts(acpl::Float::NaN<acpl::Float32>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0xFF);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x00000000, 0x00400000));
+	
+	acpl::Float::GetParts(acpl::Float::QNaN<acpl::Float32>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0xFF);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x00000000, 0x00400000));
+	
+	acpl::Float::GetParts(acpl::Float::SNaN<acpl::Float32>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0xFF);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x00000000, 0x00200000) || (_local_HasSigNaN == false && oFpp.sMan  == acpl::Const::UI64(0x00000000, 0x00400000)));
+	
+	acpl::Float::GetParts(acpl::Float::NaN<acpl::Float64>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0x7FF);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x00080000, 0x00000000));
+	
+	acpl::Float::GetParts(acpl::Float::QNaN<acpl::Float64>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0x7FF);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x00080000, 0x00000000));
+	
+	acpl::Float::GetParts(acpl::Float::SNaN<acpl::Float64>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0x7FF);
+	Test(oFpp.sMan  == acpl::Const::UI64(0x00040000, 0x00000000) || (_local_HasSigNaN == false && oFpp.sMan  == acpl::Const::UI64(0x00080000, 0x00000000)));
+	
+	acpl::Float::GetParts(acpl::Float::NaN<acpl::Float::Largest>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0x7FFF || acpl::Float::HasExtPrec() == false);
+	Test(oFpp.sMan  == acpl::Const::UI64(0xC0000000, 0x00000000) || acpl::Float::HasExtPrec() == false);
+	
+	acpl::Float::GetParts(acpl::Float::QNaN<acpl::Float::Largest>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0x7FFF || acpl::Float::HasExtPrec() == false);
+	Test(oFpp.sMan  == acpl::Const::UI64(0xC0000000, 0x00000000) || acpl::Float::HasExtPrec() == false);
+	
+	acpl::Float::GetParts(acpl::Float::SNaN<acpl::Float::Largest>(), oFpp);
+	Test(oFpp.sSign == 0);
+	Test(oFpp.sExp  == 0x7FFF || acpl::Float::HasExtPrec() == false);
+	Test(oFpp.sMan  == acpl::Const::UI64(0xA0000000, 0x00000000) || acpl::Float::HasExtPrec() == false);
+	
+	
+	// IsNaN() method
+	
+	Test(acpl::Float::IsNaN(acpl::Float::Inf<acpl::Float32>()) == false);
+	Test(acpl::Float::IsNaN(acpl::Float::Inf<acpl::Float64>()) == false);
+	Test(acpl::Float::IsNaN(acpl::Float::Inf<acpl::Float::Largest>()) == false);
+	
+	Test(acpl::Float::IsNaN(acpl::Float::NaN<acpl::Float32>()) == true);
+	Test(acpl::Float::IsNaN(acpl::Float::NaN<acpl::Float64>()) == true);
+	Test(acpl::Float::IsNaN(acpl::Float::NaN<acpl::Float::Largest>()) == true);
+	
+	Test(acpl::Float::IsNaN(acpl::Float::QNaN<acpl::Float32>()) == true);
+	Test(acpl::Float::IsNaN(acpl::Float::QNaN<acpl::Float64>()) == true);
+	Test(acpl::Float::IsNaN(acpl::Float::QNaN<acpl::Float::Largest>()) == true);
+	
+	Test(acpl::Float::IsNaN(acpl::Float::SNaN<acpl::Float32>()) == true);
+	Test(acpl::Float::IsNaN(acpl::Float::SNaN<acpl::Float64>()) == true);
+	Test(acpl::Float::IsNaN(acpl::Float::SNaN<acpl::Float::Largest>()) == true);
+	
+	
+	return 0;
+}
+
+static int TestNumClass()
 {
 	PrintFn();
 	
@@ -91,6 +236,7 @@ static int TestTypeInfo()
 	
 	Test(acpl::Num<acpl::Float32>::IsFloat() == true);
 	Test(acpl::Num<acpl::Float64>::IsFloat() == true);
+	Test(acpl::Num<acpl::Float::Largest>::IsFloat() == true);
 	
 	Test(acpl::Num<acpl::SizeT >::IsFloat() == false);
 	Test(acpl::Num<acpl::SSizeT>::IsFloat() == false);
@@ -109,9 +255,10 @@ static int TestTypeInfo()
 	Test(acpl::Num<acpl::UInt32>::Min() == 0);
 	Test(acpl::Num<acpl::UInt64>::Min() == 0);
 	
-	// Can't conceivably test the limits of floating-point types, but call the `Min` function just to test if it compiles
-	acpl::Num<acpl::Float32>::Min();
-	acpl::Num<acpl::Float64>::Min();
+	// More comprehensive tests are performed in tests of `acpl::Float` class
+	Test(acpl::Num<acpl::Float32>::Min() == acpl::Float::Min<acpl::Float32>());
+	Test(acpl::Num<acpl::Float64>::Min() == acpl::Float::Min<acpl::Float64>());
+	Test(acpl::Num<acpl::Float::Largest>::Min() == acpl::Float::Min<acpl::Float::Largest>());
 	
 	Test(acpl::Num<acpl::SizeT >::Min() == 0);
 	
@@ -138,9 +285,10 @@ static int TestTypeInfo()
 	Test(acpl::Num<acpl::UInt32>::Max() == 0xFFFFFFFF);
 	Test(acpl::Num<acpl::UInt64>::Max() == acpl::Const::UI64(0xFFFFFFFF, 0xFFFFFFFF));
 	
-	// Can't conceivably test the limits of floating-point types, but call the `Max` function just to test if it compiles
-	acpl::Num<acpl::Float32>::Max();
-	acpl::Num<acpl::Float64>::Max();
+	// More comprehensive tests are performed in tests of `acpl::Float` class
+	Test(acpl::Num<acpl::Float32>::Max() == acpl::Float::Max<acpl::Float32>());
+	Test(acpl::Num<acpl::Float64>::Max() == acpl::Float::Max<acpl::Float64>());
+	Test(acpl::Num<acpl::Float::Largest>::Max() == acpl::Float::Max<acpl::Float::Largest>());
 	
 	if (sizeof(acpl::SizeT ) == 8)
 		Test(acpl::Num<acpl::SizeT >::Max() == static_cast<acpl::SizeT >(acpl::Const::UI64(0xFFFFFFFF, 0xFFFFFFFF)))
@@ -251,7 +399,8 @@ SectionFuncMain(types)
 	if (argc < 1)
 	{
 		Test(TestTypeSizes() == 0);
-		Test(TestTypeInfo() == 0);
+		Test(TestFloatClass() == 0);
+		Test(TestNumClass() == 0);
 		Test(TestCasts() == 0);
 		Test(TestEnum() == 0);
 		

@@ -130,6 +130,225 @@ namespace acpl
 	
 	
 	// 
+	// Forward-declaration
+	// 
+	
+	template <class tType>
+	class Num;
+	
+	
+	// 
+	// Floating-point type manipulation class
+	// 
+	
+	class Float
+	{
+		private:
+			template <class tFloatType, class tBinRep>
+			union Rep
+			{
+				tFloatType uFloat;
+				tBinRep uBin;
+			};
+		
+		public:
+			typedef long double Largest; // largest floating-point type
+			struct Parts
+			{
+				typedef acpl::UInt64 Mantissa;
+				typedef acpl::UInt16 Exponent;
+				typedef acpl::UInt8 Sign;
+				
+				acpl::Float::Parts::Mantissa sMan;
+				acpl::Float::Parts::Exponent sExp;
+				acpl::Float::Parts::Sign sSign;
+			};
+		
+		private:
+			static inline void I_TypeCheck(const acpl::Float32 &) { }
+			static inline void I_TypeCheck(const acpl::Float64 &) { }
+			static inline void I_TypeCheck(const acpl::Float::Largest &) { }
+			
+			template <class tType>
+			static inline tType I_Create(acpl::UInt8 nSign, acpl::UInt16 nExp, acpl::UInt64 nMan)
+			{
+				if (sizeof(tType) == sizeof(acpl::Float32))
+					return static_cast<tType>(acpl::Float::Create<acpl::Float32>(nSign, nExp, nMan));
+				else
+				if (sizeof(tType) == sizeof(acpl::Float64))
+					return static_cast<tType>(acpl::Float::Create<acpl::Float64>(nSign, nExp, nMan));
+				else
+					return static_cast<tType>(acpl::Float::Create<acpl::Float::Largest>(nSign, nExp, nMan));
+			}
+		
+		protected:
+			template<class tNumType> friend class Num;
+			
+			template <class tType>
+			static inline tType I_Min()
+			{
+				return acpl::Float::I_Create<tType>(1, 0x7FFE, acpl::Const::UI64(0xFFFFFFFF, 0xFFFFFFFF));
+			}
+			
+			template <class tType>
+			static inline tType I_Max()
+			{
+				return acpl::Float::I_Create<tType>(0, 0x7FFE, acpl::Const::UI64(0xFFFFFFFF, 0xFFFFFFFF));
+			}
+			
+			template <class tType>
+			static inline tType I_QNaN()
+			{
+				return static_cast<tType>(acpl::Float::Create<acpl::Float64>(0, 0x7FF, acpl::Const::UI64(0x00080000, 0x00000000)));
+			}
+			
+			template <class tType>
+			static inline tType I_SNaN()
+			{
+				acpl::Float64 oSNaN = acpl::Float::Create<acpl::Float64>(0, 0x7FF, acpl::Const::UI64(0x00040000, 0x00000000));
+				acpl::Float::Parts oParts;
+				acpl::Float::GetParts(oSNaN, oParts);
+				
+				return ((oParts.sMan == acpl::Const::UI64(0x00040000, 0x00000000)) ? static_cast<tType>(oSNaN) : acpl::Float::I_QNaN<tType>());
+			}
+		
+		public:
+			static inline bool HasExtPrec()
+			{
+				return (sizeof(acpl::Float::Largest) > sizeof(acpl::Float64));
+			}
+			
+			static inline void GetParts(acpl::Float32 nVal, acpl::Float::Parts &nParts)
+			{
+				acpl::Float::Rep<acpl::Float32, acpl::UInt32> oRep = { nVal };
+				nParts.sSign = (oRep.uBin >> 31);
+				nParts.sExp = ((oRep.uBin >> 23) & 0xFF);
+				nParts.sMan =  (oRep.uBin & 0x7FFFFF);
+			}
+			
+			static inline void GetParts(acpl::Float64 nVal, acpl::Float::Parts &nParts)
+			{
+				acpl::Float::Rep<acpl::Float64, acpl::UInt64> oRep = { nVal };
+				nParts.sSign = (oRep.uBin >> 63);
+				nParts.sExp = ((oRep.uBin >> 52) & 0x7FF);
+				nParts.sMan =  (oRep.uBin & acpl::Const::UI64(0x000FFFFF, 0xFFFFFFFF));
+			}
+			
+			static inline void GetParts(acpl::Float::Largest nVal, acpl::Float::Parts &nParts)
+			{
+				// if `long double` is the same size as `double`
+				if (sizeof(acpl::Float::Largest) == sizeof(acpl::Float64))
+					return acpl::Float::GetParts(static_cast<acpl::Float64>(nVal), nParts);
+				
+				// x86 extended precision (80 bits), always little-endian
+				acpl::Float::Rep<acpl::Float::Largest, acpl::UInt64[2]> oRep = { nVal };
+				nParts.sSign = ((oRep.uBin[1] >> 15) & 0x01);
+				nParts.sExp = (oRep.uBin[1] & 0x7FFF);
+				nParts.sMan = oRep.uBin[0];
+			}
+			
+			static inline void SetParts(acpl::Float32 &nVal, acpl::UInt8 nSign, acpl::UInt16 nExp, acpl::UInt64 nMan)
+			{
+				acpl::Float::Rep<acpl::Float32, acpl::UInt32> oRep;
+				oRep.uBin = 
+					(static_cast<acpl::UInt32>(nSign) << 31) |
+					(static_cast<acpl::UInt32>(nExp & 0xFF) << 23) |
+					(nMan & 0x7FFFFF);
+				nVal = oRep.uFloat;
+			}
+			
+			static inline void SetParts(acpl::Float64 &nVal, acpl::UInt8 nSign, acpl::UInt16 nExp, acpl::UInt64 nMan)
+			{
+				acpl::Float::Rep<acpl::Float64, acpl::UInt64> oRep;
+				oRep.uBin = 
+					(static_cast<acpl::UInt64>(nSign) << 63) |
+					(static_cast<acpl::UInt64>(nExp & 0x7FF) << 52) |
+					(nMan & acpl::Const::UI64(0x000FFFFF, 0xFFFFFFFF));
+				nVal = oRep.uFloat;
+			}
+			
+			static inline void SetParts(acpl::Float::Largest &nVal, acpl::UInt8 nSign, acpl::UInt16 nExp, acpl::UInt64 nMan)
+			{
+				// if `long double` is the same size as `double`
+				if (sizeof(acpl::Float::Largest) == sizeof(acpl::Float64))
+				{
+					acpl::Float64 oVal;
+					acpl::Float::SetParts(oVal, nSign, nExp, nMan);
+					nVal = oVal;
+					return;
+				}
+				
+				// x86 extended precision (80 bits), always little-endian
+				acpl::Float::Rep<acpl::Float::Largest, acpl::UInt64[2]> oRep;
+				oRep.uBin[1] =
+					(static_cast<acpl::UInt64>(nSign & 0x01) << 15) |
+					(static_cast<acpl::UInt64>(nExp & 0x7FFF));
+				oRep.uBin[0] = nMan;
+				nVal = oRep.uFloat;
+			}
+			
+			template <class tType>
+			static inline tType Create(acpl::UInt8 nSign, acpl::UInt16 nExp, acpl::UInt64 nMan)
+			{
+				tType oVal;
+				acpl::Float::SetParts(oVal, nSign, nExp, nMan);
+				return oVal;
+			}
+			
+			template <class tType>
+			static inline tType Min()
+			{
+				return acpl::Float::Create<tType>(1, 0x7FFE, acpl::Const::UI64(0xFFFFFFFF, 0xFFFFFFFF));
+			}
+			
+			template <class tType>
+			static inline tType Max()
+			{
+				return acpl::Float::Create<tType>(0, 0x7FFE, acpl::Const::UI64(0xFFFFFFFF, 0xFFFFFFFF));
+			}
+			
+			template <class tType>
+			static inline tType Inf()
+			{
+				return acpl::Float::Create<tType>(0, 0x7FFF, acpl::Const::UI64(0x80000000, 0x00000000));
+			}
+			
+			template <class tType>
+			static inline tType NaN()
+			{
+				return acpl::Float::QNaN<tType>();
+			}
+			
+			template <class tType>
+			static inline tType QNaN()
+			{
+				acpl::Float::I_TypeCheck(tType(0.0));
+				return acpl::Float::I_QNaN<tType>();
+			}
+			
+			template <class tType>
+			static inline tType SNaN()
+			{
+				acpl::Float::I_TypeCheck(tType(0.0));
+				return acpl::Float::I_SNaN<tType>();
+			}
+			
+			template <class tType>
+			static inline bool IsNaN(tType nVal)
+			{
+				acpl::Float::Parts oParts;
+				acpl::Float::Parts::Exponent oInfExp;
+				
+				acpl::Float::GetParts(acpl::Float::Inf<tType>(), oParts);
+				oInfExp = oParts.sExp;
+				
+				acpl::Float::GetParts(nVal, oParts);
+				return (oParts.sExp == oInfExp && (oParts.sMan & acpl::Const::UI64(0x7FFFFFFF, 0xFFFFFFFF)) != 0);
+			}
+	};
+	
+	
+	// 
 	// Numeric type information class
 	// 
 	
@@ -148,7 +367,7 @@ namespace acpl
 			
 			static inline bool IsFloat()
 			{
-				return ((tType(1.1) * 10) == 11);
+				return (static_cast<acpl::Float::Largest>(tType(1.5)) == static_cast<acpl::Float::Largest>(1.5));
 			}
 			
 			static inline tType Min()
@@ -159,13 +378,10 @@ namespace acpl
 				// resolved at the time of compiling so this ridiculous
 				// expressions have absolutely no strain on at run-time.
 				if (IsFloat() == true)
-				{
-					union { acpl::UInt64 uInt; tType uType; } oFiu = { ((sizeof(tType) == 4) ? acpl::Const::UI64(0x00000000, 0xFF7FFFFF) : acpl::Const::UI64(0xFFEFFFFF, 0xFFFFFFFF)) };
-					return oFiu.uType;
-				}
+					return acpl::Float::I_Min<tType>();
 				else
 				if (IsSigned() == true)
-					return (((tType(1) * (static_cast<acpl::UInt64>(0x40) << ((sizeof(tType) - 1) * 8))) * static_cast<tType>((IsSigned() == true) ? -1 : 1)) * 2);
+					return (((tType(1) * (static_cast<acpl::UInt64>(0x40) << ((((sizeof(tType) > sizeof(acpl::UInt64)) ? sizeof(acpl::UInt64) : sizeof(tType)) - 1) * 8))) * static_cast<tType>((IsSigned() == true) ? -1 : 1)) * 2);
 				else
 					return 0;
 			}
@@ -178,13 +394,10 @@ namespace acpl
 				// resolved at the time of compiling so this ridiculous
 				// expressions have absolutely no strain on at run-time.
 				if (IsFloat() == true)
-				{
-					union { acpl::UInt64 uInt; tType uType; } oFiu = { ((sizeof(tType) == 4) ? acpl::Const::UI64(0x00000000, 0x7F7FFFFF) : acpl::Const::UI64(0x7FEFFFFF, 0xFFFFFFFF)) };
-					return oFiu.uType;
-				}
+					return acpl::Float::I_Max<tType>();
 				else
 				if (IsSigned() == true)
-					return (tType(-1) - (((tType(1) * (static_cast<acpl::UInt64>(0x40) << ((sizeof(tType) - 1) * 8))) * static_cast<tType>((IsSigned() == true) ? -1 : 1)) * 2));
+					return (tType(-1) - (((tType(1) * (static_cast<acpl::UInt64>(0x40) << ((((sizeof(tType) > sizeof(acpl::UInt64)) ? sizeof(acpl::UInt64) : sizeof(tType)) - 1) * 8))) * static_cast<tType>((IsSigned() == true) ? -1 : 1)) * 2));
 				else
 					return tType(-1);
 			}

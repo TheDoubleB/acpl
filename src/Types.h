@@ -296,6 +296,12 @@ namespace acpl
 			}
 			
 			template <class tType>
+			static inline tType FractMin()
+			{
+				return acpl::Float::Create<tType>(0, 0, 1);
+			}
+			
+			template <class tType>
 			static inline tType Min()
 			{
 				return acpl::Float::Create<tType>(1, 0x7FFE, acpl::Const::UI64(0xFFFFFFFF, 0xFFFFFFFF));

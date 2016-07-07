@@ -322,6 +322,7 @@ namespace acpl
 			acpl::Mem::Block<char>::Type mStrBuf;
 			
 			acpl::UInt64 ToInt(acpl::UInt8 nBase, acpl::UInt8 nTypeInfo, bool nSwapDecMarks, bool &nSuccess);
+			acpl::Float::Largest ToFloat(bool nSwapDecMarks, bool &nSuccess);
 		
 		public:
 			inline String() : mStrBuf(32) { }
@@ -380,6 +381,14 @@ namespace acpl
 				else
 					nValue = static_cast<tType>(static_cast<acpl::UInt64>(this->ToInt(nBase, sizeof(tType), nSwapDecMarks, oSuccess)));
 				
+				return oSuccess;
+			}
+			
+			template <class tType>
+			inline bool ToFloat(tType &nValue, bool nSwapDecMarks = false)
+			{
+				bool oSuccess;
+				nValue = static_cast<tType>(this->ToFloat(nSwapDecMarks, oSuccess));
 				return oSuccess;
 			}
 		

@@ -70,6 +70,25 @@ static int _local_TestStringData(const typename acpl::Mem::Block<tStrType>::Type
 	return (*oCurPos != '\0');
 }
 
+template <class tType>
+static inline bool _local_CmpFloat(tType nVal1, tType nVal2, acpl::UInt64 nManTol) // `nManTol` is used for comparing mantissa of both values with a +/- tolerance
+{
+	acpl::Float::Parts oParts1, oParts2;
+	acpl::Float::GetParts(nVal1, oParts1);
+	acpl::Float::GetParts(nVal2, oParts2);
+	return (oParts1.sMan >= (oParts2.sMan - nManTol) && oParts1.sMan <= (oParts2.sMan + nManTol));
+}
+
+static inline bool _local_SkipFloatExtPrec()
+{
+	return (acpl::Float::HasExtPrec() == false || acpl::Float::Max<acpl::Float::Largest>() == acpl::Float::Inf<acpl::Float::Largest>());
+}
+
+static inline acpl::UInt64 _local_FloatTolSwitch(acpl::UInt64 nMaxTol)
+{
+	return ((_local_SkipFloatExtPrec() == true) ? nMaxTol : 0);
+}
+
 
 static int TestUtf8Funcs()
 {
@@ -8630,6 +8649,175 @@ static int TestToInt()
 	return 0;
 }
 
+static int TestToFloat()
+{
+	PrintFn();
+	
+	
+	acpl::String oStr;
+	acpl::Float64 oFp;
+	acpl::Float::Largest oFpExt;
+	
+	
+	// Whole numbers only
+	oStr.Set("123456789").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  123456789.0, 0) == true);
+	oStr.Set("+123456789").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  123456789.0, 0) == true);
+	oStr.Set("-123456789").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -123456789.0, 0) == true);
+	
+	// Whole numbers only (with a decimal point, but no decimal places)
+	oStr.Set("123456789.").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  123456789.0, 0) == true);
+	oStr.Set("+123456789.").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  123456789.0, 0) == true);
+	oStr.Set("-123456789.").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -123456789.0, 0) == true);
+	
+	// Whole numbers (with a decimal point and only '0' for decimal places)
+	oStr.Set("123456789.000000000").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  123456789.0, 0) == true);
+	oStr.Set("+123456789.000000000").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  123456789.0, 0) == true);
+	oStr.Set("-123456789.000000000").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -123456789.0, 0) == true);
+	
+	// Whole + fraction numbers (a tolerance of 1 is needed because of MSVC/valgrind)
+	oStr.Set("123456789.987654321").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  123456789.987654321, _local_FloatTolSwitch(1)) == true);
+	oStr.Set("+123456789.987654321").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  123456789.987654321, _local_FloatTolSwitch(1)) == true);
+	oStr.Set("-123456789.987654321").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -123456789.987654321, _local_FloatTolSwitch(1)) == true);
+	
+	// Fraction numbers only (with a leading zero before decimal point)
+	oStr.Set("0.987654321").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  0.987654321, 0) == true);
+	oStr.Set("+0.987654321").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  0.987654321, 0) == true);
+	oStr.Set("-0.987654321").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -0.987654321, 0) == true);
+	
+	// Fraction numbers only (without a leading zero before decimal point)
+	oStr.Set(".987654321").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  0.987654321, 0) == true);
+	oStr.Set("+.987654321").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  0.987654321, 0) == true);
+	oStr.Set("-.987654321").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -0.987654321, 0) == true);
+	
+	// Fraction numbers + positive exponent
+	oStr.Set(".987654321e5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  98765.4321, 0) == true);
+	oStr.Set("+.987654321e5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  98765.4321, 0) == true);
+	oStr.Set("-.987654321e5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -98765.4321, 0) == true);
+	
+	// Fraction numbers + positive exponent (with a '+' sign)
+	oStr.Set(".987654321e+5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  98765.4321, 0) == true);
+	oStr.Set("+.987654321e+5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  98765.4321, 0) == true);
+	oStr.Set("-.987654321e+5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -98765.4321, 0) == true);
+	
+	// Fraction numbers + negative exponent
+	oStr.Set(".987654321e-5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  0.00000987654321, 0) == true);
+	oStr.Set("+.987654321e-5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  0.00000987654321, 0) == true);
+	oStr.Set("-.987654321e-5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -0.00000987654321, 0) == true);
+	
+	// Whole numbers + positive exponent
+	oStr.Set("123456789e+5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  12345678900000.0, 0) == true);
+	oStr.Set("+123456789e+5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  12345678900000.0, 0) == true);
+	oStr.Set("-123456789e+5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -12345678900000.0, 0) == true);
+	
+	// Whole numbers + negative exponent (a tolerance of 1 is needed because of MSVC/valgrind)
+	oStr.Set("123456789e-5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  1234.56789, _local_FloatTolSwitch(1)) == true);
+	oStr.Set("+123456789e-5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  1234.56789, _local_FloatTolSwitch(1)) == true);
+	oStr.Set("-123456789e-5").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -1234.56789, _local_FloatTolSwitch(1)) == true);
+	
+	// Huge positive exponent (for Float64) (a tolerance of 3 is needed because of MSVC/valgrind)
+	oStr.Set("+1e+100").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0, _local_FloatTolSwitch(3)) == true);
+	oStr.Set("-1e+100").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0, _local_FloatTolSwitch(3)) == true);
+	
+	// Huge negative exponent (for Float64) (a tolerance of 6 is needed because of MSVC/valgrind)
+	oStr.Set("+1e-100").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp,  0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001, _local_FloatTolSwitch(6)) == true);
+	oStr.Set("-1e-100").ToFloat(oFp);
+	Test(_local_CmpFloat(oFp, -0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001, _local_FloatTolSwitch(6)) == true);
+	
+	// Exponent just under maximum / over minimum (for Float64)
+	oStr.Set("+1e+308").ToFloat(oFp);
+	Test(oFp < acpl::Float::Max<acpl::Float64>());
+	oStr.Set("-1e+308").ToFloat(oFp);
+	Test(oFp > acpl::Float::Min<acpl::Float64>());
+	
+	// Exponent over maximum / under minimum (+/- infinity; for Float64)
+	oStr.Set("+1e+309").ToFloat(oFp);
+	Test(oFp == acpl::Float::Inf<acpl::Float64>());
+	oStr.Set("-1e+309").ToFloat(oFp);
+	Test(oFp == acpl::Float::Inf<acpl::Float64>() * -1);
+	
+	// Exponent just in precision scope (for Float64)
+	oStr.Set("+1e-323").ToFloat(oFp);
+	Test(oFp > acpl::Float::FractMin<acpl::Float64>());
+	oStr.Set("-1e-323").ToFloat(oFp);
+	Test(oFp < acpl::Float::FractMin<acpl::Float64>() * -1);
+	
+	// Exponent out of precision scope (for Float64)
+	oStr.Set("+1e-324").ToFloat(oFp);
+	Test(oFp == 0.0);
+	oStr.Set("-1e-324").ToFloat(oFp);
+	Test(oFp == 0.0);
+	
+	
+	// NOTE: The following tests do not work in environments where x86
+	//       extended precision floating-point type is not available. Such
+	//       environment is under MSVC or running the test program using
+	//       `valgrind` tool, hence the _local_SkipFloatExtPrec() call.
+	
+	// Exponent just under maximum / over minimum (for x86 extended precision `long double`)
+	oStr.Set("+1e+4932").ToFloat(oFpExt);
+	Test(oFpExt < acpl::Float::Max<acpl::Float::Largest>() || _local_SkipFloatExtPrec() == true);
+	oStr.Set("-1e+4932").ToFloat(oFpExt);
+	Test(oFpExt > acpl::Float::Min<acpl::Float::Largest>() || _local_SkipFloatExtPrec() == true);
+	
+	// Exponent over maximum / under minimum (+/- infinity; for x86 extended precision `long double`)
+	oStr.Set("+1e+4933").ToFloat(oFpExt);
+	Test(oFpExt == acpl::Float::Inf<acpl::Float::Largest>() || _local_SkipFloatExtPrec() == true);
+	oStr.Set("-1e+4933").ToFloat(oFpExt);
+	Test(oFpExt == acpl::Float::Inf<acpl::Float::Largest>() * -1 || _local_SkipFloatExtPrec() == true);
+	
+	// Exponent just in precision scope (for x86 extended precision `long double`)
+	oStr.Set("+1e-4950").ToFloat(oFpExt);
+	Test(oFpExt > acpl::Float::FractMin<acpl::Float::Largest>() || _local_SkipFloatExtPrec() == true);
+	oStr.Set("-1e-4950").ToFloat(oFpExt);
+	Test(oFpExt < acpl::Float::FractMin<acpl::Float::Largest>() * -1 || _local_SkipFloatExtPrec() == true);
+	
+	// Exponent out of precision scope (for x86 extended precision `long double`)
+	oStr.Set("+1e-4951").ToFloat(oFpExt);
+	Test(oFpExt == 0.0); // No need for HasExtPrec() check
+	oStr.Set("-1e-4951").ToFloat(oFpExt);
+	Test(oFpExt == 0.0); // No need for HasExtPrec() check
+	
+	
+	return 0;
+}
+
+
 
 SectionFuncMain(string)
 {
@@ -8682,6 +8870,7 @@ SectionFuncMain(string)
 		Test(TestToUnicodeStrs() == 0);
 		Test(TestToFromMbs() == 0);
 		Test(TestToInt() == 0);
+		Test(TestToFloat() == 0);
 		
 		PrintOut("All Passed!\n");
 	}

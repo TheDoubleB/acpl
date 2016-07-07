@@ -762,9 +762,9 @@ acpl::UInt64 acpl::String::ToInt(acpl::UInt8 nBase, acpl::UInt8 nTypeInfo, bool 
 		return 0;
 	
 	
-	// Determine whether a single '+', '-' or digit groupping sign it is
-	// present. If one of these signs appears the number must be in decimal form
-	// (base == 10). If a '-' is present, the tType must be a signed type.
+	// Determine whether a single '+' or '-' is present. If one of these signs
+	// appears the number must be in decimal form (base == 10). If a '-' is
+	// present, the tType must be a signed type.
 	if (*oStr == '-')
 	{
 		if ((nTypeInfo & 0x80) == 0 || (nBase != 0 && nBase != 10))
@@ -860,6 +860,122 @@ acpl::UInt64 acpl::String::ToInt(acpl::UInt8 nBase, acpl::UInt8 nTypeInfo, bool 
 	
 	if (*oStr == '\0')
 		nSuccess = true;
+	
+	
+	return oValue;
+}
+
+acpl::Float::Largest acpl::String::ToFloat(bool nSwapDecMarks, bool &nSuccess)
+{
+	// Init
+	nSuccess = false;
+	
+	const char *oStr = this->Utf8();
+	bool oIsNeg = false; // Is the number negative
+	bool oIsExpNeg = false; // Is the exponent negative
+	const char oDecPoint = ((nSwapDecMarks == true) ? ',' : '.');
+	const char oDigitGrp = ((nSwapDecMarks == true) ? '.' : ',');
+	
+	// Position oStr to the first non-whitespace character.
+	for (; _local_String_Gen_IsWspace(oStr) == true; acpl::pi::_string_utf8_next_seq(oStr));
+	
+	if (*oStr == '\0') // The string contains no meaningful data
+		return 0;
+	
+	
+	// Determine whether a single '+' or '-' is present.
+	if (*oStr == '-')
+	{
+		oIsNeg = true;
+		oStr++;
+	}
+	else
+	if (*oStr == '+')
+		oStr++;
+	
+	
+	// Needed vars and their initializations
+	acpl::Float::Largest oValue = 0.0;
+	acpl::Float::Largest oDivisor = 1.0;
+	acpl::UInt32 oExponent = 0;
+	
+	
+	// Process string for whole part of the number; `oValue` is already initialized
+	for (; *oStr != '\0'; oStr++)
+	{
+		if (acpl::pi::_string_ascii_char2num(*oStr, 10, oValue) == true);
+		else
+		if (*oStr == oDecPoint)
+		{
+			oStr++;
+			break;
+		}
+		else
+		if (*oStr != oDigitGrp)
+			break; // possible 'e' or 'E' for exponent, whitespaces, or invalid char (certainly not a digit groupping in decimal base); handled after loop
+	}
+	
+	// Process string for fraction part of the number (if it exists); `oValue` is already set and `oDivisor` initialized
+	for (; *oStr != '\0'; oStr++)
+	{
+		if (acpl::pi::_string_ascii_char2num(*oStr, 10, oValue) == true)
+			oDivisor *= 10;
+		else
+			break; // possible 'e' or 'E' for exponent, whitespaces, or invalid char; handled after loop
+	}
+	
+	// Determine whether 'e' or 'E' for exponent and a single '+' or '-' is
+	// present.
+	if (*oStr == 'e' || *oStr == 'E') // we have the exponent part as well
+	{
+		oStr++;
+		if (*oStr == '-')
+		{
+			oIsExpNeg = true;
+			oStr++;
+		}
+		else
+		if (*oStr == '+')
+			oStr++;
+	}
+	
+	// Process string for exponent part of the number (if it exists); `oValue` and `oDivisor` are already set
+	for (; *oStr != '\0'; oStr++)
+	{
+		if (acpl::pi::_string_ascii_char2num(*oStr, 10, oExponent) == true)
+		{
+			if (oExponent >= 50000) // x86 extended precision (largest supported) format has a range of approximately 3.65e-4951 to 1.18e+4932
+				oExponent /= 10;    // Reduce the exponent; (exponent > 5000) = infinity, (exponent < -5000) = out-of-scope small number
+		}
+		else
+			break; // possible whitespaces or invalid char; handled after loop
+	}
+	
+	// Limit exponent to 5000
+	if (oExponent > 5000)
+		oExponent = 5000;
+	
+	
+	// Invert value if it is negative
+	if (oIsNeg == true)
+		oValue *= -1;
+	
+	
+	// Check for possible trailing whitespaces and NULL terminator
+	for (; _local_String_Gen_IsWspace(oStr) == true; acpl::pi::_string_utf8_next_seq(oStr));
+	
+	if (*oStr == '\0')
+		nSuccess = true;
+	
+	
+	// Recalculate `oValue` with `oDivisor`
+	oValue /= oDivisor;
+	
+	// Recalculate `oValue` with `oExponent`
+	if (oIsExpNeg == true)
+		while (oExponent-- != 0) oValue /= 10.0;
+	else
+		while (oExponent-- != 0) oValue *= 10.0;
 	
 	
 	return oValue;

@@ -351,6 +351,14 @@ namespace acpl
 				acpl::Float::GetParts(nVal, oParts);
 				return (oParts.sExp == oInfExp && (oParts.sMan & acpl::Const::UI64(0x7FFFFFFF, 0xFFFFFFFF)) != 0);
 			}
+			
+			template <class tType>
+			static inline bool IsNeg(tType nVal)
+			{
+				acpl::Float::Parts oParts;
+				acpl::Float::GetParts(nVal, oParts);
+				return (oParts.sSign != 0);
+			}
 	};
 	
 	

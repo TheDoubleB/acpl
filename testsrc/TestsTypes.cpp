@@ -194,6 +194,36 @@ static int TestFloatClass()
 	Test(acpl::Float::IsNaN(acpl::Float::SNaN<acpl::Float::Largest>()) == true);
 	
 	
+	// IsNeg() method
+	
+	Test(acpl::Float::IsNeg(0.0) == false);
+	Test(acpl::Float::IsNeg(0.0 * -1) == true);
+	Test(acpl::Float::IsNeg(1.0) == false);
+	Test(acpl::Float::IsNeg(1.0 * -1) == true);
+	
+	Test(acpl::Float::IsNeg(acpl::Float::Max<acpl::Float32>()) == false);
+	Test(acpl::Float::IsNeg(acpl::Float::Max<acpl::Float32>() * -1) == true);
+	Test(acpl::Float::IsNeg(acpl::Float::Min<acpl::Float32>()) == true);
+	Test(acpl::Float::IsNeg(acpl::Float::Min<acpl::Float32>() * -1) == false);
+	
+	Test(acpl::Float::IsNeg(acpl::Float::Max<acpl::Float64>()) == false);
+	Test(acpl::Float::IsNeg(acpl::Float::Max<acpl::Float64>() * -1) == true);
+	Test(acpl::Float::IsNeg(acpl::Float::Min<acpl::Float64>()) == true);
+	Test(acpl::Float::IsNeg(acpl::Float::Min<acpl::Float64>() * -1) == false);
+	
+	Test(acpl::Float::IsNeg(acpl::Float::Max<acpl::Float::Largest>()) == false);
+	Test(acpl::Float::IsNeg(acpl::Float::Max<acpl::Float::Largest>() * -1) == true);
+	Test(acpl::Float::IsNeg(acpl::Float::Min<acpl::Float::Largest>()) == true);
+	Test(acpl::Float::IsNeg(acpl::Float::Min<acpl::Float::Largest>() * -1) == false);
+	
+	Test(acpl::Float::IsNeg(acpl::Float::Inf<acpl::Float32>()) == false);
+	Test(acpl::Float::IsNeg(acpl::Float::Inf<acpl::Float32>() * -1) == true);
+	Test(acpl::Float::IsNeg(acpl::Float::Inf<acpl::Float64>()) == false);
+	Test(acpl::Float::IsNeg(acpl::Float::Inf<acpl::Float64>() * -1) == true);
+	Test(acpl::Float::IsNeg(acpl::Float::Inf<acpl::Float::Largest>()) == false);
+	Test(acpl::Float::IsNeg(acpl::Float::Inf<acpl::Float::Largest>() * -1) == true);
+	
+	
 	return 0;
 }
 

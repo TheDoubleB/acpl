@@ -1724,6 +1724,135 @@ void acpl::String::IntRef::Conv(const acpl::String::IntRef::Type &nArg, acpl::UI
 
 
 // 
+// acpl::String::FloatRef
+// 
+
+void acpl::String::FloatRef::Conv(acpl::Float::Largest nArg, bool nSwapDecMarks)
+{
+	const char oDecMark = ((nSwapDecMarks == true) ? ',' : '.');
+	acpl::Float::Largest oVal = nArg;
+	char *oCurPos = this->mStr;
+	
+	// Absolutize the value
+	if (acpl::Float::IsNeg(oVal) == true)
+	{
+		oVal *= -1.0;
+		*oCurPos++ = '-';
+	}
+	else
+		*oCurPos++ = '+';
+	
+	
+	if (oVal == 0.0)
+	{
+		*oCurPos++ = '0';
+	}
+	else
+	if (oVal == acpl::Float::Inf<acpl::Float::Largest>())
+	{
+		*oCurPos++ = 'i';
+		*oCurPos++ = 'n';
+		*oCurPos++ = 'f';
+	}
+	else
+	if (acpl::Float::IsNaN(oVal) == true)
+	{
+		*oCurPos++ = 'n';
+		*oCurPos++ = 'a';
+		*oCurPos++ = 'n';
+	}
+	else
+	{
+		// Decimal exponent
+		acpl::SInt16 oExp = 0;
+		
+		// Rounding threshold weight
+		acpl::Float::Largest oRndThr = 0.0000000000001L;
+		if (acpl::Float::HasExtPrecRT() == true)
+			oRndThr /= 100.0; // can be even smaller for extended precision
+		
+		// Make `1.0 <= oVal < 10.0` with a corresponding exponent
+		while (oVal >= 10.0)
+		{
+			oVal /= 10.0;
+			oExp++;
+		}
+		while (oVal < 1.0)
+		{
+			oVal *= 10.0;
+			oExp--;
+		}
+		
+		// Adjust rounding threshold weight for near-edge of denormal fraction
+		// values due to garbage creep-in because of the divisions of `oVal`.
+		// Second to last denormal fraction will be slightly skewed and the last
+		// denormal fraction can be skewed quite a lot.
+		for (acpl::SInt16 i = ((acpl::Float::HasExtPrecRT() == true) ? -4936 : -310);
+			i >= oExp && oRndThr < ((acpl::Float::HasExtPrecRT() == true) ? 0.1L : 0.01L); i--)
+			oRndThr *= 10.0;
+		
+		for (acpl::UInt8 i = 0; i < 22; i++) // will not reach 22, but just in case
+		{
+			acpl::UInt8 oCurDigit = static_cast<acpl::UInt8>(oVal);
+			
+			acpl::Float::Largest oValFloor = static_cast<acpl::Float::Largest>(oCurDigit);
+			acpl::Float::Largest oValCeil = static_cast<acpl::Float::Largest>(oCurDigit + 1);
+			
+			if (i == 1)
+				*oCurPos++ = oDecMark;
+			
+			if ((oVal - oValFloor) < oRndThr)
+			{
+				*oCurPos++ = static_cast<acpl::UInt8>(oValFloor) + '0';
+				break;
+			}
+			else
+			if ((oValCeil - oVal) < oRndThr)
+			{
+				if (oValCeil < 10.0)
+					*oCurPos++ = static_cast<acpl::UInt8>(oValCeil) + '0';
+				else
+				{
+					*oCurPos++ = static_cast<acpl::UInt8>(oValCeil / 10.0) + '0';
+					oExp++;
+				}
+				break;
+			}
+			else
+				*oCurPos++ = oCurDigit + '0';
+			
+			oVal -= oValFloor;
+			oVal *= 10;
+			oRndThr *= 10;
+		}
+		
+		if (oExp != 0)
+		{
+			*oCurPos++ = 'e';
+			if (oExp < 0)
+			{
+				*oCurPos++ = '-';
+				oExp *= -1;
+			}
+			
+			for (acpl::SInt16 i = 10000; i != 0; i /= 10)
+			{
+				if ((oExp % i) >= oExp && acpl::pi::_string_ascii_is_digit(oCurPos[-1]) != true)
+					continue;
+				*oCurPos++ = (oExp / i) + '0';
+				oExp %= i;
+			}
+		}
+	}
+	
+	*oCurPos++ = '\0';
+	
+	this->mTgt.uPtr = this->mStr + ((this->mStr[0] == '-') ? 0 : 1);
+}
+
+
+
+// 
 // acpl::String::IpAddrRef
 // 
 

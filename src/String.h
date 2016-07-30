@@ -227,7 +227,19 @@ namespace acpl
 					inline static acpl::UInt8 NativePadding() { return (sizeof(void *) * 2); }
 			};
 			
-			// TODO: create `FloatRef` class for `Float{32,64}` types
+			class FloatRef : public acpl::String::PermRef
+			{
+					acplHideClassCopyI(FloatRef, acpl::String::PermRef());
+				
+				private:
+					char mStr[65];
+					void Conv(acpl::Float::Largest nArg, bool nSwapDecMarks);
+				
+				public:
+					inline FloatRef(acpl::Float::Largest nArg, bool nSwapDecMarks = false) : acpl::String::PermRef() { this->Conv(nArg, nSwapDecMarks); }
+					inline virtual const char *Utf8() const { return ((this->mTgt.uPtr != NULL) ? static_cast<const char *>(this->mTgt.uPtr) : ""); }
+				
+			};
 			
 			class IpAddrRef : public acpl::String::PermRef
 			{

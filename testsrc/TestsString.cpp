@@ -1311,6 +1311,105 @@ static int TestPtrRef()
 	return 0;
 }
 
+static int TestFloatRef()
+{
+	PrintFn();
+	
+	
+	acpl::Float::Largest oFp;
+	
+	
+	// +/- 0.0
+	{
+		oFp = 0.0;
+		acpl::String::FloatRef oRef(oFp);
+		Test(_local_Memcmp(oRef.GetPtr(), "0", 2) == true);
+	}
+	{
+		oFp *= -1.0;
+		acpl::String::FloatRef oRef(oFp);
+		Test(_local_Memcmp(oRef.GetPtr(), "-0", 3) == true);
+	}
+	
+	
+	// +/- inf
+	{
+		oFp = acpl::Float::Inf<acpl::Float::Largest>();
+		acpl::String::FloatRef oRef(oFp);
+		Test(_local_Memcmp(oRef.GetPtr(), "inf", 4) == true);
+	}
+	{
+		oFp *= -1.0;
+		acpl::String::FloatRef oRef(oFp);
+		Test(_local_Memcmp(oRef.GetPtr(), "-inf", 5) == true);
+	}
+	
+	// +/- nan
+	{
+		oFp = acpl::Float::NaN<acpl::Float::Largest>();
+		acpl::String::FloatRef oRef(oFp);
+		Test(_local_Memcmp(oRef.GetPtr(), "nan", 4) == true);
+	}
+	{
+		acpl::Float::Parts oFpParts;
+		acpl::Float::GetParts(oFp, oFpParts);
+		oFp = acpl::Float::Create<acpl::Float::Largest>(1, oFpParts.sExp, oFpParts.sMan);
+		acpl::String::FloatRef oRef(oFp);
+		Test(_local_Memcmp(oRef.GetPtr(), "-nan", 5) == true);
+	}
+	
+	
+	// Up the exponent ladder
+	for (acpl::UInt8 i = 1; i < 10; i++)
+	{
+		oFp = i;
+		for (acpl::UInt16 j = 1; j <= ((acpl::Float::HasExtPrecRT() == true) ? 4931 : 307); j++)
+		{
+			oFp *= 10.0;
+			
+			acpl::String::FloatRef oRef(oFp);
+			const char *oFpStr = oRef.Utf8();
+			
+			TestFM(oFpStr[0] == (i + '0'), "i=%u j=%u fpstr=%s", i, j, oRef.Utf8());
+			TestFM(oFpStr[1] == 'e', "i=%u j=%u fpstr=%s", i, j, oRef.Utf8());
+			oFpStr += 2;
+			
+			acpl::String::IntRef oIntRef(j);
+			const char *oIntStr = oIntRef.Utf8();
+			
+			for (; *oFpStr != '\0' && *oIntStr != '\0'; oFpStr++, oIntStr++)
+				TestFM(*oFpStr == *oIntStr, "i=%u j=%u fpstr=%s", i, j, oRef.Utf8());
+		}
+	}
+	
+	// Down the exponent ladder
+	for (acpl::UInt8 i = 1; i < 10; i++)
+	{
+		oFp = i;
+		for (acpl::UInt16 j = 1; j <= ((acpl::Float::HasExtPrecRT() == true) ? 4948 : 321); j++)
+		{
+			oFp /= 10.0;
+			
+			acpl::String::FloatRef oRef(oFp);
+			const char *oFpStr = oRef.Utf8();
+			
+			TestFM(oFpStr[0] == (i + '0'), "i=%u j=%u fpstr=%s", i, j, oRef.Utf8());
+			TestFM(oFpStr[1] == 'e', "i=%u j=%u fpstr=%s", i, j, oRef.Utf8());
+			TestFM(oFpStr[2] == '-', "i=%u j=%u fpstr=%s", i, j, oRef.Utf8());
+			oFpStr += 3;
+			
+			acpl::String::IntRef oIntRef(j);
+			const char *oIntStr = oIntRef.Utf8();
+			
+			for (; *oFpStr != '\0' && *oIntStr != '\0'; oFpStr++, oIntStr++)
+				TestFM(*oFpStr == *oIntStr, "i=%u j=%u fpstr=%s", i, j, oRef.Utf8());
+		}
+	}
+	
+	
+	return 0;
+}
+
 static int TestIpAddrRef()
 {
 	PrintFn();
@@ -8824,6 +8923,7 @@ SectionFuncMain(string)
 		Test(TestIntRef() == 0);
 		Test(TestUnicharRef() == 0);
 		Test(TestPtrRef() == 0);
+		Test(TestFloatRef() == 0);
 		Test(TestIpAddrRef() == 0);
 		Test(TestNetAddrRef() == 0);
 		Test(TestRefMeasureConvertSelf() == 0);

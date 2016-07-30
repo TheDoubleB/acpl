@@ -218,6 +218,11 @@ namespace acpl
 				return (sizeof(acpl::Float::Largest) > sizeof(acpl::Float64));
 			}
 			
+			static inline bool HasExtPrecRT()
+			{
+				return (acpl::Float::HasExtPrec() == true && acpl::Float::Max<acpl::Float::Largest>() != acpl::Float::Inf<acpl::Float::Largest>());
+			}
+			
 			static inline void GetParts(acpl::Float32 nVal, acpl::Float::Parts &nParts)
 			{
 				acpl::Float::Rep<acpl::Float32, acpl::UInt32> oRep = { nVal };

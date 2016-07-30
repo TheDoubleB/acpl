@@ -79,14 +79,9 @@ static inline bool _local_CmpFloat(tType nVal1, tType nVal2, acpl::UInt64 nManTo
 	return (oParts1.sMan >= (oParts2.sMan - nManTol) && oParts1.sMan <= (oParts2.sMan + nManTol));
 }
 
-static inline bool _local_SkipFloatExtPrec()
-{
-	return (acpl::Float::HasExtPrec() == false || acpl::Float::Max<acpl::Float::Largest>() == acpl::Float::Inf<acpl::Float::Largest>());
-}
-
 static inline acpl::UInt64 _local_FloatTolSwitch(acpl::UInt64 nMaxTol)
 {
-	return ((_local_SkipFloatExtPrec() == true) ? nMaxTol : 0);
+	return ((acpl::Float::HasExtPrecRT() == false) ? nMaxTol : 0);
 }
 
 
@@ -8787,25 +8782,25 @@ static int TestToFloat()
 	// NOTE: The following tests do not work in environments where x86
 	//       extended precision floating-point type is not available. Such
 	//       environment is under MSVC or running the test program using
-	//       `valgrind` tool, hence the _local_SkipFloatExtPrec() call.
+	//       `valgrind` tool, hence the acpl::Float::HasExtPrecRT() call.
 	
 	// Exponent just under maximum / over minimum (for x86 extended precision `long double`)
 	oStr.Set("+1e+4932").ToFloat(oFpExt);
-	Test(oFpExt < acpl::Float::Max<acpl::Float::Largest>() || _local_SkipFloatExtPrec() == true);
+	Test(oFpExt < acpl::Float::Max<acpl::Float::Largest>() || acpl::Float::HasExtPrecRT() == false);
 	oStr.Set("-1e+4932").ToFloat(oFpExt);
-	Test(oFpExt > acpl::Float::Min<acpl::Float::Largest>() || _local_SkipFloatExtPrec() == true);
+	Test(oFpExt > acpl::Float::Min<acpl::Float::Largest>() || acpl::Float::HasExtPrecRT() == false);
 	
 	// Exponent over maximum / under minimum (+/- infinity; for x86 extended precision `long double`)
 	oStr.Set("+1e+4933").ToFloat(oFpExt);
-	Test(oFpExt == acpl::Float::Inf<acpl::Float::Largest>() || _local_SkipFloatExtPrec() == true);
+	Test(oFpExt == acpl::Float::Inf<acpl::Float::Largest>() || acpl::Float::HasExtPrecRT() == false);
 	oStr.Set("-1e+4933").ToFloat(oFpExt);
-	Test(oFpExt == acpl::Float::Inf<acpl::Float::Largest>() * -1 || _local_SkipFloatExtPrec() == true);
+	Test(oFpExt == acpl::Float::Inf<acpl::Float::Largest>() * -1 || acpl::Float::HasExtPrecRT() == false);
 	
 	// Exponent just in precision scope (for x86 extended precision `long double`)
 	oStr.Set("+1e-4950").ToFloat(oFpExt);
-	Test(oFpExt > acpl::Float::FractMin<acpl::Float::Largest>() || _local_SkipFloatExtPrec() == true);
+	Test(oFpExt > acpl::Float::FractMin<acpl::Float::Largest>() || acpl::Float::HasExtPrecRT() == false);
 	oStr.Set("-1e-4950").ToFloat(oFpExt);
-	Test(oFpExt < acpl::Float::FractMin<acpl::Float::Largest>() * -1 || _local_SkipFloatExtPrec() == true);
+	Test(oFpExt < acpl::Float::FractMin<acpl::Float::Largest>() * -1 || acpl::Float::HasExtPrecRT() == false);
 	
 	// Exponent out of precision scope (for x86 extended precision `long double`)
 	oStr.Set("+1e-4951").ToFloat(oFpExt);

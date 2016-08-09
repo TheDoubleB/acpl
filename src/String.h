@@ -284,9 +284,7 @@ namespace acpl
 					
 					RefList &String(const acpl::String::Ref &nArg, acpl::SizeT nMaxCount = acpl::Num<acpl::SizeT>::Max(), acpl::SizeT nStartOffset = 0);
 					inline RefList &Int(const acpl::String::IntRef::Type &nArg, acpl::UInt8 nBase = 10, bool nUpperCase = false, acpl::UInt8 nPadding = 0, char nPaddingChar = ' ') { this->mList.Add(new acpl::String::IntRef(nArg, nBase, nUpperCase, nPadding, nPaddingChar)); return *this; }
-					// TODO: add `Float()`
- 					// RefList &Float(acpl::Float nArg, acpl::UInt8 nPrecision = 6, char nDecimalPoint = '.', acpl::UInt8 nPadding = 0, char nPaddingChar = ' ');
- 					// RefList &Float(acpl::Double nArg, acpl::UInt8 nPrecision = 6, char nDecimalPoint = '.', acpl::UInt8 nPadding = 0, char nPaddingChar = ' ');
+					inline RefList &Float(acpl::Float::Largest nArg, bool nSwapDecMarks = false) { this->mList.Add(new acpl::String::FloatRef(nArg, nSwapDecMarks)); return *this; }
 			};
 			
 			class FmtRefBase : public acpl::String::AllocPermRef

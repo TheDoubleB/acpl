@@ -4709,6 +4709,17 @@ static int TestRefList()
 	Test(_local_Memcmp(oRl.List().GetLast()->GetPtr(), "0123456789ABCDEF", 17) == true);
 	
 	
+	// Float
+	
+	oRl.Float(-100.0);
+	Test(oRl.List().GetLast()->IsNull() == false);
+	Test(_local_Memcmp(oRl.List().GetLast()->GetPtr(), "-1e2", 4) == true);
+	
+	oRl.Float(0.01);
+	Test(oRl.List().GetLast()->IsNull() == false);
+	Test(_local_Memcmp(oRl.List().GetLast()->GetPtr(), "1e-2", 4) == true);
+	
+	
 	return 0;
 }
 

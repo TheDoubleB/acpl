@@ -232,7 +232,7 @@ namespace acpl
 					acplHideClassCopyI(FloatRef, acpl::String::PermRef());
 				
 				private:
-					char mStr[65];
+					char mStr[33];
 					void Conv(acpl::Float::Largest nArg, bool nSwapDecMarks);
 				
 				public:
